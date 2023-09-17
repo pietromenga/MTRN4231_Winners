@@ -15,10 +15,14 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package( OpenCV REQUIRED )
+
+# Inclue dirs
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # Create executables from cpp file and link packages
-# add_executable(talker src/publisher_member_function.cpp)
-# ament_target_dependencies(talker rclcpp std_msgs geometry_msgs)
+add_executable(camTest src/camTest.cpp)
+ament_target_dependencies(camTest rclcpp std_msgs geometry_msgs OpenCV)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -33,7 +37,7 @@ if(BUILD_TESTING)
 endif()
 
 install(TARGETS
-  # executable targets go here
+  camTest
   DESTINATION lib/${PROJECT_NAME})
 
 
