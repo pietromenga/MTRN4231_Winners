@@ -17,19 +17,33 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package( OpenCV REQUIRED )
+find_package(tf2)
+find_package(tf2_ros)
+find_package(tf2_geometry_msgs)
 
 # Inclue dirs
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # Create executables from cpp file and link packages
 add_executable(camTest src/camTest.cpp)
-ament_target_dependencies(camTest rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+ament_target_dependencies(camTest 
+  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
+)
 
 add_executable(ballPose src/ballPose.cpp)
-ament_target_dependencies(ballPose rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+ament_target_dependencies(ballPose 
+  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
+)
 
 add_executable(velcroPadPose src/velcroPadPose.cpp)
-ament_target_dependencies(velcroPadPose rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+ament_target_dependencies(velcroPadPose 
+  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
+)
+
+add_executable(transforms src/transforms.cpp)
+ament_target_dependencies(transforms 
+  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV tf2 tf2_ros tf2_geometry_msgs
+)
 
 # add_executable(ballPose src/ballPose.cpp)
 # ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
@@ -50,6 +64,8 @@ endif()
 install(TARGETS
   camTest
   ballPose
+  velcroPadPose
+  transforms
   DESTINATION lib/${PROJECT_NAME})
 
 
