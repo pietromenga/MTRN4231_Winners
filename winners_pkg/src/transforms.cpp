@@ -23,7 +23,7 @@ class TFBroadcaster : public rclcpp::Node
     : Node("TFBroadcaster")
     {
       ballpose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "ball_pose", 10, std::bind(&TFBroadcaster::tf_ball, this, _1));
-      velcropose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "ball_pose", 10, std::bind(&TFBroadcaster::tf_velcro, this, _1));
+      velcropose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "velcro_pad_pose", 10, std::bind(&TFBroadcaster::tf_velcro, this, _1));
       tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
       tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
