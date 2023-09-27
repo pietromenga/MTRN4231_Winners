@@ -14,6 +14,7 @@ find_package(ament_cmake REQUIRED)
 # Packages for our project
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package( OpenCV REQUIRED )
 
@@ -22,7 +23,17 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # Create executables from cpp file and link packages
 add_executable(camTest src/camTest.cpp)
-ament_target_dependencies(camTest rclcpp std_msgs geometry_msgs OpenCV)
+ament_target_dependencies(camTest rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+
+add_executable(ballPose src/ballPose.cpp)
+ament_target_dependencies(ballPose rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+
+add_executable(velcroPadPose src/velcroPadPose.cpp)
+ament_target_dependencies(velcroPadPose rclcpp std_msgs sensor_msgs geometry_msgs OpenCV)
+
+# add_executable(ballPose src/ballPose.cpp)
+# ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -38,6 +49,7 @@ endif()
 
 install(TARGETS
   camTest
+  ballPose
   DESTINATION lib/${PROJECT_NAME})
 
 
