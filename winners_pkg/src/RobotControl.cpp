@@ -4,24 +4,24 @@ RobotControl::RobotControl() : Node("RobotControl")
 {
 
     // Moveit comm setup
-    client_servo_start_ = create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
-    client_servo_stop_ = create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
-    client_switch_controller_ = create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
+    client_servo_start_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
+    client_servo_stop_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
+    client_switch_controller_ = this->create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
 
-    joint_cmd_pub_ = create_publisher<control_msgs::msg::JointJog>("servo_node/delta_joint_cmds", 10);
-    twist_cmd_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("servo_node/delta_twist_cmds", 10);
-    joint_pose_pub_ = create_publisher<trajectory_msgs::msg::JointTrajectory>("joint_trajectory_controller/joint_trajectory", 10);
+    joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
+    twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
+    joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
     wait_for_services();
 
     // Sub to catching servo control
-    catch_twist_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>("catch_delta", 10, std::bind(&RobotControl::move_to_catch, this, _1));
+    catch_twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("/catch_delta", 10, std::bind(&RobotControl::move_to_catch, this, _1));
     //throw_traj_sub_ ...
 
     // Mode 
     robot_mode = RobotControlMode::JOINT;
-    start_catching_service_ = create_service<std_srvs::srv::Trigger>("start_catching", std::bind(&RobotControl::start_catching, this, _1, _2));
-    stop_catching_service_ = create_service<std_srvs::srv::Trigger>("stop_catching", std::bind(&RobotControl::stop_catching, this, _1, _2));
+    start_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/start_catching", std::bind(&RobotControl::start_catching, this, _1, _2));
+    stop_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/stop_catching", std::bind(&RobotControl::stop_catching, this, _1, _2));
 }
 
 void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) {

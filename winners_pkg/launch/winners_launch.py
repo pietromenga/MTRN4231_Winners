@@ -14,5 +14,17 @@ def generate_launch_description():
             namespace='velcroPadPose',
             executable='velcroPadPose',
             name='sim'
-        )
+        ),
+        Node(
+            package='winners_pkg',
+            namespace='RobotControl',
+            executable='RobotControl',
+            name='sim'
+        ),
+        Node(
+            package='winners_pkg',
+            namespace='Brain',
+            executable='Brain',
+            name='sim'
+        ),
     ])

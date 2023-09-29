@@ -62,9 +62,14 @@ ament_target_dependencies(RobotControl
   rclcpp std_msgs geometry_msgs control_msgs moveit_ros_planning_interface moveit_visual_tools controller_manager_msgs
   trajectory_msgs
 )
-target_include_directories(RobotControl PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+
+# BRAIN
+add_executable(Brain src/Brain.cpp)
+ament_target_dependencies(Brain 
+  rclcpp std_msgs geometry_msgs control_msgs moveit_ros_planning_interface moveit_visual_tools controller_manager_msgs
+  trajectory_msgs
+)
+
 
 # add_executable(ballPose src/ballPose.cpp)
 # ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
@@ -88,7 +93,11 @@ install(TARGETS
   velcroPadPose
   transforms
   RobotControl
+  Brain
   DESTINATION lib/${PROJECT_NAME})
 
+# For launch folder
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME})
 
 ament_package()
