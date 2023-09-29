@@ -16,34 +16,55 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package( OpenCV REQUIRED )
+find_package(OpenCV REQUIRED )
 find_package(tf2)
 find_package(tf2_ros)
 find_package(tf2_geometry_msgs)
+find_package(control_msgs)
+find_package(moveit_ros_planning_interface)
+# find_package(ros_ur_driver)
+find_package(moveit_visual_tools)
+find_package(controller_manager_msgs)
+find_package(trajectory_msgs)
+
 
 # Inclue dirs
 include_directories( ${OpenCV_INCLUDE_DIRS} )
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Create executables from cpp file and link packages
+# TESTING CAMERA
 add_executable(camTest src/camTest.cpp)
 ament_target_dependencies(camTest 
   rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
 )
 
+# BALL POSE
 add_executable(ballPose src/ballPose.cpp)
 ament_target_dependencies(ballPose 
   rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
 )
 
+# VELCRO PAD POSE
 add_executable(velcroPadPose src/velcroPadPose.cpp)
 ament_target_dependencies(velcroPadPose 
   rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
 )
 
+# TRANSFORMS
 add_executable(transforms src/transforms.cpp)
 ament_target_dependencies(transforms 
-  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV tf2 tf2_ros tf2_geometry_msgs
+  rclcpp std_msgs geometry_msgs OpenCV tf2 tf2_ros tf2_geometry_msgs
 )
+
+# ROBOT CONTROL 
+add_executable(RobotControl src/RobotControl.cpp)
+ament_target_dependencies(RobotControl 
+  rclcpp std_msgs geometry_msgs control_msgs moveit_ros_planning_interface moveit_visual_tools controller_manager_msgs
+  trajectory_msgs
+)
+target_include_directories(RobotControl PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
 
 # add_executable(ballPose src/ballPose.cpp)
 # ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
@@ -66,6 +87,7 @@ install(TARGETS
   ballPose
   velcroPadPose
   transforms
+  RobotControl
   DESTINATION lib/${PROJECT_NAME})
 
 

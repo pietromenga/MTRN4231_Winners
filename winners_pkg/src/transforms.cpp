@@ -2,7 +2,6 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <visualization_msgs/msg/marker.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <cmath>
 #include <memory>
@@ -37,7 +36,6 @@ class TFBroadcaster : public rclcpp::Node
 
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr ballpose_sub_;
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr velcropose_sub_;
-    rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr publisher_;
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
     std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
 };
