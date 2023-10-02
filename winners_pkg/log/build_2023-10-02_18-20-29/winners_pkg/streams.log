@@ -1,0 +1,48 @@
+[0.029s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[0.214s] [ 16%] Built target camTest
+[0.216s] [ 33%] Built target transforms
+[0.217s] [ 41%] [32mBuilding CXX object CMakeFiles/velcroPadPose.dir/src/velcroPadPose.cpp.o[0m
+[0.219s] [ 50%] [32mBuilding CXX object CMakeFiles/ballPose.dir/src/ballPose.cpp.o[0m
+[0.254s] [ 66%] Built target Brain
+[0.256s] [ 83%] Built target RobotControl
+[3.364s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:[m[K In member function ‘[01m[Kvoid BallPosePublisher::find_ball(const Image&)[m[K’:
+[3.364s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[3.364s]    49 | void BallPosePublisher::find_ball([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
+[3.364s]       |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[3.396s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:[m[K In member function ‘[01m[Kvoid VelcroPadPublisher::find_pad(const Image&)[m[K’:
+[3.396s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[3.396s]    49 | void VelcroPadPublisher::find_pad([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
+[3.396s]       |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[9.549s] [ 91%] [32m[1mLinking CXX executable velcroPadPose[0m
+[9.650s] [100%] [32m[1mLinking CXX executable ballPose[0m
+[10.599s] [100%] Built target ballPose
+[10.609s] [100%] Built target velcroPadPose
+[10.816s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[10.993s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg
+[11.002s] -- Install configuration: ""
+[11.004s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/camTest
+[11.010s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/ballPose
+[11.020s] -- Set runtime path of "/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/ballPose" to ""
+[11.023s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/velcroPadPose
+[11.028s] -- Set runtime path of "/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/velcroPadPose" to ""
+[11.032s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/transforms
+[11.033s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/RobotControl
+[11.036s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/Brain
+[11.036s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/launch
+[11.037s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/launch/winners_launch.py
+[11.038s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/package_run_dependencies/winners_pkg
+[11.045s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/parent_prefix_path/winners_pkg
+[11.049s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.sh
+[11.049s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.dsv
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/path.sh
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/path.dsv
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.bash
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.sh
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.zsh
+[11.050s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.dsv
+[11.051s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/package.dsv
+[11.051s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/packages/winners_pkg
+[11.052s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig.cmake
+[11.052s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig-version.cmake
+[11.052s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/package.xml
+[11.061s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg
