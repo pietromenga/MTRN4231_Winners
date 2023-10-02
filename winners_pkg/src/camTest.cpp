@@ -49,8 +49,8 @@ public:
         } else {
             // Set frame rate and resolution here.
             cap.set(cv::CAP_PROP_FPS, 60);              // Set frame rate to 60 Hz
-            cap.set(cv::CAP_PROP_FRAME_WIDTH, 1280);    // Set frame width
-            cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);   // Set frame height
+            cap.set(cv::CAP_PROP_FRAME_WIDTH, 1920);    // Set frame width
+            cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);   // Set frame height
 
             // Optionally, check if the settings were applied.
             double fps = cap.get(cv::CAP_PROP_FPS);
