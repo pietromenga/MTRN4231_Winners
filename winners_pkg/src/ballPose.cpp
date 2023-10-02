@@ -30,7 +30,7 @@ class BallPosePublisher : public rclcpp::Node
 {
 public:
     BallPosePublisher()
-    : Node("minimal_publisher3"), count_(0)
+    : Node("BallPosePublisher"), count_(0)
     {
         // Pub to ball pose
         publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("ball_pose", 10); 

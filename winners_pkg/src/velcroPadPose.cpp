@@ -30,7 +30,7 @@ class VelcroPadPublisher : public rclcpp::Node
 {
 public:
     VelcroPadPublisher()
-    : Node("minimal_publisher2"), count_(0)
+    : Node("VelcroPadPublisher"), count_(0)
     {
         // Pub to ball pose
         publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("velcro_pad_pose", 10); 
