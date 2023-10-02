@@ -31,7 +31,7 @@ class MinimalPublisher : public rclcpp::Node
 {
 public:
     MinimalPublisher()
-    : Node("MinalPublisher"), count_(0)
+    : Node("MinimalPublisher"), count_(0)
     {
         publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("topic", 10);
         timer_ = this->create_wall_timer(
