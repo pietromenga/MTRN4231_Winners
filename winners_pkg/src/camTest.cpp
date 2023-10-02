@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <chrono>
-#include <functional>S
+#include <functional>
 #include <memory>
 #include <string>
 #include <stdio.h>
@@ -46,6 +46,17 @@ public:
         // check if we succeeded
         if (!cap.isOpened()) {
             std::cerr << "#### ERROR! Unable to open camera\n";
+        } else {
+            // Set frame rate and resolution here.
+            cap.set(cv::CAP_PROP_FPS, 60);              // Set frame rate to 60 Hz
+            cap.set(cv::CAP_PROP_FRAME_WIDTH, 1280);    // Set frame width
+            cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);   // Set frame height
+
+            // Optionally, check if the settings were applied.
+            double fps = cap.get(cv::CAP_PROP_FPS);
+            double width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
+            double height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
+            std::cout << "FPS: " << fps << ", Width: " << width << ", Height: " << height << std::endl;
         }
 
         prevTime = std::chrono::system_clock::now();

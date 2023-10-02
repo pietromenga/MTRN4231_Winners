@@ -1,0 +1,30 @@
+[0.036s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[0.189s] [35m[1mConsolidate compiler generated dependencies of target ballPose[0m
+[0.205s] [35m[1mConsolidate compiler generated dependencies of target velcroPadPose[0m
+[0.236s] [ 25%] [32mBuilding CXX object CMakeFiles/camTest.dir/src/camTest.cpp.o[0m
+[0.236s] [ 25%] [32mBuilding CXX object CMakeFiles/ballPose.dir/src/ballPose.cpp.o[0m
+[0.236s] [ 25%] [32mBuilding CXX object CMakeFiles/velcroPadPose.dir/src/velcroPadPose.cpp.o[0m
+[0.242s] [ 41%] Built target transforms
+[0.293s] [ 58%] Built target RobotControl
+[0.300s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:16:10:[m[K [01;31m[Kfatal error: [m[Kfunctional>: No such file or directory
+[0.301s]    16 | #include [01;31m[K<functional>S[m[K
+[0.301s]       |          [01;31m[K^~~~~~~~~~~~~[m[K
+[0.301s] compilation terminated.
+[0.302s] gmake[2]: *** [CMakeFiles/camTest.dir/build.make:76: CMakeFiles/camTest.dir/src/camTest.cpp.o] Error 1
+[0.302s] gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/camTest.dir/all] Error 2
+[0.302s] gmake[1]: *** Waiting for unfinished jobs....
+[0.322s] [ 75%] Built target Brain
+[3.521s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:[m[K In member function ‘[01m[Kvoid BallPosePublisher::find_ball(const Image&)[m[K’:
+[3.534s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[3.534s]    49 | void BallPosePublisher::find_ball([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
+[3.534s]       |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[3.551s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:[m[K In member function ‘[01m[Kvoid VelcroPadPublisher::find_pad(const Image&)[m[K’:
+[3.551s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[3.552s]    49 | void VelcroPadPublisher::find_pad([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
+[3.552s]       |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[10.186s] [ 91%] [32m[1mLinking CXX executable velcroPadPose[0m
+[10.189s] [ 91%] [32m[1mLinking CXX executable ballPose[0m
+[10.735s] [ 91%] Built target ballPose
+[10.755s] [ 91%] Built target velcroPadPose
+[10.760s] gmake: *** [Makefile:146: all] Error 2
+[10.879s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4

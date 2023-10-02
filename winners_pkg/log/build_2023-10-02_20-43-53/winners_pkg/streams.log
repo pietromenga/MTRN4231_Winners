@@ -1,0 +1,17 @@
+[0.025s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[0.154s] [35m[1mConsolidate compiler generated dependencies of target velcroPadPose[0m
+[0.160s] [35m[1mConsolidate compiler generated dependencies of target ballPose[0m
+[0.206s] [ 16%] Built target velcroPadPose
+[0.206s] [ 33%] Built target ballPose
+[0.206s] [ 41%] [32mBuilding CXX object CMakeFiles/camTest.dir/src/camTest.cpp.o[0m
+[0.224s] [ 58%] Built target transforms
+[0.266s] [ 75%] Built target Brain
+[0.271s] [ 91%] Built target RobotControl
+[0.288s] [01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:16:10:[m[K [01;31m[Kfatal error: [m[Kfunctional>: No such file or directory
+[0.288s]    16 | #include [01;31m[K<functional>S[m[K
+[0.288s]       |          [01;31m[K^~~~~~~~~~~~~[m[K
+[0.288s] compilation terminated.
+[0.291s] gmake[2]: *** [CMakeFiles/camTest.dir/build.make:76: CMakeFiles/camTest.dir/src/camTest.cpp.o] Error 1
+[0.291s] gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/camTest.dir/all] Error 2
+[0.292s] gmake: *** [Makefile:146: all] Error 2
+[0.294s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
