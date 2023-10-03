@@ -1,0 +1,28 @@
+[35m[1mConsolidate compiler generated dependencies of target camTest[0m
+[  8%] [32mBuilding CXX object CMakeFiles/camTest.dir/src/camTest.cpp.o[0m
+[ 25%] Built target velcroPadPose
+[ 58%] Built target ballPose
+[ 58%] Built target transforms
+[ 83%] Built target Brain
+[ 91%] Built target RobotControl
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:[m[K In constructor ‘[01m[KImagePublisher::ImagePublisher()[m[K’:
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:21:13:[m[K [01;31m[Kerror: [m[Kunable to find numeric literal operator ‘[01m[Koperator""ms[m[K’
+   21 |             [01;31m[K16ms[m[K, std::bind(&ImagePublisher::captureAndPublish, this));
+      |             [01;31m[K^~~~[m[K
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:[m[K In member function ‘[01m[Kvoid ImagePublisher::init_v4l2()[m[K’:
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:42:54:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K,[m[K’ token
+   42 |                       /* length of the mapped area */[01;31m[K,[m[K
+      |                                                      [01;31m[K^[m[K
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:[m[K In member function ‘[01m[Kvoid ImagePublisher::captureAndPublish()[m[K’:
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:77:40:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K;[m[K’ token
+   77 |         image_msg.height = /* height */[01;31m[K;[m[K
+      |                                        [01;31m[K^[m[K
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:78:38:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K;[m[K’ token
+   78 |         image_msg.width = /* width */[01;31m[K;[m[K
+      |                                      [01;31m[K^[m[K
+[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:80:36:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K;[m[K’ token
+   80 |         image_msg.step = /* step */[01;31m[K;[m[K
+      |                                    [01;31m[K^[m[K
+gmake[2]: *** [CMakeFiles/camTest.dir/build.make:76: CMakeFiles/camTest.dir/src/camTest.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/camTest.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

@@ -1,97 +1,105 @@
-// Copyright 2016 Open Source Robotics Foundation, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
+#include <linux/videodev2.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
 
 #include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/pose.hpp"
+#include "sensor_msgs/msg/image.hpp"
 
-using namespace std::chrono_literals;
-
-/* This example creates a subclass of Node and uses std::bind() to register a
- * member function as a callback from the timer. */
-
-class MinimalPublisher : public rclcpp::Node
+class ImagePublisher : public rclcpp::Node
 {
 public:
-    MinimalPublisher()
-    : Node("MinimalPublisher"), count_(0)
+    ImagePublisher() : Node("imagePublisher")
     {
-        publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("topic", 10);
+        publisher_ = this->create_publisher<sensor_msgs::msg::Image>("/image_raw", 10);
+
+        // Initialize V4L2
+        init_v4l2();
+
         timer_ = this->create_wall_timer(
-        2ms, std::bind(&MinimalPublisher::captureImg, this));
-
-        int deviceID;
-        std::cout << "Choose a /dev/video device num" << std::endl;
-        std::cin >> deviceID; // 0 = open default camera. Use v4l2-ctl --list-devices to find out which device id
-        int apiID = cv::CAP_ANY; 
-        cap.open(deviceID, apiID);
-
-        // check if we succeeded
-        if (!cap.isOpened()) {
-            std::cerr << "#### ERROR! Unable to open camera\n";
-        } else {
-            // Set frame rate and resolution here.
-            cap.set(cv::CAP_PROP_FPS, 60);              // Set frame rate to 60 Hz
-            cap.set(cv::CAP_PROP_FRAME_WIDTH, 1920);    // Set frame width
-            cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);   // Set frame height
-
-            // Optionally, check if the settings were applied.
-            double fps = cap.get(cv::CAP_PROP_FPS);
-            double width = cap.get(cv::CAP_PROP_FRAME_WIDTH);
-            double height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
-            std::cout << "FPS: " << fps << ", Width: " << width << ", Height: " << height << std::endl;
-        }
-
-        prevTime = std::chrono::system_clock::now();
+            16ms, std::bind(&ImagePublisher::captureAndPublish, this));
     }
 
 private:
-    void captureImg();
-    rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr publisher_;
-    size_t count_;
-    cv::VideoCapture cap;
-    std::chrono::time_point<std::chrono::system_clock> prevTime;
-};
+    void init_v4l2()
+    {
+        fd = open("/dev/video0", O_RDWR);
+        if (fd == -1) {
+            perror("Opening video device");
+            return;
+        }
 
-void MinimalPublisher::captureImg() {
+        // TODO: Add more settings here like frame rate, resolution, etc.
 
-    cv::Mat frame;
-    cap.read(frame);
+        // Initialize buffer
+        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory = V4L2_MEMORY_MMAP;
+        // TODO: Fill other buf fields as necessary
 
-    if (!frame.empty()) {
-        cv::imshow("me", frame);
-        cv::waitKey(5);
+        // Memory mapping
+        buffer = mmap(NULL, 
+                      /* length of the mapped area */,
+                      PROT_READ | PROT_WRITE,
+                      MAP_SHARED,
+                      fd, 
+                      buf.m.offset);
+
+        if (buffer == MAP_FAILED) {
+            perror("Memory mapping failed");
+            return;
+        }
+
+        // Queue the buffer
+        if (ioctl(fd, VIDIOC_QBUF, &buf) == -1) {
+            perror("Queue buffer");
+            return;
+        }
+
+        // Start capturing
+        enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        if (ioctl(fd, VIDIOC_STREAMON, &type) == -1) {
+            perror("Start capture");
+            return;
+        }
     }
 
-    std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = now - prevTime;
-    std::cout << "Elapsed time, " << elapsed_seconds.count() <<  " " << frame.size().height << " " << frame.size().width << std::endl;
+    void captureAndPublish()
+    {
+        if (ioctl(fd, VIDIOC_DQBUF, &buf) == -1) {
+            perror("Retrieve frame");
+            return;
+        }
 
-    prevTime = now;
-}
+        // Convert this to ROS2 sensor_msgs::msg::Image and publish.
+        sensor_msgs::msg::Image image_msg;
+        image_msg.header.stamp = this->now();
+        image_msg.height = /* height */;
+        image_msg.width = /* width */;
+        image_msg.encoding = "bgr8";  
+        image_msg.step = /* step */;
+        image_msg.data = std::vector<uint8_t>((uint8_t*)buffer, (uint8_t*)buffer + buf.length);
+
+        publisher_->publish(image_msg);
+
+        // Requeue buffer
+        if (ioctl(fd, VIDIOC_QBUF, &buf) == -1) {
+            perror("Queue buffer");
+            return;
+        }
+    }
+
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
+    int fd;
+    void *buffer;
+    struct v4l2_buffer buf;
+};
 
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<MinimalPublisher>());
+    rclcpp::spin(std::make_shared<ImagePublisher>());
     rclcpp::shutdown();
     return 0;
 }
