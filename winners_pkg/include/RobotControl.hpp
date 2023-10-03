@@ -13,6 +13,7 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "control_msgs/msg/joint_jog.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include "moveit/move_group_interface/move_group_interface.h"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -38,6 +39,7 @@ private:
     rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
+    moveit::planning_interface::MoveGroupInterface* move_group;
 
     // Subscriptions to catch and throw topics
     rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr catch_twist_sub_;

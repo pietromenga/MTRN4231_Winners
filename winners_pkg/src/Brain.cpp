@@ -12,14 +12,37 @@ Brain::Brain() : Node("Brain") {
     request_start_catching();
 }
 
+// void Brain::generateJointPose(std::vector<double> jointQ) {
+//     joint_trajectory_msg = trajectory_msgs::msg::JointTrajectory();
+//     joint_trajectory_msg.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+//                                         'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+
+//     joint_trajectory_point = JointTrajectoryPoint()
+//     joint_trajectory_point.positions = [q1,q2,q3,q4,q5,q6]
+//     joint_trajectory_point.velocities = []
+//     joint_trajectory_point.accelerations = []
+//     joint_trajectory_point.effort = []
+
+//     joint_trajectory_msg.
+// }
+
 void Brain::request_start_catching() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = start_catching_client_->async_send_request(request);
+    auto result = start_catching_client_->async_send_request(request, std::bind(&Brain::service_response_handler, this, _1));
 }
 
 void Brain::request_stop_catching() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = stop_catching_client_->async_send_request(request);
+    auto result = stop_catching_client_->async_send_request(request, std::bind(&Brain::service_response_handler, this, _1));
+}
+
+void Brain::service_response_handler(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)  {
+    if (future.get()->success) {
+        RCLCPP_INFO(this->get_logger(), "Service Call Succeeded");
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Service Call Failed. Shutting Down");
+        rclcpp::shutdown();
+    }
 }
 
 void Brain::on_key_press(const std_msgs::msg::String &keyString) {

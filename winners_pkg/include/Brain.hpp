@@ -41,4 +41,7 @@ private:
 
     // Sends a request to the robot control node to stop moving the robot for catching
     void request_stop_catching();
+
+    // Handles service responses and stops program if any fail
+    void service_response_handler(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
 };

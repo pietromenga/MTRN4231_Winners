@@ -7,10 +7,11 @@ RobotControl::RobotControl() : Node("RobotControl")
     client_servo_start_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
     client_servo_stop_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
     client_switch_controller_ = this->create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
+    move_group = new moveit::planning_interface::MoveGroupInterface{this,"ur_manipulator"};
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
-    joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
+    // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
     wait_for_services();
 
@@ -30,20 +31,6 @@ void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) 
         msg->header.stamp = this->now();
         twist_cmd_pub_->publish(std::move(msg));
     }
-}
-
-void RobotControl::generateJointPose(double q0, double q1, double q2, double q3, double q4, double q5) {
-    // joint_trajectory_msg = trajectory_msgs::msg::JointTrajectory();
-    // joint_trajectory_msg.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
-    //                                     'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-
-    // joint_trajectory_point = JointTrajectoryPoint()
-    // joint_trajectory_point.positions = [q1,q2,q3,q4,q5,q6]
-    // joint_trajectory_point.velocities = []
-    // joint_trajectory_point.accelerations = []
-    // joint_trajectory_point.effort = []
-
-    // joint_trajectory_msg.
 }
 
 void RobotControl::start_catching(
