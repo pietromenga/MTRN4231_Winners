@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'CameraVC'
+package_name = 'CameraCV_pkg'
 
 setup(
     name=package_name,
@@ -14,12 +14,13 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='mtrn',
-    maintainer_email='mtrn@todo.todo',
+    maintainer_email='youngseol0527@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "test_node = CameraCV_pkg.opencv_test:main"
         ],
     },
 )
