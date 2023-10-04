@@ -7,11 +7,17 @@ RobotControl::RobotControl() : Node("RobotControl")
     client_servo_start_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
     client_servo_stop_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
     client_switch_controller_ = this->create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
-    move_group = new moveit::planning_interface::MoveGroupInterface{this,"ur_manipulator"};
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
+    RCLCPP_INFO(this->get_logger(), "BEFORE");
+
+
+    move_group_interface = std::make_unique<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
+    move_group_interface->setPlanningTime(10.0);
     // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
+
+    RCLCPP_INFO(this->get_logger(), "AFTER");
 
     wait_for_services();
 
@@ -33,11 +39,49 @@ void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) 
     }
 }
 
+void RobotControl::test_move() {
+    RCLCPP_INFO(this->get_logger(), "Starting test");
+
+    moveit::planning_interface::MoveGroupInterface::Plan planMessage;
+
+    // moveit::core::RobotStatePtr current_state = move_group_interface->getCurrentState();
+    // moveit::core::JointModelGroupPtr joint_model_group = current_state->getJointModelGroup("ur_manipulator");
+
+    // std::vector<double> joint_group_positions = {
+    //     0.09529498, -1.392773, 1.5180874, -0.13439, 1.83119945, -0.62412974
+    // };
+    // // current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+
+    // // joint_group_positions[0] = -1.0;  // radians
+    // move_group_interface->setJointValueTarget(joint_group_positions);
+
+    geometry_msgs::msg::Pose msg;
+    msg.orientation.x = 0.0;
+    msg.orientation.y = 1.0;
+    msg.orientation.z = 0.0;
+    msg.orientation.w = 0.0;
+    msg.position.x = 0.200;
+    msg.position.y = -0.692;
+    msg.position.z = 0.034;
+
+    move_group_interface->setPoseTarget(msg);
+    bool success = static_cast<bool>(move_group_interface->plan(planMessage));
+
+    //Execute movement to point 1
+    if (success) {
+      move_group_interface->execute(planMessage);
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Planning failed!");
+    }
+    
+}
+
 void RobotControl::start_catching(
     const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
     (void) request;
+
 
     RCLCPP_INFO(this->get_logger(), "Starting Catching");
 
@@ -53,6 +97,7 @@ void RobotControl::stop_catching(
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
     (void) request;
+    test_move();
 
     RCLCPP_INFO(this->get_logger(), "Stopping Catching");
 

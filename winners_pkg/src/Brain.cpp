@@ -9,7 +9,7 @@ Brain::Brain() : Node("Brain") {
 
     wait_for_services();
 
-    request_start_catching();
+    request_stop_catching();
 }
 
 // void Brain::generateJointPose(std::vector<double> jointQ) {
@@ -69,7 +69,7 @@ void Brain::wait_for_services() {
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
             return;
         }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "start catching service not available, waiting again...");
     }
 
     while (!stop_catching_client_->wait_for_service(std::chrono::seconds(1))) {
@@ -77,7 +77,7 @@ void Brain::wait_for_services() {
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
             return;
         }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "stop catching service not available, waiting again...");
     }
 }
 

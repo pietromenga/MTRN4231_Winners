@@ -39,7 +39,7 @@ private:
     rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
-    moveit::planning_interface::MoveGroupInterface* move_group;
+    std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
 
     // Subscriptions to catch and throw topics
     rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr catch_twist_sub_;
@@ -72,4 +72,7 @@ private:
 
     // Generates a joint trajectory pose to send to the robot for a single position
     void generateJointPose(double q0, double q1, double q2, double q3, double q4, double q5);
+    
+    //
+    void test_move();
 };
