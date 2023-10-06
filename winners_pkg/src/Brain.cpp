@@ -28,20 +28,19 @@ Brain::Brain() : Node("Brain") {
 
 void Brain::request_start_catching() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = start_catching_client_->async_send_request(request, std::bind(&Brain::service_response_handler, this, _1));
+    auto result = start_catching_client_->async_send_request(request);
 }
 
 void Brain::request_stop_catching() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = stop_catching_client_->async_send_request(request, std::bind(&Brain::service_response_handler, this, _1));
+    auto result = stop_catching_client_->async_send_request(request);
 }
 
 void Brain::service_response_handler(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)  {
     if (future.get()->success) {
         RCLCPP_INFO(this->get_logger(), "Service Call Succeeded");
     } else {
-        RCLCPP_ERROR(this->get_logger(), "Service Call Failed. Shutting Down");
-        rclcpp::shutdown();
+        RCLCPP_ERROR(this->get_logger(), "Service Call Failed.");
     }
 }
 
@@ -64,21 +63,8 @@ void Brain::on_key_press(const std_msgs::msg::String &keyString) {
 }
 
 void Brain::wait_for_services() {
-    while (!start_catching_client_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-            return;
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "start catching service not available, waiting again...");
-    }
-
-    while (!stop_catching_client_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-            return;
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "stop catching service not available, waiting again...");
-    }
+    wait_for_service<std_srvs::srv::Trigger>(start_catching_client_);
+    wait_for_service<std_srvs::srv::Trigger>(stop_catching_client_);
 }
 
 int main(int argc, char * argv[])

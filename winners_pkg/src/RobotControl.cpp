@@ -3,23 +3,20 @@
 RobotControl::RobotControl() : Node("RobotControl")
 {
 
-    // Moveit comm setup
+    // Robot comm setup
     client_servo_start_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
     client_servo_stop_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
     client_switch_controller_ = this->create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
-    RCLCPP_INFO(this->get_logger(), "BEFORE");
 
-
+    // Moveit objects
     move_group_interface = std::make_unique<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
     move_group_interface->setPlanningTime(10.0);
+    planning_scene_interface = moveit::planning_interface::PlanningSceneInterface{};
+    planning_frame_id = move_group_interface->getPlanningFrame();
     // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
-
-    RCLCPP_INFO(this->get_logger(), "AFTER");
-
-    wait_for_services();
 
     // Sub to catching servo control
     catch_twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>("/catch_delta", 10, std::bind(&RobotControl::move_to_catch, this, _1));
@@ -29,6 +26,22 @@ RobotControl::RobotControl() : Node("RobotControl")
     robot_mode = RobotControlMode::JOINT;
     start_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/start_catching", std::bind(&RobotControl::start_catching, this, _1, _2));
     stop_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/stop_catching", std::bind(&RobotControl::stop_catching, this, _1, _2));
+
+    // Setup
+    wait_for_services();
+    setup_collisions();
+}
+
+void RobotControl::setup_collisions() {
+    auto collision_object = generateCollisionObject( 0.08, 0.6, 0.57, 0.5, 0.2, 0.2, planning_frame_id, "box");
+    auto col_object_table = generateCollisionObject( 2.4, 1.2, 0.04, 0.85, 0.25, -0.03, planning_frame_id, "table");
+    auto col_object_backWall = generateCollisionObject( 2.4, 0.04, 1.0, 0.85, -0.45, 0.5, planning_frame_id, "backWall");
+    auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.45, 0.25, 0.5, planning_frame_id, "sideWall");
+
+    planning_scene_interface.applyCollisionObject(collision_object);
+    planning_scene_interface.applyCollisionObject(col_object_table);
+    planning_scene_interface.applyCollisionObject(col_object_backWall);
+    planning_scene_interface.applyCollisionObject(col_object_sideWall);
 }
 
 void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) {
@@ -39,73 +52,77 @@ void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) 
     }
 }
 
-void RobotControl::test_move() {
-    RCLCPP_INFO(this->get_logger(), "Starting test");
+void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
+    move_group_interface->setPoseTarget(msg);
+    tryExecutePlan();
+}
 
+void RobotControl::tryMoveToTargetQ(const std::vector<double> &q) {
+    move_group_interface->setJointValueTarget(q);
+    tryExecutePlan();
+}
+
+void RobotControl::tryExecutePlan() {
     moveit::planning_interface::MoveGroupInterface::Plan planMessage;
 
-    // moveit::core::RobotStatePtr current_state = move_group_interface->getCurrentState();
-    // moveit::core::JointModelGroupPtr joint_model_group = current_state->getJointModelGroup("ur_manipulator");
+    bool planSuccess = static_cast<bool>(move_group_interface->plan(planMessage));
 
-    // std::vector<double> joint_group_positions = {
-    //     0.09529498, -1.392773, 1.5180874, -0.13439, 1.83119945, -0.62412974
-    // };
-    // // current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
-
-    // // joint_group_positions[0] = -1.0;  // radians
-    // move_group_interface->setJointValueTarget(joint_group_positions);
-
-    geometry_msgs::msg::Pose msg;
-    msg.orientation.x = 0.0;
-    msg.orientation.y = 1.0;
-    msg.orientation.z = 0.0;
-    msg.orientation.w = 0.0;
-    msg.position.x = 0.200;
-    msg.position.y = -0.692;
-    msg.position.z = 0.034;
-
-    move_group_interface->setPoseTarget(msg);
-    bool success = static_cast<bool>(move_group_interface->plan(planMessage));
-
-    //Execute movement to point 1
-    if (success) {
-      move_group_interface->execute(planMessage);
+    // Execute movement
+    if (planSuccess) {
+        RCLCPP_INFO(this->get_logger(), "Move to Target Planning Succeeded! Executing...");
+        bool executeSuccess = static_cast<bool>(move_group_interface->execute(planMessage));
+        
+        if (executeSuccess) {
+            RCLCPP_INFO(this->get_logger(), "Move to Target Execution Success");
+        } else {
+            shutdownControl("Move to Target Execution Failure");
+        }
     } else {
-        RCLCPP_ERROR(this->get_logger(), "Planning failed!");
+        shutdownControl("Move to Target Planning failed!");
     }
-    
+}
+
+void RobotControl::shutdownControl(const std::string &errorMsg) {
+    RCLCPP_ERROR(this->get_logger(), errorMsg.c_str());
+    RCLCPP_ERROR(this->get_logger(), "Shutting down");
+    rclcpp::shutdown();
 }
 
 void RobotControl::start_catching(
     const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
-    (void) request;
+    response->success = false;
 
+    if (robot_mode != RobotControlMode::SERVO) {
+        RCLCPP_INFO(this->get_logger(), "Starting Catching");
 
-    RCLCPP_INFO(this->get_logger(), "Starting Catching");
+        robot_mode = RobotControlMode::SERVO;
+        request_switch_controllers(robot_mode);
+        request_start_servo();
 
-    robot_mode = RobotControlMode::SERVO;
-    request_switch_controllers(robot_mode);
-    request_start_servo();
-
-    response->success = true;
+        response->success = true;
+    } else {
+        RCLCPP_INFO(this->get_logger(), "Already in Catching Mode");
+    }
 }
 
 void RobotControl::stop_catching(
     const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
-    (void) request;
-    test_move();
+    response->success = false;
 
-    RCLCPP_INFO(this->get_logger(), "Stopping Catching");
+    if (robot_mode != RobotControlMode::JOINT) {
+        RCLCPP_INFO(this->get_logger(), "Stopping Catching");
 
-    robot_mode = RobotControlMode::JOINT;
-    request_stop_servo();
-    request_switch_controllers(robot_mode);
-
-    response->success = true;
+        robot_mode = RobotControlMode::JOINT;
+        request_stop_servo();
+        request_switch_controllers(robot_mode);
+        response->success = true;
+    } else {
+        RCLCPP_INFO(this->get_logger(), "Already in Catching Mode");
+    }
 }
 
 void RobotControl::request_start_servo() {
@@ -140,48 +157,26 @@ void RobotControl::request_switch_controllers(RobotControlMode mode) {
 void RobotControl::client_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)
 {
     if (future.get()->success) {
-        RCLCPP_INFO(this->get_logger(), "Servo Service call succeeded");
-        // actived_servo_flag = true;
+        RCLCPP_INFO(this->get_logger(), "Servo Mode Changed");
     } else {
-        RCLCPP_ERROR(this->get_logger(), "Servo Service call failed");
+        shutdownControl("Servo Mode Change Failed");
     }
 }
 
 void RobotControl::client_switch_controller_response_callback(rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedFuture future) 
 {
     if (future.get()->ok) {
-        RCLCPP_INFO(this->get_logger(), "Switch controller Service call succeeded");
-        // switched_controllers_flag = true;
+        RCLCPP_INFO(this->get_logger(), "Switching controller succeeded");
     } else {
-        RCLCPP_ERROR(this->get_logger(), "Switch controller Service call failed");
+        shutdownControl("Switching controller failed");
     }
 }
 
 
 void RobotControl::wait_for_services(){
-    while (!client_servo_start_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-            return;
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-    }
-
-    while (!client_servo_stop_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-            return;
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-    }
-
-    while (!client_switch_controller_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for the service. Exiting.");
-            return;
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-    }
+    wait_for_service<std_srvs::srv::Trigger>(client_servo_start_);
+    wait_for_service<std_srvs::srv::Trigger>(client_servo_stop_);
+    wait_for_service<controller_manager_msgs::srv::SwitchController>(client_switch_controller_);
 }
 
 int main(int argc, char * argv[])

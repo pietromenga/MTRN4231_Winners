@@ -1,19 +1,25 @@
-#include <rclcpp/rclcpp.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <geometry_msgs/msg/pose_stamped.hpp>
+// #pragma once
+
+// Cpp includes
 #include <memory>
 #include <thread>
 #include <chrono>
 #include <functional>
 #include <string>
 
+// Ros2 inludes
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <std_srvs/srv/trigger.hpp>
+#include <controller_manager_msgs/srv/switch_controller.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
+#include <control_msgs/msg/joint_jog.hpp>
+#include <trajectory_msgs/msg/joint_trajectory.hpp>
+#include <moveit/move_group_interface/move_group_interface.h>
+#include <moveit/planning_scene_interface/planning_scene_interface.h>
 
-#include "std_srvs/srv/trigger.hpp"
-#include "controller_manager_msgs/srv/switch_controller.hpp"
-#include "geometry_msgs/msg/twist_stamped.hpp"
-#include "control_msgs/msg/joint_jog.hpp"
-#include "trajectory_msgs/msg/joint_trajectory.hpp"
-#include "moveit/move_group_interface/move_group_interface.h"
+#include "Helpers.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -35,11 +41,13 @@ private:
     void client_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
     void client_switch_controller_response_callback(rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedFuture future);
 
-    // Robot Control Publishers
+    // Robot Control Publishers and moveit
     rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
+    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+    std::string planning_frame_id;
 
     // Subscriptions to catch and throw topics
     rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr catch_twist_sub_;
@@ -69,10 +77,22 @@ private:
 
     // Requests robot to switch between forward controller and joint controller
     void request_switch_controllers(RobotControlMode mode);
-
-    // Generates a joint trajectory pose to send to the robot for a single position
-    void generateJointPose(double q0, double q1, double q2, double q3, double q4, double q5);
     
+    // Sets up collisions for moveit to avoid
+    void setup_collisions();
+
+    // Sets a target pose and attempts movement
+    void tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg);
+    
+    // Sets a target joint pose and attempts movement
+    void tryMoveToTargetQ(const std::vector<double> &q);
+    
+    // Tries to plan and execute target goal
+    void tryExecutePlan();
+
+    // Shutsdown the node and prints an error msg
+    void shutdownControl(const std::string &errorMsg);
+
     //
     void test_move();
 };
