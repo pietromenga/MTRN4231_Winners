@@ -17,58 +17,64 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(OpenCV REQUIRED )
-find_package(tf2)
-find_package(tf2_ros)
-find_package(tf2_geometry_msgs)
-find_package(control_msgs)
-find_package(moveit_ros_planning_interface)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(control_msgs REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED) 
 # find_package(ros_ur_driver)
-find_package(moveit_visual_tools)
-find_package(controller_manager_msgs)
-find_package(trajectory_msgs)
+find_package(moveit_visual_tools REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(controller_manager_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
+find_package(rviz_visual_tools)
+
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  rclcpp 
+  std_msgs 
+  geometry_msgs 
+  control_msgs 
+  moveit_ros_planning_interface 
+  moveit_visual_tools 
+  controller_manager_msgs
+  trajectory_msgs 
+  rviz_visual_tools
+  OpenCV
+  sensor_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+)
 
 
 # Inclue dirs
 include_directories( ${OpenCV_INCLUDE_DIRS} )
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # TESTING CAMERA
 add_executable(camTest src/camTest.cpp)
-ament_target_dependencies(camTest 
-  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
-)
+ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BALL POSE
 add_executable(ballPose src/ballPose.cpp)
-ament_target_dependencies(ballPose 
-  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
-)
+ament_target_dependencies(ballPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # VELCRO PAD POSE
 add_executable(velcroPadPose src/velcroPadPose.cpp)
-ament_target_dependencies(velcroPadPose 
-  rclcpp std_msgs sensor_msgs geometry_msgs OpenCV
-)
+ament_target_dependencies(velcroPadPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(transforms src/transforms.cpp)
-ament_target_dependencies(transforms 
-  rclcpp std_msgs geometry_msgs OpenCV tf2 tf2_ros tf2_geometry_msgs
-)
+ament_target_dependencies(transforms ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # ROBOT CONTROL 
 add_executable(RobotControl src/RobotControl.cpp)
-ament_target_dependencies(RobotControl 
-  rclcpp std_msgs geometry_msgs control_msgs moveit_ros_planning_interface moveit_visual_tools controller_manager_msgs
-  trajectory_msgs
-)
+ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BRAIN
 add_executable(Brain src/Brain.cpp)
-ament_target_dependencies(Brain 
-  rclcpp std_msgs geometry_msgs control_msgs moveit_ros_planning_interface moveit_visual_tools controller_manager_msgs
-  trajectory_msgs
-)
+ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 
 # add_executable(ballPose src/ballPose.cpp)

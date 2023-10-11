@@ -20,9 +20,11 @@
   <depend>geometry_msgs</depend>
   <depend>control_msgs</depend>
 
+  <depend>Eigen3</depend>
   <depend>moveit_ros_planning_interface</depend>
   <depend>ros_ur_driver</depend>
   <depend>moveit_visual_tools</depend>
+  <depend>rviz_visual_tools</depend>
   <depend>controller_manager_msgs</depend>
 
   <exec_depend>ros2launch</exec_depend>

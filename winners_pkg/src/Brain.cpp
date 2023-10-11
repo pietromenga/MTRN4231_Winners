@@ -9,6 +9,7 @@ Brain::Brain() : Node("Brain") {
 
     wait_for_services();
 
+    std::this_thread::sleep_for(2000ms);
     request_start_catching();
 }
 

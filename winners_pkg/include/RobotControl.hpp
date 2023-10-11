@@ -16,8 +16,10 @@
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <control_msgs/msg/joint_jog.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
-#include "moveit/move_group_interface/move_group_interface.h"
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
+#include <moveit_visual_tools/moveit_visual_tools.h>
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 #include "Helpers.hpp"
 
@@ -33,8 +35,9 @@ class RobotControl : public rclcpp::Node
 {
 public:
     RobotControl();
+    ~RobotControl();
 private:
-    std::vector<double> catching_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
+    std::vector<double> catching_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
     std::vector<double> throwing_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
 
     // Clients
@@ -51,6 +54,7 @@ private:
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface> planning_scene_interface;
+    moveit_visual_tools::MoveItVisualToolsPtr mvt;
     std::string planning_frame_id;
 
     // Subscriptions to catch and throw topics
@@ -65,7 +69,8 @@ private:
     void start_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
     // Sets robot to joint control and stops catch calculation movement
-    void stop_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+    void stop_catching_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+    bool stop_catching();
 
     // Moves robot a delta movement based on where the ball is estimated to land
     void move_to_catch(const geometry_msgs::msg::TwistStamped &twist);
@@ -102,4 +107,10 @@ private:
 
     //
     void test_move();
+
+    //
+    void activate_box_constraint();
+
+    //
+    void deactivate_box_constraint();
 };
