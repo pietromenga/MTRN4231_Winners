@@ -44,12 +44,13 @@ auto generatePoseMsg(float x,float y, float z,float qx,float qy,float qz,float q
     return msg;
 }
 
-template <typename T>
-auto wait_for_service(typename rclcpp::Client<T>::SharedPtr client) -> void {
-    while (!client->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
-        }
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
-    }
-}
+// template <typename T>
+// auto wait_for_service(typename rclcpp::Client<T>::SharedPtr client) -> void {
+//     while (!client->wait_for_service(std::chrono::seconds(1))) {
+//         if (!rclcpp::ok()) {
+//             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
+//             return;
+//         }
+//         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+//     }
+// }

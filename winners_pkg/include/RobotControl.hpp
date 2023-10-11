@@ -16,7 +16,7 @@
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <control_msgs/msg/joint_jog.hpp>
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
-#include <moveit/move_group_interface/move_group_interface.h>
+#include "moveit/move_group_interface/move_group_interface.h"
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
 #include "Helpers.hpp"
@@ -27,11 +27,15 @@ using std::placeholders::_2;
 
 enum RobotControlMode {JOINT, SERVO};
 
+
+
 class RobotControl : public rclcpp::Node
 {
 public:
     RobotControl();
 private:
+    std::vector<double> catching_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
+    std::vector<double> throwing_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
 
     // Clients
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client_servo_start_;
@@ -46,7 +50,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
-    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+    std::shared_ptr<moveit::planning_interface::PlanningSceneInterface> planning_scene_interface;
     std::string planning_frame_id;
 
     // Subscriptions to catch and throw topics
@@ -92,6 +96,9 @@ private:
 
     // Shutsdown the node and prints an error msg
     void shutdownControl(const std::string &errorMsg);
+
+    // converts q pose to radians
+    std::vector<double> qToRadians(const std::vector<double> &q);
 
     //
     void test_move();

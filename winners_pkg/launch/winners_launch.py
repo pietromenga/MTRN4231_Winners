@@ -93,21 +93,18 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='winners_pkg',
-            namespace='ballPose',
+            name='ballPose',
             executable='ballPose',
-            name='sim'
         ),
         Node(
             package='winners_pkg',
-            namespace='velcroPadPose',
+            name='velcroPadPose',
             executable='velcroPadPose',
-            name='sim'
         ),
         Node(
             package='winners_pkg',
-            namespace='RobotControl',
+            name='RobotControl',
             executable='RobotControl',
-            name='sim',
             parameters=[
                 robot_description,
                 robot_description_semantic,
@@ -115,8 +112,7 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            namespace='Brain',
+            name='Brain',
             executable='Brain',
-            name='sim'
         ),
     ])

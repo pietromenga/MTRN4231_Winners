@@ -2,7 +2,6 @@
 
 RobotControl::RobotControl() : Node("RobotControl")
 {
-
     // Robot comm setup
     client_servo_start_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/start_servo");
     client_servo_stop_ = this->create_client<std_srvs::srv::Trigger>("/servo_node/stop_servo");
@@ -14,7 +13,7 @@ RobotControl::RobotControl() : Node("RobotControl")
     // Moveit objects
     move_group_interface = std::make_unique<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
     move_group_interface->setPlanningTime(10.0);
-    planning_scene_interface = moveit::planning_interface::PlanningSceneInterface{};
+    planning_scene_interface = std::make_unique<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
     // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
@@ -33,15 +32,13 @@ RobotControl::RobotControl() : Node("RobotControl")
 }
 
 void RobotControl::setup_collisions() {
-    auto collision_object = generateCollisionObject( 0.08, 0.6, 0.57, 0.5, 0.2, 0.2, planning_frame_id, "box");
     auto col_object_table = generateCollisionObject( 2.4, 1.2, 0.04, 0.85, 0.25, -0.03, planning_frame_id, "table");
-    auto col_object_backWall = generateCollisionObject( 2.4, 0.04, 1.0, 0.85, -0.45, 0.5, planning_frame_id, "backWall");
-    auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.45, 0.25, 0.5, planning_frame_id, "sideWall");
+    auto col_object_backWall = generateCollisionObject( 2.4, 0.04, 1.0, 0.85, -0.45, -0.7, planning_frame_id, "backWall");
+    auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.45, 0.25, -0.7, planning_frame_id, "sideWall");
 
-    planning_scene_interface.applyCollisionObject(collision_object);
-    planning_scene_interface.applyCollisionObject(col_object_table);
-    planning_scene_interface.applyCollisionObject(col_object_backWall);
-    planning_scene_interface.applyCollisionObject(col_object_sideWall);
+    planning_scene_interface->applyCollisionObject(col_object_table);
+    planning_scene_interface->applyCollisionObject(col_object_backWall);
+    planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
 void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) {
@@ -53,13 +50,26 @@ void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) 
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
+    RCLCPP_INFO(this->get_logger(), "Setting target pose");
     move_group_interface->setPoseTarget(msg);
     tryExecutePlan();
 }
 
 void RobotControl::tryMoveToTargetQ(const std::vector<double> &q) {
-    move_group_interface->setJointValueTarget(q);
+    // Convert to radians
+    std::vector<double> jointTarget = qToRadians(q);
+
+    RCLCPP_INFO(this->get_logger(), "Setting target joint position");
+    move_group_interface->setJointValueTarget(jointTarget);
     tryExecutePlan();
+}
+
+std::vector<double> RobotControl::qToRadians(const std::vector<double> &q) {
+    std::vector<double> radJoint;
+    for (auto joint : q) {
+        radJoint.push_back(joint * 3.1415 / 180.0);
+    }
+    return radJoint;
 }
 
 void RobotControl::tryExecutePlan() {
@@ -93,6 +103,8 @@ void RobotControl::start_catching(
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
     response->success = false;
+
+    tryMoveToTargetQ(catching_start_joint);
 
     if (robot_mode != RobotControlMode::SERVO) {
         RCLCPP_INFO(this->get_logger(), "Starting Catching");
@@ -174,9 +186,27 @@ void RobotControl::client_switch_controller_response_callback(rclcpp::Client<con
 
 
 void RobotControl::wait_for_services(){
-    wait_for_service<std_srvs::srv::Trigger>(client_servo_start_);
-    wait_for_service<std_srvs::srv::Trigger>(client_servo_stop_);
-    wait_for_service<controller_manager_msgs::srv::SwitchController>(client_switch_controller_);
+    while (!client_servo_start_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
+            return;
+        }
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+    }
+    while (!client_servo_stop_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
+            return;
+        }
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+    }
+    while (!client_switch_controller_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
+            return;
+        }
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+    }
 }
 
 int main(int argc, char * argv[])
