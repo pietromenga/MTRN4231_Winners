@@ -10,7 +10,7 @@ import numpy as np
 class MyNode(Node):
     def __init__(self):
         # Initialize the Video
-    cap = cv2.VideoCapture('Videos/vid (4).mp4')
+    cap = cv2.VideoCapture(0)
 
     # Create the color Finder object
     myColorFinder = ColorFinder(False)
