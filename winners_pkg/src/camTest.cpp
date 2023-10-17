@@ -1,57 +1,48 @@
-#include <chrono>
-#include <fcntl.h>
-#include <linux/videodev2.h>
-#include <memory>
-#include <stdio.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
+#include <opencv2/opencv.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/image.hpp>
+#include <vector>
 
-#include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/image.hpp"
-
-using namespace std::chrono_literals;
-
-class ImagePublisher : public rclcpp::Node
-{
-public:
-    ImagePublisher() : Node("image_publisher")
-    {
-        publisher_ = this->create_publisher<sensor_msgs::msg::Image>("/image_raw", 10);
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(16), std::bind(&ImagePublisher::captureAndPublish, this));
-        init_v4l2();
-    }
-
-private:
-    void init_v4l2()
-    {
-        // Initialization code for v4l2
-        // Omitted for brevity, use ioctl calls to set up your camera
-    }
-
-    void captureAndPublish()
-    {
-        auto image_msg = sensor_msgs::msg::Image();
-        image_msg.header.stamp = this->now();
-        image_msg.height = 720;  // height for 720p
-        image_msg.width = 1280;  // width for 720p
-        image_msg.encoding = "bgr8";  // or "rgb8"
-        image_msg.step = 1280 * 3;  // step = width * byte_per_pixel (1280 * 3)
-
-        // Capture code here to fill image_msg.data
-        // Omitted for brevity
-
-        publisher_->publish(image_msg);
-    }
-
-    rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
-};
-
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<ImagePublisher>());
-    rclcpp::shutdown();
+
+    auto node = std::make_shared<rclcpp::Node>("image_publisher");
+    auto publisher = node->create_publisher<sensor_msgs::msg::Image>("/image_raw", 10);
+
+    cv::VideoCapture cap(0); // Open the default camera, use 0 for default, or provide the camera ID if you have multiple cameras
+
+    if (!cap.isOpened())
+    {
+        RCLCPP_ERROR(node->get_logger(), "Could not open camera");
+        return -1;
+    }
+
+    cv::Mat frame;
+    sensor_msgs::msg::Image msg;
+
+    msg.encoding = "bgr8";
+    msg.height = 1080;
+    msg.width = 1920;
+    msg.step = 1920 * 3; // width * 3 bytes per pixel for BGR format
+
+    while (rclcpp::ok())
+    {
+        cap >> frame;
+
+        if (frame.empty())
+        {
+            RCLCPP_ERROR(node->get_logger(), "Captured frame is empty");
+            break;
+        }
+
+        msg.header.stamp = node->now();
+        msg.data = std::vector<uint8_t>(frame.data, frame.data + frame.total() * frame.elemSize());
+
+        publisher->publish(msg);
+
+        rclcpp::spin_some(node);
+    }
+
     return 0;
 }

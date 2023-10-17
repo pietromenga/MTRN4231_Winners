@@ -89,5 +89,6 @@
         "/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages",
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
-    ]
+    ],
+    "cmake.sourceDirectory": "/home/mtrn/4231/project_workspace/MTRN4231_Winners/dual_camera"
 }

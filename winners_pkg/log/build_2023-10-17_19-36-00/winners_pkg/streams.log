@@ -1,0 +1,102 @@
+[0.020s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[0.100s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.216s] -- Found rclcpp: 16.0.5 (/opt/ros/humble/share/rclcpp/cmake)
+[0.255s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.258s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.264s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.276s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.289s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.343s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.347s] -- Found rmw_cyclonedds_cpp: 1.3.4 (/opt/ros/humble/share/rmw_cyclonedds_cpp/cmake)
+[0.375s] -- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+[0.492s] -- Found sensor_msgs: 4.2.3 (/opt/ros/humble/share/sensor_msgs/cmake)
+[0.573s] -- Found tf2: 0.25.3 (/opt/ros/humble/share/tf2/cmake)
+[0.581s] -- Found tf2_ros: 0.25.3 (/opt/ros/humble/share/tf2_ros/cmake)
+[0.784s] -- Found tf2_geometry_msgs: 0.25.3 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+[0.788s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[0.789s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[0.794s] -- Found control_msgs: 4.4.0 (/opt/ros/humble/share/control_msgs/cmake)
+[0.954s] -- Found moveit_ros_planning_interface: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning_interface/share/moveit_ros_planning_interface/cmake)
+[0.965s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[1.292s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[1.300s] -- Found parameter_traits: 0.3.6 (/opt/ros/humble/share/parameter_traits/cmake)
+[1.311s] -- Found rclcpp_lifecycle: 16.0.5 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)
+[1.343s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.381s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.599s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[1.906s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[2.048s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[2.297s] -- Found moveit_visual_tools: 4.1.0 (/home/mtrn/4231/ws_moveit2/install/moveit_visual_tools/share/moveit_visual_tools/cmake)
+[2.531s] -- Setting OGRE_DIR to: '/opt/ros/humble/share/rviz_ogre_vendor/cmake/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake'
+[2.532s] -- Found OGRE
+[2.532s] --   static     : OFF
+[2.532s] --   components : HLMS;MeshLodGenerator;Overlay;Paging;Property;RTShaderSystem;Terrain;Volume
+[2.532s] --   plugins    : Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[2.532s] --   media      : /opt/ros/humble/opt/rviz_ogre_vendor/share/OGRE/Media
+[2.532s] -- OGRE_LIBRARIES: OgreHLMS;OgreMeshLodGenerator;OgreOverlay;OgrePaging;OgreProperty;OgreRTShaderSystem;OgreTerrain;OgreVolume;OgreMain
+[2.532s] -- OGRE_LIBRARY_DIRS: /opt/ros/humble/opt/rviz_ogre_vendor/lib
+[2.532s] -- OGRE_PLUGINS: Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[2.532s] -- OGRE_PLUGIN_DIR: /opt/ros/humble/opt/rviz_ogre_vendor/lib/OGRE
+[2.532s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[2.532s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[2.532s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[2.532s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[2.533s] -- Could not find freeimage library
+[2.572s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_RELEASE: _render_system_gl_static_library_abs-NOTFOUND
+[2.572s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_DEBUG: _render_system_gl_static_library_abs-NOTFOUND
+[2.991s] -- Found controller_manager_msgs: 2.30.0 (/opt/ros/humble/share/controller_manager_msgs/cmake)
+[3.064s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[3.128s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[3.128s] -- Configured cppcheck include dirs: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/include
+[3.128s] -- Configured cppcheck exclude dirs and/or files: 
+[3.130s] -- Added test 'flake8' to check Python code syntax and style conventions
+[3.132s] -- Added test 'lint_cmake' to check CMake code style
+[3.134s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[3.141s] -- Added test 'uncrustify' to check C / C++ code style
+[3.141s] -- Configured uncrustify additional arguments: 
+[3.142s] -- Added test 'xmllint' to check XML markup files
+[3.144s] -- Configuring done
+[3.211s] -- Generating done
+[3.214s] -- Build files have been written to: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg
+[3.238s] [35m[1mConsolidate compiler generated dependencies of target velcroPadPose[0m
+[3.239s] [35m[1mConsolidate compiler generated dependencies of target ballPose[0m
+[3.239s] [35m[1mConsolidate compiler generated dependencies of target camTest[0m
+[3.239s] [35m[1mConsolidate compiler generated dependencies of target transforms[0m
+[3.254s] [ 14%] Built target camTest
+[3.255s] [ 28%] Built target velcroPadPose
+[3.256s] [ 42%] Built target ballPose
+[3.260s] [ 57%] Built target transforms
+[3.263s] [35m[1mConsolidate compiler generated dependencies of target RobotControl[0m
+[3.265s] [35m[1mConsolidate compiler generated dependencies of target Brain[0m
+[3.283s] [ 71%] Built target RobotControl
+[3.285s] [ 78%] [32mBuilding CXX object CMakeFiles/dual_cam_test.dir/src/dual_cam_test.cpp.o[0m
+[3.287s] [ 92%] Built target Brain
+[4.841s] [100%] [32m[1mLinking CXX executable dual_cam_test[0m
+[4.907s] [100%] Built target dual_cam_test
+[4.927s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg -- -j4 -l4
+[4.971s] Invoking command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg
+[4.977s] -- Install configuration: ""
+[4.978s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/camTest
+[4.978s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/ballPose
+[4.978s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/velcroPadPose
+[4.979s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/transforms
+[4.979s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/RobotControl
+[4.979s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/lib/winners_pkg/Brain
+[4.980s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/launch
+[4.980s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/launch/winners_launch.py
+[4.980s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/package_run_dependencies/winners_pkg
+[4.980s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/parent_prefix_path/winners_pkg
+[4.980s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.sh
+[4.980s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.dsv
+[4.980s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/path.sh
+[4.980s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/environment/path.dsv
+[4.982s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.bash
+[4.982s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.sh
+[4.982s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.zsh
+[4.982s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/local_setup.dsv
+[4.983s] -- Installing: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/package.dsv
+[4.983s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/ament_index/resource_index/packages/winners_pkg
+[4.983s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig.cmake
+[4.983s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig-version.cmake
+[4.983s] -- Up-to-date: /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/install/winners_pkg/share/winners_pkg/package.xml
+[4.985s] Invoked command in '/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/build/winners_pkg
