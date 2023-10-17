@@ -33,10 +33,10 @@ private:
     {
         auto image_msg = sensor_msgs::msg::Image();
         image_msg.header.stamp = this->now();
-        image_msg.height = 1080;
-        image_msg.width = 1920;
-        image_msg.encoding = "bgr8"; // or "rgb8" or whatever your camera produces
-        image_msg.step = 1920 * 3;   // step = width * byte_per_pixel for color images
+        image_msg.height = 720;  // height for 720p
+        image_msg.width = 1280;  // width for 720p
+        image_msg.encoding = "bgr8";  // or "rgb8"
+        image_msg.step = 1280 * 3;  // step = width * byte_per_pixel (1280 * 3)
 
         // Capture code here to fill image_msg.data
         // Omitted for brevity
