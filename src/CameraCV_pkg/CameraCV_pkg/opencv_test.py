@@ -8,8 +8,7 @@ from cvzone.ColorModule import ColorFinder
 import numpy as np
 
 class MyNode(Node):
-    def __init__(self):
-        # Initialize the Video
+    # Initialize the Video
     cap = cv2.VideoCapture(0)
 
     # Create the color Finder object
