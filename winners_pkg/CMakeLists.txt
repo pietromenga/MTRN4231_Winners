@@ -65,8 +65,12 @@ add_executable(velcroPadPose src/velcroPadPose.cpp)
 ament_target_dependencies(velcroPadPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
-add_executable(transforms src/transforms.cpp)
-ament_target_dependencies(transforms ${THIS_PACKAGE_INCLUDE_DEPENDS})
+add_executable(Transforms src/Transforms.cpp)
+ament_target_dependencies(Transforms ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+# Visualisations
+add_executable(Visualisations src/Visualisations.cpp)
+ament_target_dependencies(Visualisations ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # ROBOT CONTROL 
 add_executable(RobotControl src/RobotControl.cpp)
@@ -97,7 +101,8 @@ install(TARGETS
   camTest
   ballPose
   velcroPadPose
-  transforms
+  Transforms
+  Visualisations
   RobotControl
   Brain
   DESTINATION lib/${PROJECT_NAME})
