@@ -35,8 +35,11 @@
 devel/
 logs/
 log/*
+log/
+build/*
 build/
 install/*
+install/
 bin/
 lib/
 msg_gen/

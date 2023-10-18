@@ -1,7 +1,0 @@
-[35m[1mConsolidate compiler generated dependencies of target camTest[0m
-[ 25%] Built target ballPose
-[ 41%] Built target velcroPadPose
-[ 50%] Built target transforms
-[ 58%] [32mBuilding CXX object CMakeFiles/camTest.dir/src/camTest.cpp.o[0m
-[ 75%] Built target RobotControl
-[ 91%] Built target Brain

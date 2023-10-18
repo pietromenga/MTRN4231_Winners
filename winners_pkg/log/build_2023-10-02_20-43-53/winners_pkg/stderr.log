@@ -1,7 +1,0 @@
-[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/camTest.cpp:16:10:[m[K [01;31m[Kfatal error: [m[Kfunctional>: No such file or directory
-   16 | #include [01;31m[K<functional>S[m[K
-      |          [01;31m[K^~~~~~~~~~~~~[m[K
-compilation terminated.
-gmake[2]: *** [CMakeFiles/camTest.dir/build.make:76: CMakeFiles/camTest.dir/src/camTest.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:147: CMakeFiles/camTest.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2

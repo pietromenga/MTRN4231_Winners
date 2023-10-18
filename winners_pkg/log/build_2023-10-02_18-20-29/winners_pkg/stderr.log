@@ -1,8 +1,0 @@
-[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:[m[K In member function ‘[01m[Kvoid BallPosePublisher::find_ball(const Image&)[m[K’:
-[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/ballPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
-   49 | void BallPosePublisher::find_ball([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
-      |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
-[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:[m[K In member function ‘[01m[Kvoid VelcroPadPublisher::find_pad(const Image&)[m[K’:
-[01m[K/home/mtrn/4231/project_workspace/MTRN4231_Winners/winners_pkg/src/velcroPadPose.cpp:49:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kimg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
-   49 | void VelcroPadPublisher::find_pad([01;35m[Kconst sensor_msgs::msg::Image & img[m[K) {
-      |                                   [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
