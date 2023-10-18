@@ -18,8 +18,6 @@
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <moveit_visual_tools/moveit_visual_tools.h>
-#include <rviz_visual_tools/rviz_visual_tools.hpp>
 
 #include "Helpers.hpp"
 
@@ -54,7 +52,6 @@ private:
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface> planning_scene_interface;
-    moveit_visual_tools::MoveItVisualToolsPtr mvt;
     std::string planning_frame_id;
 
     // Subscriptions to catch and throw topics
@@ -107,10 +104,4 @@ private:
 
     //
     void test_move();
-
-    //
-    void activate_box_constraint();
-
-    //
-    void deactivate_box_constraint();
 };

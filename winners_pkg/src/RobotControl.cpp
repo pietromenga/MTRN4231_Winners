@@ -22,8 +22,7 @@ RobotControl::RobotControl() : Node("RobotControl")
     move_group_interface->setPlanningTime(10.0);
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
-    mvt = std::make_shared<moveit_visual_tools::MoveItVisualTools>(std::shared_ptr<rclcpp::Node>(this), "base_link", rviz_visual_tools::RVIZ_MARKER_TOPIC,
-                                                move_group_interface->getRobotModel());
+    
     // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
     // Sub to catching servo control
@@ -46,47 +45,12 @@ RobotControl::~RobotControl() {
 
 void RobotControl::setup_collisions() {
     auto col_object_table = generateCollisionObject( 2.4, 1.2, 0.04, 0.85, 0.25, -0.03, planning_frame_id, "table");
-    auto col_object_backWall = generateCollisionObject( 2.4, 0.04, 1.0, 0.85, -0.31, -0.5, planning_frame_id, "backWall");
+    auto col_object_backWall = generateCollisionObject( 4, 0.04, 2.0, 0.85, -0.31, 0.0, planning_frame_id, "backWall");
     auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.31, 0.25, -0.5, planning_frame_id, "sideWall");
 
     planning_scene_interface->applyCollisionObject(col_object_table);
     planning_scene_interface->applyCollisionObject(col_object_backWall);
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
-}
-
-void RobotControl::activate_box_constraint() {
-    moveit_msgs::msg::PositionConstraint box_constraint;
-    box_constraint.header.frame_id = move_group_interface->getPoseReferenceFrame();
-    box_constraint.link_name = move_group_interface->getEndEffectorLink();
-    shape_msgs::msg::SolidPrimitive box;
-    box.type = shape_msgs::msg::SolidPrimitive::BOX;
-    box.dimensions = { 2, 2, 2 };
-    box_constraint.constraint_region.primitives.emplace_back(box);
-
-
-    geometry_msgs::msg::Pose box_pose;
-    box_pose.position.x = 0.0;
-    box_pose.position.y = 0.0;
-    box_pose.position.z = 0.0;
-    box_constraint.constraint_region.primitive_poses.emplace_back(box_pose);
-    box_constraint.weight = 1.0; // Weird this doesnt effect anything 
-
-    // Visualize the box constraint
-    Eigen::Vector3d box_point_1(box_pose.position.x - box.dimensions[0] / 2, box_pose.position.y - box.dimensions[1] / 2,
-                                box_pose.position.z - box.dimensions[2] / 2);
-    Eigen::Vector3d box_point_2(box_pose.position.x + box.dimensions[0] / 2, box_pose.position.y + box.dimensions[1] / 2,
-                                box_pose.position.z + box.dimensions[2] / 2);
-    mvt->publishCuboid(box_point_1, box_point_2, rviz_visual_tools::TRANSLUCENT_DARK);
-    mvt->trigger();
-
-
-    moveit_msgs::msg::Constraints box_constraints;
-    box_constraints.position_constraints.emplace_back(box_constraint);
-    move_group_interface->setPathConstraints(box_constraints);
-}
-
-void RobotControl::deactivate_box_constraint() {
-    move_group_interface->clearPathConstraints();
 }
 
 void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) {
@@ -156,7 +120,6 @@ void RobotControl::start_catching(
         RCLCPP_INFO(this->get_logger(), "Starting Catching");
 
         tryMoveToTargetQ(catching_start_joint);
-        activate_box_constraint();
 
         robot_mode = RobotControlMode::SERVO;
         request_switch_controllers(robot_mode);
@@ -180,7 +143,6 @@ bool RobotControl::stop_catching() {
         RCLCPP_INFO(this->get_logger(), "Stopping Catching");
 
         // tryMoveToTargetQ();
-        deactivate_box_constraint();
 
         robot_mode = RobotControlMode::JOINT;
         request_stop_servo();

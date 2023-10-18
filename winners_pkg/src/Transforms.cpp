@@ -30,7 +30,7 @@ void TFBroadcaster::tf_velcro(const geometry_msgs::msg::PoseStamped & msg)
 }
 
 void TFBroadcaster::setupStaticTransforms() {
-	geometry_msgs::msg::TransformStamped camera1_static, camera2_static;
+	geometry_msgs::msg::TransformStamped camera1_static, camera2_static, catch_box;
 
     // Camera1 static position and orientation
     camera1_static.header.frame_id = "base_link";
@@ -54,8 +54,20 @@ void TFBroadcaster::setupStaticTransforms() {
     camera2_static.transform.rotation.y = 0.0;
     camera2_static.transform.rotation.z = 0.0;
 
+    // Camera2 static position and orientation
+    catch_box.header.frame_id = "base_link";
+    catch_box.child_frame_id = "catch_box";
+    catch_box.transform.translation.x = -0.5;
+    catch_box.transform.translation.y = 0.25;
+    catch_box.transform.translation.z = 0.0;
+    catch_box.transform.rotation.w = 1.0;
+    catch_box.transform.rotation.x = 0.0;
+    catch_box.transform.rotation.y = 0.0;
+    catch_box.transform.rotation.z = 0.0;
+
     tf_static_broadcaster_->sendTransform(camera1_static);
     tf_static_broadcaster_->sendTransform(camera2_static);
+    tf_static_broadcaster_->sendTransform(catch_box);
 }
 
 

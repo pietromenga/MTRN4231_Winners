@@ -13,9 +13,10 @@ class Visualisations : public rclcpp::Node
 {
 public:
     Visualisations();
+    void setupMarkers();
 
 private:
-    void setupMarkers();
-    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher_;
+    rclcpp::TimerBase::SharedPtr timer;
+    rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pubmarker;
     int markerCount;
 };
