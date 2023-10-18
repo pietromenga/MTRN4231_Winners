@@ -61,6 +61,7 @@ private:
     RobotControlMode robot_mode;
     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_catching_service_;
     rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr stop_catching_service_;
+    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr throwing_service_;
 
     // Sets robot to servo mode and allows robot control to use catch calculation and move robot.
     void start_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
@@ -104,4 +105,8 @@ private:
 
     //
     void test_move();
+
+    //
+    void throw_ball_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+    std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 };

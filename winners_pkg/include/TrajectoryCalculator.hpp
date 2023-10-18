@@ -16,6 +16,7 @@ class TrajectoryCalculator : public rclcpp::Node
 public:
     TrajectoryCalculator();
     void tfCallback();
+    void calcTrajectory();
 private:
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr catch_publisher_;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr pred_publisher_;

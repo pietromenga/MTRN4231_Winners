@@ -3,14 +3,20 @@
 Brain::Brain() : Node("Brain") {
     start_catching_client_ = this->create_client<std_srvs::srv::Trigger>("/start_catching");
     stop_catching_client_ = this->create_client<std_srvs::srv::Trigger>("/stop_catching");
+    throw_client_ = this->create_client<std_srvs::srv::Trigger>("/throw_ball");
 
     keyboard_sub_ = this->create_subscription<std_msgs::msg::String>("/keyboard_input", 10, std::bind(&Brain::on_key_press, this, _1));
     test_catch_twist_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/catch_delta", 10);
 
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
+    timer_ = this->create_wall_timer( std::chrono::milliseconds(10), std::bind(&Brain::tfCallback, this));
+
     wait_for_services();
 
     std::this_thread::sleep_for(2000ms);
-    request_start_catching();
+    request_throw();
 }
 
 // void Brain::generateJointPose(std::vector<double> jointQ) {
@@ -27,21 +33,76 @@ Brain::Brain() : Node("Brain") {
 //     joint_trajectory_msg.
 // }
 
+void Brain::tfCallback()
+{
+    // Get transformation between ball and end effector 
+    std::string fromFrameRel = "end_effector"; // TODO get correct link name
+    std::string toFrameRel = "ball_tf";
+
+    geometry_msgs::msg::TransformStamped t;
+
+    try {
+        t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
+    } catch (const tf2::TransformException & ex) {
+        // RCLCPP_INFO( this->get_logger(), "Could not transform %s to %s: %s", toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+        return;
+    }
+
+    // Distance to end eff
+    auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
+
+    // If within distance stop catching and initiate throw
+    if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
+        // Transition to throw mode and attemp a throw 
+        request_stop_catching();
+        if (robotState == RobotState::THROWING) {
+            request_throw();
+        }
+    }
+}
+
 void Brain::request_start_catching() {
+    RCLCPP_INFO(this->get_logger(), "Requesting to start catching...");
+
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result = start_catching_client_->async_send_request(request);
+
+    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_INFO(this->get_logger(), "Request Start Catching Call Succeeded");
+        robotState = RobotState::CATCHING;
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Request Start Catching Call Failed");
+        rclcpp::shutdown();
+    }
 }
 
 void Brain::request_stop_catching() {
+    RCLCPP_INFO(this->get_logger(), "Requesting to stop catching...");
+
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result = stop_catching_client_->async_send_request(request);
+
+    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_INFO(this->get_logger(), "Request Stop Catching Call Succeeded");
+        robotState = RobotState::THROWING;
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "Request Stop Catching Call Failed");
+        rclcpp::shutdown();
+    }
 }
 
-void Brain::service_response_handler(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)  {
-    if (future.get()->success) {
-        RCLCPP_INFO(this->get_logger(), "Service Call Succeeded");
+void Brain::request_throw() {
+    RCLCPP_INFO(this->get_logger(), "Requesting a throw from robot control");
+
+    auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
+    auto result = throw_client_->async_send_request(request);
+
+    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_INFO(this->get_logger(), "Throw Service Call Succeeded");
+        request_start_catching();
     } else {
-        RCLCPP_ERROR(this->get_logger(), "Service Call Failed.");
+        RCLCPP_ERROR(this->get_logger(), "Throw Service Call Failed");
+        rclcpp::shutdown();
     }
 }
 
@@ -72,6 +133,13 @@ void Brain::wait_for_services() {
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
     }
     while (!stop_catching_client_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
+            return;
+        }
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "service not available, waiting again...");
+    }
+    while (!throw_client_->wait_for_service(std::chrono::seconds(1))) {
         if (!rclcpp::ok()) {
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Interrupted while waiting for services");
             return;

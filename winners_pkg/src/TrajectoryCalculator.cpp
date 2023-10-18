@@ -16,7 +16,7 @@ void TrajectoryCalculator::tfCallback()
 {
     // Check if the transformation is between "map" and "dynamic_frame"
     std::string fromFrameRel = "base_link";
-    std::string toFrameRel = "ball_pose";
+    std::string toFrameRel = "ball_tf";
 
     geometry_msgs::msg::TransformStamped t;
 
@@ -27,6 +27,11 @@ void TrajectoryCalculator::tfCallback()
         return;
     }
 
+    calcTrajectory();
+}
+
+void TrajectoryCalculator::calcTrajectory() {
+    // TODO: DO TRAJECTORY CALC HERE BASED ON BALL_TF
 }
 
 int main(int argc, char * argv[])

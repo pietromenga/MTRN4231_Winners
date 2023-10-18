@@ -33,6 +33,7 @@ RobotControl::RobotControl() : Node("RobotControl")
     robot_mode = RobotControlMode::JOINT;
     start_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/start_catching", std::bind(&RobotControl::start_catching, this, _1, _2));
     stop_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/stop_catching", std::bind(&RobotControl::stop_catching_request, this, _1, _2));
+    throwing_service_ = this->create_service<std_srvs::srv::Trigger>("/throw_ball", std::bind(&RobotControl::throw_ball_request, this, _1, _2));
 
     // Setup
     wait_for_services();
@@ -40,7 +41,9 @@ RobotControl::RobotControl() : Node("RobotControl")
 }
 
 RobotControl::~RobotControl() {
-    stop_catching();
+    if (robot_mode == RobotControlMode::SERVO) {
+        stop_catching();
+    }
 }
 
 void RobotControl::setup_collisions() {
@@ -131,6 +134,26 @@ void RobotControl::start_catching(
     }
 }
 
+void RobotControl::throw_ball_request(
+    const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+    std::shared_ptr<std_srvs::srv::Trigger::Response> response
+) {
+    response->success = false;
+
+    if (robot_mode == RobotControlMode::JOINT) {
+        RCLCPP_INFO(this->get_logger(), "Making throw");
+
+        tryMoveToTargetQ(throwing_start_joint);
+
+        // Do throwing motion
+        std::this_thread::sleep_for(2000ms);
+
+        response->success = true;
+    } else {
+        RCLCPP_INFO(this->get_logger(), "Cannot throw in Catching Mode");
+    }
+}
+
 void RobotControl::stop_catching_request(
     const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
@@ -141,8 +164,6 @@ void RobotControl::stop_catching_request(
 bool RobotControl::stop_catching() {
     if (robot_mode != RobotControlMode::JOINT) {
         RCLCPP_INFO(this->get_logger(), "Stopping Catching");
-
-        // tryMoveToTargetQ();
 
         robot_mode = RobotControlMode::JOINT;
         request_stop_servo();
