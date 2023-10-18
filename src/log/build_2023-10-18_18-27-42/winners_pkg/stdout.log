@@ -1,0 +1,36 @@
+[35m[1mConsolidate compiler generated dependencies of target camTest[0m
+[35m[1mConsolidate compiler generated dependencies of target ballPose[0m
+[35m[1mConsolidate compiler generated dependencies of target velcroPadPose[0m
+[35m[1mConsolidate compiler generated dependencies of target transforms[0m
+[35m[1mConsolidate compiler generated dependencies of target Brain[0m
+[35m[1mConsolidate compiler generated dependencies of target RobotControl[0m
+[ 66%] Built target transforms
+[ 75%] Built target camTest
+[ 66%] Built target ballPose
+[ 66%] Built target velcroPadPose
+[ 91%] Built target RobotControl
+[100%] Built target Brain
+-- Install configuration: ""
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/camTest
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/ballPose
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/velcroPadPose
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/transforms
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/RobotControl
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/Brain
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/launch
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/launch/winners_launch.py
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/package_run_dependencies/winners_pkg
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/parent_prefix_path/winners_pkg
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.sh
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/path.sh
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/path.dsv
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.bash
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.sh
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.zsh
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.dsv
+-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/package.dsv
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/packages/winners_pkg
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig.cmake
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig-version.cmake
+-- Up-to-date: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/package.xml

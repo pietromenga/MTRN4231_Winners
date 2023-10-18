@@ -1,0 +1,299 @@
+[0.000000] (-) TimerEvent: {}
+[0.000344] (CameraCV_pkg) JobQueued: {'identifier': 'CameraCV_pkg', 'dependencies': OrderedDict()}
+[0.000362] (winners_pkg) JobQueued: {'identifier': 'winners_pkg', 'dependencies': OrderedDict()}
+[0.000396] (CameraCV_pkg) JobStarted: {'identifier': 'CameraCV_pkg'}
+[0.022804] (winners_pkg) JobStarted: {'identifier': 'winners_pkg'}
+[0.099903] (-) TimerEvent: {}
+[0.163958] (winners_pkg) JobProgress: {'identifier': 'winners_pkg', 'progress': 'cmake'}
+[0.164345] (winners_pkg) Command: {'cmd': ['/usr/bin/cmake', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg', '-DCMAKE_INSTALL_PREFIX=/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg'], 'cwd': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'en_AU:en'), ('USER', 'andrew'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/andrew'), ('CHROME_DESKTOP', 'code-url-handler.desktop'), ('OLDPWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg'), ('TERM_PROGRAM_VERSION', '1.83.1'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1436'), ('SYSTEMD_EXEC_PID', '1865'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '23944'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'andrew'), ('JOURNAL_STREAM', '8:17338'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'andrew'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/MTRN4231:@/tmp/.ICE-unix/1838,unix/MTRN4231:/tmp/.ICE-unix/1838'), ('INVOCATION_ID', '20cddc7e42c04e0a95a84e3b369bfcfd'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('LANG', 'en_AU.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-3d5585e705.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', '--ms-enable-electron-run-as-node'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.170721] (winners_pkg) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.200011] (-) TimerEvent: {}
+[0.235343] (winners_pkg) StdoutLine: {'line': b'-- Found rclcpp: 16.0.6 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[0.248451] (winners_pkg) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.249576] (winners_pkg) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.252243] (winners_pkg) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.257276] (winners_pkg) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.264331] (winners_pkg) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.291374] (winners_pkg) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[0.292000] (winners_pkg) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.4 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[0.300077] (-) TimerEvent: {}
+[0.346479] (winners_pkg) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[0.360548] (CameraCV_pkg) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../build/CameraCV_pkg', 'build', '--build-base', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build', 'install', '--record', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log', '--single-version-externally-managed'], 'cwd': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'LANGUAGE': 'en_AU:en', 'USER': 'andrew', 'XDG_SESSION_TYPE': 'x11', 'GIT_ASKPASS': '/usr/share/code/resources/app/extensions/git/dist/askpass.sh', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/andrew', 'CHROME_DESKTOP': 'code-url-handler.desktop', 'OLDPWD': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg', 'TERM_PROGRAM_VERSION': '1.83.1', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code/code', 'MANAGERPID': '1436', 'SYSTEMD_EXEC_PID': '1865', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '23944', 'ROS_DISTRO': 'humble', 'GTK_IM_MODULE': 'ibus', 'LOGNAME': 'andrew', 'JOURNAL_STREAM': '8:17338', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'andrew', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/MTRN4231:@/tmp/.ICE-unix/1838,unix/MTRN4231:/tmp/.ICE-unix/1838', 'INVOCATION_ID': '20cddc7e42c04e0a95a84e3b369bfcfd', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'x11', 'DISPLAY': ':0', 'LANG': 'en_AU.UTF-8', 'XDG_CURRENT_DESKTOP': 'Unity', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-3d5585e705.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'ORIGINAL_XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '--ms-enable-electron-run-as-node', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/prefix_override:/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[0.400160] (-) TimerEvent: {}
+[0.420979] (winners_pkg) StdoutLine: {'line': b'-- Found sensor_msgs: 4.2.3 (/opt/ros/humble/share/sensor_msgs/cmake)\n'}
+[0.455868] (CameraCV_pkg) StdoutLine: {'line': b'running egg_info\n'}
+[0.456155] (CameraCV_pkg) StdoutLine: {'line': b'writing ../build/CameraCV_pkg/CameraCV_pkg.egg-info/PKG-INFO\n'}
+[0.456273] (CameraCV_pkg) StdoutLine: {'line': b'writing dependency_links to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/dependency_links.txt\n'}
+[0.456377] (CameraCV_pkg) StdoutLine: {'line': b'writing entry points to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/entry_points.txt\n'}
+[0.456400] (CameraCV_pkg) StdoutLine: {'line': b'writing requirements to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/requires.txt\n'}
+[0.456424] (CameraCV_pkg) StdoutLine: {'line': b'writing top-level names to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/top_level.txt\n'}
+[0.457079] (CameraCV_pkg) StdoutLine: {'line': b"reading manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'\n"}
+[0.457518] (CameraCV_pkg) StdoutLine: {'line': b"writing manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'\n"}
+[0.457553] (CameraCV_pkg) StdoutLine: {'line': b'running build\n'}
+[0.457574] (CameraCV_pkg) StdoutLine: {'line': b'running build_py\n'}
+[0.457629] (CameraCV_pkg) StdoutLine: {'line': b'running install\n'}
+[0.457684] (CameraCV_pkg) StderrLine: {'line': b'/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.\n'}
+[0.457715] (CameraCV_pkg) StderrLine: {'line': b'  warnings.warn(\n'}
+[0.457807] (CameraCV_pkg) StdoutLine: {'line': b'running install_lib\n'}
+[0.458303] (CameraCV_pkg) StdoutLine: {'line': b'running install_data\n'}
+[0.458485] (CameraCV_pkg) StdoutLine: {'line': b'running install_egg_info\n'}
+[0.459129] (CameraCV_pkg) StdoutLine: {'line': b"removing '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg-0.0.0-py3.10.egg-info' (and everything under it)\n"}
+[0.459244] (CameraCV_pkg) StdoutLine: {'line': b'Copying ../build/CameraCV_pkg/CameraCV_pkg.egg-info to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg-0.0.0-py3.10.egg-info\n'}
+[0.459485] (CameraCV_pkg) StdoutLine: {'line': b'running install_scripts\n'}
+[0.468915] (CameraCV_pkg) StdoutLine: {'line': b'Installing test_node script to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/CameraCV_pkg\n'}
+[0.468992] (CameraCV_pkg) StdoutLine: {'line': b"writing list of installed files to '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log'\n"}
+[0.479148] (CameraCV_pkg) CommandEnded: {'returncode': 0}
+[0.483512] (winners_pkg) StdoutLine: {'line': b'-- Found tf2: 0.25.4 (/opt/ros/humble/share/tf2/cmake)\n'}
+[0.487178] (winners_pkg) StdoutLine: {'line': b'-- Found tf2_ros: 0.25.4 (/opt/ros/humble/share/tf2_ros/cmake)\n'}
+[0.497973] (CameraCV_pkg) JobEnded: {'identifier': 'CameraCV_pkg', 'rc': 0}
+[0.500210] (-) TimerEvent: {}
+[0.600336] (-) TimerEvent: {}
+[0.643707] (winners_pkg) StdoutLine: {'line': b'-- Found tf2_geometry_msgs: 0.25.4 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)\n'}
+[0.645591] (winners_pkg) StdoutLine: {'line': b'-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)\n'}
+[0.646263] (winners_pkg) StdoutLine: {'line': b'-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target\n'}
+[0.650469] (winners_pkg) StdoutLine: {'line': b'-- Found control_msgs: 4.4.0 (/opt/ros/humble/share/control_msgs/cmake)\n'}
+[0.700435] (-) TimerEvent: {}
+[0.785884] (winners_pkg) StdoutLine: {'line': b'-- Found moveit_ros_planning_interface: 2.5.5 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)\n'}
+[0.795347] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread \n'}
+[0.800489] (-) TimerEvent: {}
+[0.900665] (-) TimerEvent: {}
+[1.000902] (-) TimerEvent: {}
+[1.075229] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread \n'}
+[1.080513] (winners_pkg) StdoutLine: {'line': b'-- Found parameter_traits: 0.3.6 (/opt/ros/humble/share/parameter_traits/cmake)\n'}
+[1.089555] (winners_pkg) StdoutLine: {'line': b'-- Found rclcpp_lifecycle: 16.0.6 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)\n'}
+[1.100949] (-) TimerEvent: {}
+[1.111986] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem \n'}
+[1.146929] (winners_pkg) StdoutLine: {'line': b'-- library: /usr/lib/x86_64-linux-gnu/libcurl.so\n'}
+[1.201017] (-) TimerEvent: {}
+[1.301241] (-) TimerEvent: {}
+[1.332438] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono \n'}
+[1.401350] (-) TimerEvent: {}
+[1.501548] (-) TimerEvent: {}
+[1.601761] (-) TimerEvent: {}
+[1.606677] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options \n'}
+[1.701891] (-) TimerEvent: {}
+[1.731640] (winners_pkg) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread \n'}
+[1.802019] (-) TimerEvent: {}
+[1.902247] (-) TimerEvent: {}
+[1.946547] (winners_pkg) StdoutLine: {'line': b'-- Found moveit_visual_tools: 4.1.0 (/opt/ros/humble/share/moveit_visual_tools/cmake)\n'}
+[2.002347] (-) TimerEvent: {}
+[2.102576] (-) TimerEvent: {}
+[2.140831] (winners_pkg) StdoutLine: {'line': b"-- Setting OGRE_DIR to: '/opt/ros/humble/share/rviz_ogre_vendor/cmake/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake'\n"}
+[2.141471] (winners_pkg) StdoutLine: {'line': b'-- Found OGRE\n'}
+[2.141502] (winners_pkg) StdoutLine: {'line': b'--   static     : OFF\n'}
+[2.141526] (winners_pkg) StdoutLine: {'line': b'--   components : HLMS;MeshLodGenerator;Overlay;Paging;Property;RTShaderSystem;Terrain;Volume\n'}
+[2.141561] (winners_pkg) StdoutLine: {'line': b'--   plugins    : Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI\n'}
+[2.141585] (winners_pkg) StdoutLine: {'line': b'--   media      : /opt/ros/humble/opt/rviz_ogre_vendor/share/OGRE/Media\n'}
+[2.141608] (winners_pkg) StdoutLine: {'line': b'-- OGRE_LIBRARIES: OgreHLMS;OgreMeshLodGenerator;OgreOverlay;OgrePaging;OgreProperty;OgreRTShaderSystem;OgreTerrain;OgreVolume;OgreMain\n'}
+[2.141631] (winners_pkg) StdoutLine: {'line': b'-- OGRE_LIBRARY_DIRS: /opt/ros/humble/opt/rviz_ogre_vendor/lib\n'}
+[2.141675] (winners_pkg) StdoutLine: {'line': b'-- OGRE_PLUGINS: Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI\n'}
+[2.141699] (winners_pkg) StdoutLine: {'line': b'-- OGRE_PLUGIN_DIR: /opt/ros/humble/opt/rviz_ogre_vendor/lib/OGRE\n'}
+[2.141721] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so\n'}
+[2.141742] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so\n'}
+[2.141777] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so\n'}
+[2.141801] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so\n'}
+[2.142199] (winners_pkg) StdoutLine: {'line': b'-- Could not find freeimage library\n'}
+[2.149309] (winners_pkg) StdoutLine: {'line': b'-- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") \n'}
+[2.151135] (winners_pkg) StdoutLine: {'line': b'-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   \n'}
+[2.185087] (winners_pkg) StdoutLine: {'line': b'-- Found X11: /usr/include   \n'}
+[2.185301] (winners_pkg) StdoutLine: {'line': b'-- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so\n'}
+[2.202654] (-) TimerEvent: {}
+[2.231225] (winners_pkg) StdoutLine: {'line': b'-- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so - found\n'}
+[2.231352] (winners_pkg) StdoutLine: {'line': b'-- Looking for gethostbyname\n'}
+[2.301894] (winners_pkg) StdoutLine: {'line': b'-- Looking for gethostbyname - found\n'}
+[2.302073] (winners_pkg) StdoutLine: {'line': b'-- Looking for connect\n'}
+[2.302717] (-) TimerEvent: {}
+[2.374817] (winners_pkg) StdoutLine: {'line': b'-- Looking for connect - found\n'}
+[2.374971] (winners_pkg) StdoutLine: {'line': b'-- Looking for remove\n'}
+[2.402902] (-) TimerEvent: {}
+[2.404155] (winners_pkg) StdoutLine: {'line': b'-- Looking for remove - found\n'}
+[2.404335] (winners_pkg) StdoutLine: {'line': b'-- Looking for shmat\n'}
+[2.439998] (winners_pkg) StdoutLine: {'line': b'-- Looking for shmat - found\n'}
+[2.440197] (winners_pkg) StdoutLine: {'line': b'-- Looking for IceConnectionNumber in ICE\n'}
+[2.481639] (winners_pkg) StdoutLine: {'line': b'-- Looking for IceConnectionNumber in ICE - found\n'}
+[2.482923] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_RELEASE: _render_system_gl_static_library_abs-NOTFOUND\n'}
+[2.483103] (winners_pkg) StdoutLine: {'line': b'-- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_DEBUG: _render_system_gl_static_library_abs-NOTFOUND\n'}
+[2.503064] (-) TimerEvent: {}
+[2.603354] (-) TimerEvent: {}
+[2.703607] (-) TimerEvent: {}
+[2.803895] (-) TimerEvent: {}
+[2.874243] (winners_pkg) StdoutLine: {'line': b'-- Found controller_manager_msgs: 2.32.0 (/opt/ros/humble/share/controller_manager_msgs/cmake)\n'}
+[2.904059] (-) TimerEvent: {}
+[2.906361] (winners_pkg) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.8 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[2.947569] (winners_pkg) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[2.947799] (winners_pkg) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/include\n'}
+[2.947863] (winners_pkg) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[2.948018] (winners_pkg) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[2.948230] (winners_pkg) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[2.948414] (winners_pkg) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257\n"}
+[2.948751] (winners_pkg) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[2.948812] (winners_pkg) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[2.948943] (winners_pkg) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[2.949361] (winners_pkg) StdoutLine: {'line': b'-- Configuring done\n'}
+[2.986329] (winners_pkg) StdoutLine: {'line': b'-- Generating done\n'}
+[2.987878] (winners_pkg) StdoutLine: {'line': b'-- Build files have been written to: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg\n'}
+[2.996163] (winners_pkg) CommandEnded: {'returncode': 0}
+[2.997217] (winners_pkg) JobProgress: {'identifier': 'winners_pkg', 'progress': 'build'}
+[2.997414] (winners_pkg) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg', '--', '-j24', '-l24'], 'cwd': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'en_AU:en'), ('USER', 'andrew'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/andrew'), ('CHROME_DESKTOP', 'code-url-handler.desktop'), ('OLDPWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg'), ('TERM_PROGRAM_VERSION', '1.83.1'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1436'), ('SYSTEMD_EXEC_PID', '1865'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '23944'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'andrew'), ('JOURNAL_STREAM', '8:17338'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'andrew'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/MTRN4231:@/tmp/.ICE-unix/1838,unix/MTRN4231:/tmp/.ICE-unix/1838'), ('INVOCATION_ID', '20cddc7e42c04e0a95a84e3b369bfcfd'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('LANG', 'en_AU.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-3d5585e705.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', '--ms-enable-electron-run-as-node'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[3.004146] (-) TimerEvent: {}
+[3.033527] (winners_pkg) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/velcroPadPose.dir/src/velcroPadPose.cpp.o\x1b[0m\n'}
+[3.033827] (winners_pkg) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/ballPose.dir/src/ballPose.cpp.o\x1b[0m\n'}
+[3.033890] (winners_pkg) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/camTest.dir/src/camTest.cpp.o\x1b[0m\n'}
+[3.033946] (winners_pkg) StdoutLine: {'line': b'[ 41%] \x1b[32mBuilding CXX object CMakeFiles/transforms.dir/src/transforms.cpp.o\x1b[0m\n'}
+[3.034000] (winners_pkg) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/Brain.dir/src/Brain.cpp.o\x1b[0m\n'}
+[3.034054] (winners_pkg) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/RobotControl.dir/src/RobotControl.cpp.o\x1b[0m\n'}
+[3.104387] (-) TimerEvent: {}
+[3.204840] (-) TimerEvent: {}
+[3.305126] (-) TimerEvent: {}
+[3.405435] (-) TimerEvent: {}
+[3.505758] (-) TimerEvent: {}
+[3.606061] (-) TimerEvent: {}
+[3.706471] (-) TimerEvent: {}
+[3.806745] (-) TimerEvent: {}
+[3.907079] (-) TimerEvent: {}
+[4.007639] (-) TimerEvent: {}
+[4.108152] (-) TimerEvent: {}
+[4.208674] (-) TimerEvent: {}
+[4.309203] (-) TimerEvent: {}
+[4.409663] (-) TimerEvent: {}
+[4.510107] (-) TimerEvent: {}
+[4.589319] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/transforms.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid TFBroadcaster::tf_ball(const PoseStamped&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.589583] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/transforms.cpp:44:69:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kmsg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.589652] (winners_pkg) StderrLine: {'line': b'   44 | void TFBroadcaster::tf_ball(\x1b[01;35m\x1b[Kconst geometry_msgs::msg::PoseStamped & msg\x1b[m\x1b[K)\n'}
+[4.589709] (winners_pkg) StderrLine: {'line': b'      |                             \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~\x1b[m\x1b[K\n'}
+[4.589763] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/transforms.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid TFBroadcaster::tf_velcro(const PoseStamped&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.589816] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/transforms.cpp:53:71:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kmsg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.589870] (winners_pkg) StderrLine: {'line': b'   53 | void TFBroadcaster::tf_velcro(\x1b[01;35m\x1b[Kconst geometry_msgs::msg::PoseStamped & msg\x1b[m\x1b[K)\n'}
+[4.589921] (winners_pkg) StderrLine: {'line': b'      |                               \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~\x1b[m\x1b[K\n'}
+[4.610222] (-) TimerEvent: {}
+[4.710648] (-) TimerEvent: {}
+[4.734323] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid RobotControl::generateJointPose(double, double, double, double, double, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[4.734534] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:45:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq0\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.734603] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(\x1b[01;35m\x1b[Kdouble q0\x1b[m\x1b[K, double q1, double q2, double q3, double q4, double q5) {\n'}
+[4.734661] (winners_pkg) StderrLine: {'line': b'      |                                      \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.734713] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:56:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq1\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.734767] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(double q0, \x1b[01;35m\x1b[Kdouble q1\x1b[m\x1b[K, double q2, double q3, double q4, double q5) {\n'}
+[4.734818] (winners_pkg) StderrLine: {'line': b'      |                                                 \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.734868] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:67:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq2\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.734919] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(double q0, double q1, \x1b[01;35m\x1b[Kdouble q2\x1b[m\x1b[K, double q3, double q4, double q5) {\n'}
+[4.734969] (winners_pkg) StderrLine: {'line': b'      |                                                            \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.735017] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:78:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq3\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.735067] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(double q0, double q1, double q2, \x1b[01;35m\x1b[Kdouble q3\x1b[m\x1b[K, double q4, double q5) {\n'}
+[4.735116] (winners_pkg) StderrLine: {'line': b'      |                                                                       \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.735164] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:89:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq4\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.735220] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(double q0, double q1, double q2, double q3, \x1b[01;35m\x1b[Kdouble q4\x1b[m\x1b[K, double q5) {\n'}
+[4.735277] (winners_pkg) StderrLine: {'line': b'      |                                                                                  \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.735326] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/RobotControl.cpp:35:100:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kq5\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[4.735379] (winners_pkg) StderrLine: {'line': b'   35 | void RobotControl::generateJointPose(double q0, double q1, double q2, double q3, double q4, \x1b[01;35m\x1b[Kdouble q5\x1b[m\x1b[K) {\n'}
+[4.735427] (winners_pkg) StderrLine: {'line': b'      |                                                                                             \x1b[01;35m\x1b[K~~~~~~~^~\x1b[m\x1b[K\n'}
+[4.810748] (-) TimerEvent: {}
+[4.911115] (-) TimerEvent: {}
+[5.011495] (-) TimerEvent: {}
+[5.111919] (-) TimerEvent: {}
+[5.150140] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/velcroPadPose.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid VelcroPadPublisher::find_pad(const Image&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[5.150346] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/velcroPadPose.cpp:49:67:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kimg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[5.150405] (winners_pkg) StderrLine: {'line': b'   49 | void VelcroPadPublisher::find_pad(\x1b[01;35m\x1b[Kconst sensor_msgs::msg::Image & img\x1b[m\x1b[K) {\n'}
+[5.150457] (winners_pkg) StderrLine: {'line': b'      |                                   \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~\x1b[m\x1b[K\n'}
+[5.173227] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/ballPose.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid BallPosePublisher::find_ball(const Image&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[5.173434] (winners_pkg) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg/src/ballPose.cpp:49:67:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kimg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter\x07-Wunused-parameter\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[5.173506] (winners_pkg) StderrLine: {'line': b'   49 | void BallPosePublisher::find_ball(\x1b[01;35m\x1b[Kconst sensor_msgs::msg::Image & img\x1b[m\x1b[K) {\n'}
+[5.173559] (winners_pkg) StderrLine: {'line': b'      |                                   \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~\x1b[m\x1b[K\n'}
+[5.212022] (-) TimerEvent: {}
+[5.312398] (-) TimerEvent: {}
+[5.412752] (-) TimerEvent: {}
+[5.513167] (-) TimerEvent: {}
+[5.613569] (-) TimerEvent: {}
+[5.713975] (-) TimerEvent: {}
+[5.814410] (-) TimerEvent: {}
+[5.914850] (-) TimerEvent: {}
+[6.015231] (-) TimerEvent: {}
+[6.115701] (-) TimerEvent: {}
+[6.216075] (-) TimerEvent: {}
+[6.316503] (-) TimerEvent: {}
+[6.410311] (winners_pkg) StdoutLine: {'line': b'[ 58%] \x1b[32m\x1b[1mLinking CXX executable camTest\x1b[0m\n'}
+[6.416578] (-) TimerEvent: {}
+[6.516927] (-) TimerEvent: {}
+[6.617503] (-) TimerEvent: {}
+[6.718040] (-) TimerEvent: {}
+[6.818487] (-) TimerEvent: {}
+[6.910802] (winners_pkg) StdoutLine: {'line': b'[ 58%] Built target camTest\n'}
+[6.918550] (-) TimerEvent: {}
+[7.018775] (-) TimerEvent: {}
+[7.119096] (-) TimerEvent: {}
+[7.219344] (-) TimerEvent: {}
+[7.319643] (-) TimerEvent: {}
+[7.419960] (-) TimerEvent: {}
+[7.520265] (-) TimerEvent: {}
+[7.620627] (-) TimerEvent: {}
+[7.720911] (-) TimerEvent: {}
+[7.821190] (-) TimerEvent: {}
+[7.921493] (-) TimerEvent: {}
+[8.021770] (-) TimerEvent: {}
+[8.027417] (winners_pkg) StdoutLine: {'line': b'[ 66%] \x1b[32m\x1b[1mLinking CXX executable transforms\x1b[0m\n'}
+[8.121863] (-) TimerEvent: {}
+[8.222172] (-) TimerEvent: {}
+[8.259143] (winners_pkg) StdoutLine: {'line': b'[ 66%] Built target transforms\n'}
+[8.322315] (-) TimerEvent: {}
+[8.422652] (-) TimerEvent: {}
+[8.434123] (winners_pkg) StdoutLine: {'line': b'[ 75%] \x1b[32m\x1b[1mLinking CXX executable Brain\x1b[0m\n'}
+[8.522746] (-) TimerEvent: {}
+[8.623053] (-) TimerEvent: {}
+[8.723367] (-) TimerEvent: {}
+[8.823867] (-) TimerEvent: {}
+[8.856609] (winners_pkg) StdoutLine: {'line': b'[ 83%] \x1b[32m\x1b[1mLinking CXX executable velcroPadPose\x1b[0m\n'}
+[8.911568] (winners_pkg) StdoutLine: {'line': b'[ 91%] \x1b[32m\x1b[1mLinking CXX executable ballPose\x1b[0m\n'}
+[8.923941] (-) TimerEvent: {}
+[9.025590] (-) TimerEvent: {}
+[9.126049] (-) TimerEvent: {}
+[9.148470] (winners_pkg) StdoutLine: {'line': b'[ 91%] Built target velcroPadPose\n'}
+[9.211663] (winners_pkg) StdoutLine: {'line': b'[ 91%] Built target ballPose\n'}
+[9.226170] (-) TimerEvent: {}
+[9.326603] (-) TimerEvent: {}
+[9.347602] (winners_pkg) StdoutLine: {'line': b'[ 91%] Built target Brain\n'}
+[9.355177] (winners_pkg) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable RobotControl\x1b[0m\n'}
+[9.426682] (-) TimerEvent: {}
+[9.526884] (-) TimerEvent: {}
+[9.627146] (-) TimerEvent: {}
+[9.727377] (-) TimerEvent: {}
+[9.827633] (-) TimerEvent: {}
+[9.927902] (-) TimerEvent: {}
+[10.028141] (-) TimerEvent: {}
+[10.128372] (-) TimerEvent: {}
+[10.183535] (winners_pkg) StdoutLine: {'line': b'[100%] Built target RobotControl\n'}
+[10.188448] (winners_pkg) CommandEnded: {'returncode': 0}
+[10.204679] (winners_pkg) JobProgress: {'identifier': 'winners_pkg', 'progress': 'install'}
+[10.210703] (winners_pkg) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg'], 'cwd': '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'en_AU:en'), ('USER', 'andrew'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/andrew'), ('CHROME_DESKTOP', 'code-url-handler.desktop'), ('OLDPWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg'), ('TERM_PROGRAM_VERSION', '1.83.1'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1436'), ('SYSTEMD_EXEC_PID', '1865'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '23944'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'andrew'), ('JOURNAL_STREAM', '8:17338'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'andrew'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/MTRN4231:@/tmp/.ICE-unix/1838,unix/MTRN4231:/tmp/.ICE-unix/1838'), ('INVOCATION_ID', '20cddc7e42c04e0a95a84e3b369bfcfd'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('LANG', 'en_AU.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-3d5585e705.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', '--ms-enable-electron-run-as-node'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[10.217308] (winners_pkg) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[10.217471] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/camTest\n'}
+[10.218180] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/camTest" to ""\n'}
+[10.218237] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/ballPose\n'}
+[10.220381] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/ballPose" to ""\n'}
+[10.220441] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/velcroPadPose\n'}
+[10.222335] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/velcroPadPose" to ""\n'}
+[10.222384] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/transforms\n'}
+[10.224029] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/transforms" to ""\n'}
+[10.224073] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/RobotControl\n'}
+[10.226194] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/RobotControl" to ""\n'}
+[10.226236] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/Brain\n'}
+[10.228292] (winners_pkg) StdoutLine: {'line': b'-- Set runtime path of "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/lib/winners_pkg/Brain" to ""\n'}
+[10.228338] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/launch\n'}
+[10.228378] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/launch/winners_launch.py\n'}
+[10.228400] (-) TimerEvent: {}
+[10.228474] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/package_run_dependencies/winners_pkg\n'}
+[10.228510] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/parent_prefix_path/winners_pkg\n'}
+[10.228619] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.sh\n'}
+[10.228732] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/ament_prefix_path.dsv\n'}
+[10.228765] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/path.sh\n'}
+[10.228817] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/environment/path.dsv\n'}
+[10.228844] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.bash\n'}
+[10.228868] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.sh\n'}
+[10.228901] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.zsh\n'}
+[10.228923] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/local_setup.dsv\n'}
+[10.228949] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/package.dsv\n'}
+[10.228980] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/ament_index/resource_index/packages/winners_pkg\n'}
+[10.229016] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig.cmake\n'}
+[10.229046] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/cmake/winners_pkgConfig-version.cmake\n'}
+[10.229078] (winners_pkg) StdoutLine: {'line': b'-- Installing: /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg/share/winners_pkg/package.xml\n'}
+[10.229972] (winners_pkg) CommandEnded: {'returncode': 0}
+[10.296475] (winners_pkg) JobEnded: {'identifier': 'winners_pkg', 'rc': 0}
+[10.297001] (-) EventReactorShutdown: {}

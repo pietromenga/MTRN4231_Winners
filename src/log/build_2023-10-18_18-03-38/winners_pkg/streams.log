@@ -1,0 +1,33 @@
+[0.107s] Invoking command in '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg': /usr/bin/cmake /home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg -DCMAKE_INSTALL_PREFIX=/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg
+[0.154s] -- The C compiler identification is GNU 11.4.0
+[0.179s] -- The CXX compiler identification is GNU 11.4.0
+[0.182s] -- Detecting C compiler ABI info
+[0.216s] -- Detecting C compiler ABI info - done
+[0.219s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.219s] -- Detecting C compile features
+[0.220s] -- Detecting C compile features - done
+[0.221s] -- Detecting CXX compiler ABI info
+[0.259s] -- Detecting CXX compiler ABI info - done
+[0.263s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.263s] -- Detecting CXX compile features
+[0.263s] -- Detecting CXX compile features - done
+[0.267s] [31mCMake Error at CMakeLists.txt:9 (find_package):
+[0.267s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[0.267s]   has asked CMake to find a package configuration file provided by
+[0.267s]   "ament_cmake", but CMake did not find one.
+[0.267s] 
+[0.267s]   Could not find a package configuration file provided by "ament_cmake" with
+[0.267s]   any of the following names:
+[0.267s] 
+[0.267s]     ament_cmakeConfig.cmake
+[0.267s]     ament_cmake-config.cmake
+[0.267s] 
+[0.267s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[0.267s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[0.267s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[0.267s]   has been installed.
+[0.267s] 
+[0.268s] [0m
+[0.268s] -- Configuring incomplete, errors occurred!
+[0.268s] See also "/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg/CMakeFiles/CMakeOutput.log".
+[0.269s] Invoked command in '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/winners_pkg' returned '1': /usr/bin/cmake /home/andrew/4231/project_workspace/MTRN4231_Winners/src/winners_pkg -DCMAKE_INSTALL_PREFIX=/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/winners_pkg

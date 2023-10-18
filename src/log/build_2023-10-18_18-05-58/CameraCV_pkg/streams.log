@@ -1,0 +1,23 @@
+[0.289s] Invoking command in '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg': PYTHONPATH=/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/prefix_override:/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../build/CameraCV_pkg build --build-base /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build install --record /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log --single-version-externally-managed
+[0.381s] running egg_info
+[0.381s] writing ../build/CameraCV_pkg/CameraCV_pkg.egg-info/PKG-INFO
+[0.381s] writing dependency_links to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/dependency_links.txt
+[0.381s] writing entry points to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/entry_points.txt
+[0.381s] writing requirements to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/requires.txt
+[0.381s] writing top-level names to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/top_level.txt
+[0.382s] reading manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'
+[0.382s] writing manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'
+[0.382s] running build
+[0.382s] running build_py
+[0.382s] running install
+[0.382s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.383s]   warnings.warn(
+[0.383s] running install_lib
+[0.383s] running install_data
+[0.383s] running install_egg_info
+[0.384s] removing '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg-0.0.0-py3.10.egg-info' (and everything under it)
+[0.384s] Copying ../build/CameraCV_pkg/CameraCV_pkg.egg-info to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg-0.0.0-py3.10.egg-info
+[0.384s] running install_scripts
+[0.394s] Installing test_node script to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/CameraCV_pkg
+[0.394s] writing list of installed files to '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log'
+[0.404s] Invoked command in '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/CameraCV_pkg' returned '0': PYTHONPATH=/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/prefix_override:/home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../build/CameraCV_pkg build --build-base /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build install --record /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log --single-version-externally-managed

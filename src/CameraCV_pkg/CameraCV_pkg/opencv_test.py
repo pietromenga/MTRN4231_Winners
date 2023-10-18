@@ -1,80 +1,59 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-import cvzone
-import math
 import cv2
-from cvzone.ColorModule import ColorFinder
-import numpy as np
+import time
 
 class MyNode(Node):
-    # Initialize the Video
-    cap = cv2.VideoCapture(0)
+    def __init__(self):
+        super().__init__('my_node')
+        self.cap1 = cv2.VideoCapture(0)
+        self.cap2 = cv2.VideoCapture(2)
 
-    # Create the color Finder object
-    myColorFinder = ColorFinder(False)
-    hsvVals = {'hmin': 8, 'smin': 96, 'vmin': 115, 'hmax': 14, 'smax': 255, 'vmax': 255}
+        # Set resolution to 1080p for both cameras
+        for cap in [self.cap1, self.cap2]:
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            cap.set(cv2.CAP_PROP_FPS, 60)
 
-    # Variables
-    posListX, posListY = [], []
-    xList = [item for item in range(0, 1300)]
-    prediction = False
+        self.show_video()
 
-    while True:
-        # Grab the image
+    def show_video(self):
+        frame_count = 0
+        start_time = time.time()
+        fps = 0  # Initialize fps to 0
 
-        success, img = cap.read()
-        # img = cv2.imread("Ball.png")
-        img = img[0:900, :]
+        while True:
+            success1, img1 = self.cap1.read()
+            success2, img2 = self.cap2.read()
 
-        # Find the Color Ball
-        imgColor, mask = myColorFinder.update(img, hsvVals)
-        # Find location of the Ball
-        imgContours, contours = cvzone.findContours(img, mask, minArea=500)
+            if not success1:
+                self.get_logger().warn("Failed to read frame from camera 1")
+                break
 
-        if contours:
-            posListX.append(contours[0]['center'][0])
-            posListY.append(contours[0]['center'][1])
+            if not success2:
+                self.get_logger().warn("Failed to read frame from camera 2")
+                break
 
-        if posListX:
-            # Polynomial Regression y = Ax^2 + Bx + C
-            # Find the Coefficients
-            A, B, C = np.polyfit(posListX, posListY, 2)
+            frame_count += 1
+            elapsed_time = time.time() - start_time
 
-            for i, (posX, posY) in enumerate(zip(posListX, posListY)):
-                pos = (posX, posY)
-                cv2.circle(imgContours, pos, 10, (0, 255, 0), cv2.FILLED)
-                if i == 0:
-                    cv2.line(imgContours, pos, pos, (0, 255, 0), 5)
-                else:
-                    cv2.line(imgContours, pos, (posListX[i - 1], posListY[i - 1]), (0, 255, 0), 5)
+            if elapsed_time > 1:  # every second
+                fps = frame_count / elapsed_time
+                print(f"FPS: {fps:.2f}")
+                frame_count = 0
+                start_time = time.time()
 
-            for x in xList:
-                y = int(A * x ** 2 + B * x + C)
-                cv2.circle(imgContours, (x, y), 2, (255, 0, 255), cv2.FILLED)
+            cv2.putText(img1, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(img2, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            if len(posListX) < 10:
-                # Prediction
-                # X values 330 to 430  Y 590
-                a = A
-                b = B
-                c = C - 590
+            cv2.imshow("Camera 1 Stream", img1)
+            cv2.imshow("Camera 2 Stream", img2)
 
-                x = int((-b - math.sqrt(b ** 2 - (4 * a * c))) / (2 * a))
-                prediction = 330 < x < 430
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-            if prediction:
-                cvzone.putTextRect(imgContours, "Basket", (50, 150),
-                                scale=5, thickness=5, colorR=(0, 200, 0), offset=20)
-            else:
-                cvzone.putTextRect(imgContours, "No Basket", (50, 150),
-                                scale=5, thickness=5, colorR=(0, 0, 200), offset=20)
-
-        # Display
-        imgContours = cv2.resize(imgContours, (0, 0), None, 0.7, 0.7)
-        # cv2.imshow("Image", img)
-        cv2.imshow("ImageColor", imgContours)
-        cv2.waitKey(100)
+        cv2.destroyAllWindows()
 
 def main(args=None):
     rclpy.init(args=args)
@@ -84,5 +63,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-

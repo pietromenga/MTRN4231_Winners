@@ -1,0 +1,37 @@
+running egg_info
+creating ../build/CameraCV_pkg/CameraCV_pkg.egg-info
+writing ../build/CameraCV_pkg/CameraCV_pkg.egg-info/PKG-INFO
+writing dependency_links to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/dependency_links.txt
+writing entry points to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/entry_points.txt
+writing requirements to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/requires.txt
+writing top-level names to ../build/CameraCV_pkg/CameraCV_pkg.egg-info/top_level.txt
+writing manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'
+reading manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'
+writing manifest file '../build/CameraCV_pkg/CameraCV_pkg.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib/CameraCV_pkg
+copying CameraCV_pkg/__init__.py -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib/CameraCV_pkg
+copying CameraCV_pkg/opencv_test.py -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib/CameraCV_pkg
+running install
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running install_lib
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg
+copying /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib/CameraCV_pkg/__init__.py -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg
+copying /home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/build/lib/CameraCV_pkg/opencv_test.py -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg
+byte-compiling /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg/opencv_test.py to opencv_test.cpython-310.pyc
+running install_data
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/share/ament_index
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/share/ament_index/resource_index
+creating /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/share/ament_index/resource_index/packages
+copying resource/CameraCV_pkg -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/share/ament_index/resource_index/packages
+copying package.xml -> /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/share/CameraCV_pkg
+running install_egg_info
+Copying ../build/CameraCV_pkg/CameraCV_pkg.egg-info to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/python3.10/site-packages/CameraCV_pkg-0.0.0-py3.10.egg-info
+running install_scripts
+Installing test_node script to /home/andrew/4231/project_workspace/MTRN4231_Winners/src/install/CameraCV_pkg/lib/CameraCV_pkg
+writing list of installed files to '/home/andrew/4231/project_workspace/MTRN4231_Winners/src/build/CameraCV_pkg/install.log'
