@@ -97,11 +97,7 @@ install(TARGETS
   velcroPadPose
   transforms
   RobotControl
-  Brain
   DESTINATION lib/${PROJECT_NAME})
 
-# For launch folder
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME})
 
 ament_package()
