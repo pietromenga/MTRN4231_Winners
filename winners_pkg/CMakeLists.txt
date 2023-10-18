@@ -80,10 +80,6 @@ ament_target_dependencies(TrajectoryCalculator ${THIS_PACKAGE_INCLUDE_DEPENDS})
 add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
-# DUAL CAMERAS
-add_executable(dual_cam_test src/dual_cam_test.cpp)
-ament_target_dependencies(dual_cam_test rclcpp)
-
 
 # add_executable(ballPose src/ballPose.cpp)
 # ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
