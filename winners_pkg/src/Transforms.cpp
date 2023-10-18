@@ -3,7 +3,7 @@
 TFBroadcaster::TFBroadcaster() : Node("TFBroadcaster")
 {
     ballpose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "ball_pose", 10, std::bind(&TFBroadcaster::tf_ball, this, _1));
-    velcropose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "velcro_pad_pose", 10, std::bind(&TFBroadcaster::tf_velcro, this, _1));
+    velcropose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>( "ball_prediction", 10, std::bind(&TFBroadcaster::tf_prediction, this, _1));
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
     tf_static_broadcaster_ = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 
@@ -17,15 +17,17 @@ void TFBroadcaster::tf_ball(const geometry_msgs::msg::PoseStamped & msg)
     // RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.pose.position.x);
 
     geometry_msgs::msg::TransformStamped transform_msg;
+    transform_msg.header.frame_id = "ball_tf";
     tf_broadcaster_->sendTransform(transform_msg);
 }
 
 // Dynamic transform the velcro to the world space
-void TFBroadcaster::tf_velcro(const geometry_msgs::msg::PoseStamped & msg)
+void TFBroadcaster::tf_prediction(const geometry_msgs::msg::PoseStamped & msg)
 {
     // RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.pose.position.x);
 
     geometry_msgs::msg::TransformStamped transform_msg;
+    transform_msg.header.frame_id = "ball_prediction_tf";
     tf_broadcaster_->sendTransform(transform_msg);
 }
 

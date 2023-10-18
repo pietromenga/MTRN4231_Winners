@@ -19,7 +19,7 @@ public:
 
 private:
     void tf_ball(const geometry_msgs::msg::PoseStamped & msg);
-    void tf_velcro(const geometry_msgs::msg::PoseStamped & msg);
+    void tf_prediction(const geometry_msgs::msg::PoseStamped & msg);
     void setupStaticTransforms();
 
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr ballpose_sub_;

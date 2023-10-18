@@ -57,12 +57,8 @@ add_executable(camTest src/camTest.cpp)
 ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BALL POSE
-add_executable(ballPose src/ballPose.cpp)
-ament_target_dependencies(ballPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
-# VELCRO PAD POSE
-add_executable(velcroPadPose src/velcroPadPose.cpp)
-ament_target_dependencies(velcroPadPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
+add_executable(BallPose src/BallPose.cpp)
+ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(Transforms src/Transforms.cpp)
@@ -75,6 +71,10 @@ ament_target_dependencies(Visualisations ${THIS_PACKAGE_INCLUDE_DEPENDS})
 # ROBOT CONTROL 
 add_executable(RobotControl src/RobotControl.cpp)
 ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+# ROBOT CONTROL 
+add_executable(TrajectoryCalculator src/TrajectoryCalculator.cpp)
+ament_target_dependencies(TrajectoryCalculator ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BRAIN
 add_executable(Brain src/Brain.cpp)
@@ -99,12 +99,12 @@ endif()
 
 install(TARGETS
   camTest
-  ballPose
-  velcroPadPose
+  BallPose
   Transforms
   Visualisations
   RobotControl
   Brain
+  TrajectoryCalculator
   DESTINATION lib/${PROJECT_NAME})
 
 # For launch folder

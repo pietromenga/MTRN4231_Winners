@@ -2,7 +2,7 @@
 
 Visualisations::Visualisations() : Node("Visualisations") {
     pubmarker = this->create_publisher<visualization_msgs::msg::Marker>("/visualization_marker", 10);
-	timer = this->create_wall_timer(
+	  timer = this->create_wall_timer(
       1000ms, std::bind(&Visualisations::setupMarkers, this));
     markerCount = 0;
     setupMarkers();
@@ -18,6 +18,7 @@ void Visualisations::setupMarkers() {
     camera1.header.frame_id = "camera1";
     camera1.header.stamp = this->now();
     camera1.id = markerCount++;
+    camera1.lifetime.sec = 1;
     camera1.action = visualization_msgs::msg::Marker::ADD;
     camera1.type = visualization_msgs::msg::Marker::CUBE;
     camera1.scale.x = 0.1;
@@ -33,6 +34,7 @@ void Visualisations::setupMarkers() {
     camera2.header.frame_id = "camera2";
     camera2.header.stamp = this->now();
     camera2.id = markerCount++;
+    camera2.lifetime.sec = 1;
     camera2.action = visualization_msgs::msg::Marker::ADD;
     camera2.type = visualization_msgs::msg::Marker::CUBE;
     camera2.scale.x = 0.1;
@@ -48,6 +50,7 @@ void Visualisations::setupMarkers() {
     ball.header.frame_id = "ball_tf";
     ball.header.stamp = this->now();
     ball.id = markerCount++;
+    ball.lifetime.sec = 1;
     ball.action = visualization_msgs::msg::Marker::ADD;
     ball.type = visualization_msgs::msg::Marker::CUBE;
     ball.frame_locked = true;
@@ -75,6 +78,22 @@ void Visualisations::setupMarkers() {
     catchBox.color.a = 0.25;
     catchBox.pose.position.z = catchBox.scale.z / 2.0;
     catchBox.pose.position.x = -0.25;
+
+    // ball predict arrow
+    catchBox.header.frame_id = "ball_prediction_tf";
+    catchBox.header.stamp = this->now();
+    catchBox.id = markerCount++;
+    catchBox.lifetime.sec = 1;
+    catchBox.action = visualization_msgs::msg::Marker::ADD;
+    catchBox.type = visualization_msgs::msg::Marker::ARROW;
+    catchBox.frame_locked = true;
+    catchBox.scale.x = 0.1;
+    catchBox.scale.y = 0.1;
+    catchBox.scale.z = 0.1;
+    catchBox.color.r = 1.0;
+    catchBox.color.g = 0.0;
+    catchBox.color.b = 0.0;
+    catchBox.color.a = 1.0;
 
     // Publish all marker
     // markers.markers.push_back(camera1);
