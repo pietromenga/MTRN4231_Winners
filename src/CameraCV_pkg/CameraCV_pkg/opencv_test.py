@@ -3,63 +3,69 @@ import rclpy
 from rclpy.node import Node
 import cv2
 import time
+from multiprocessing import Process
 
-class MyNode(Node):
-    def __init__(self):
-        super().__init__('my_node')
-        self.cap1 = cv2.VideoCapture(0)
-        self.cap2 = cv2.VideoCapture(2)
+def process_camera(camera_id, output_file):
+    rclpy.init()
+    node = Node('my_node_' + str(camera_id))
 
-        # Set resolution to 1080p for both cameras
-        for cap in [self.cap1, self.cap2]:
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-            cap.set(cv2.CAP_PROP_FPS, 60)
+    cap = cv2.VideoCapture(camera_id)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    cap.set(cv2.CAP_PROP_FPS, 60)
 
-        self.show_video()
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    out = cv2.VideoWriter(output_file, fourcc, 60, (1920, 1080))
 
-    def show_video(self):
-        frame_count = 0
-        start_time = time.time()
-        fps = 0  # Initialize fps to 0
+    frame_count = 0
+    start_time = time.time()
+    fps = 0
 
-        while True:
-            success1, img1 = self.cap1.read()
-            success2, img2 = self.cap2.read()
+    while True:
+        success, img = cap.read()
+        if not success:
+            node.get_logger().warn(f"Failed to read frame from camera {camera_id}")
+            break
 
-            if not success1:
-                self.get_logger().warn("Failed to read frame from camera 1")
-                break
+        out.write(img)
+        frame_count += 1
+        elapsed_time = time.time() - start_time
 
-            if not success2:
-                self.get_logger().warn("Failed to read frame from camera 2")
-                break
+        if elapsed_time > 1:
+            fps = frame_count / elapsed_time
+            print(f"Camera {camera_id} FPS: {fps:.2f}")
+            frame_count = 0
+            start_time = time.time()
 
-            frame_count += 1
-            elapsed_time = time.time() - start_time
+        cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.imshow(f"Camera {camera_id} Stream", img)
 
-            if elapsed_time > 1:  # every second
-                fps = frame_count / elapsed_time
-                print(f"FPS: {fps:.2f}")
-                frame_count = 0
-                start_time = time.time()
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-            cv2.putText(img1, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            cv2.putText(img2, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    out.release()
+    cv2.destroyAllWindows()
+    rclpy.shutdown()
 
-            cv2.imshow("Camera 1 Stream", img1)
-            cv2.imshow("Camera 2 Stream", img2)
+if __name__ == '__main__':
+    p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
+    p2 = Process(target=process_camera, args=(1, 'compressed_output1.avi'))
 
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+    p1.start()
+    p2.start()
 
-        cv2.destroyAllWindows()
+    p1.join()
+    p2.join()
 
 def main(args=None):
-    rclpy.init(args=args)
-    node = MyNode()
-    rclpy.spin(node)
-    rclpy.shutdown()
+    p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
+    p2 = Process(target=process_camera, args=(1, 'compressed_output1.avi'))
+
+    p1.start()
+    p2.start()
+
+    p1.join()
+    p2.join()
 
 if __name__ == '__main__':
     main()
