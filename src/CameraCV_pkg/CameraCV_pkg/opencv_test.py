@@ -47,17 +47,50 @@ def process_camera(camera_id, output_file):
         mask2 = cv2.inRange(hsv, lower_red, upper_red)
 
         mask = mask1 + mask2
+        ######### PIETRO CHANGES #############
 
-        # Detect blobs in the mask
-        keypoints = detector.detect(mask)
+        # GREEN MASK
+        mask = cv2.inRange(hsv, (36,25,25), (76,240,240))
 
-        # Draw detected blobs on the original image
-        for keypoint in keypoints:
-            x, y = map(int, keypoint.pt)
-            cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
+        # Processing mask to reduce noise
+        mask = cv2.erode(mask, kernel, iterations=3)
+        mask = cv2.dilate(mask, kernel, iterations=3)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
+        # METHOD 1 - DISTANCE
+        dist = cv2.distanceTransform(mask,cv2.DIST_L2, 5)
+        dist_output = cv2.normalize(dist, None, 0, 1.0, cv2.NORM_MINMAX) 
+        indexMax = np.argmax(dist_output)
+        y = int(np.floor(indexMax / dist.shape[1]))
+        x = int(indexMax % dist.shape[1])
+        cv2.circle(img, (x, y), 10, (255, 0, 0), -1)  # Green circle
+
+        # METHOD 2 - https://pyimagesearch.com/2015/09/14/ball-tracking-with-opencv/
+        # cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # cnts = imutils.grab_contours(cnts)
+        # if len(cnts) > 0:
+        #     # find the largest contour in the mask, then use
+        #     # it to compute the minimum enclosing circle and
+        #     # centroid
+        #     c = max(cnts, key=cv2.contourArea)
+        #     ((x, y), radius) = cv2.minEnclosingCircle(c)
+        #     M = cv2.moments(c)
+        #     center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+        #     cv2.circle(img, center, 10, (255, 0, 0), -1)
+
+        #####################################
+
+        # # Detect blobs in the mask
+        # keypoints = detector.detect(mask)
+
+        # # Draw detected blobs on the original image
+        # for keypoint in keypoints:
+        #     x, y = map(int, keypoint.pt)
+        #     cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
 
         # Add FPS counter to the original image
-        cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        # cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # Show the original image
         cv2.imshow(f"Camera {camera_id} Stream", img)
