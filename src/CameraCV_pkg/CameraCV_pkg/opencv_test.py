@@ -52,6 +52,9 @@ def process_camera(camera_id, output_file):
         # GREEN MASK
         mask = cv2.inRange(hsv, (36,25,25), (76,240,240))
 
+        # Define the kernel
+        kernel = np.ones((5, 5), np.uint8)
+
         # Processing mask to reduce noise
         mask = cv2.erode(mask, kernel, iterations=3)
         mask = cv2.dilate(mask, kernel, iterations=3)
