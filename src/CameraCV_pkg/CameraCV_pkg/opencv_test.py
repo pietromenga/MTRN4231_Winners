@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 import cv2
+import numpy as np
 import time
 from multiprocessing import Process
 
@@ -33,8 +34,6 @@ def process_camera(camera_id, output_file):
         # Define lower and upper bounds for red color
         lower_red = (0, 120, 70)
         upper_red = (10, 255, 255)
-
-        # Create a mask for red color
         mask1 = cv2.inRange(hsv, lower_red, upper_red)
 
         lower_red = (160, 120, 70)
@@ -43,8 +42,20 @@ def process_camera(camera_id, output_file):
 
         mask = mask1 + mask2
 
-        # Show the mask
-        cv2.imshow(f"Camera {camera_id} Red Mask", mask)
+        # Detect circles in the mask
+        circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=0, maxRadius=0)
+
+        # If some circles are detected, draw them on the original image
+        if circles is not None:
+            circles = np.round(circles[0, :]).astype("int")
+            for (x, y, r) in circles:
+                cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
+
+        # Add FPS counter to the original image
+        cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        # Show the original image
+        cv2.imshow(f"Camera {camera_id} Stream", img)
 
         out.write(img)
         frame_count += 1
@@ -56,25 +67,12 @@ def process_camera(camera_id, output_file):
             frame_count = 0
             start_time = time.time()
 
-        cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-        cv2.imshow(f"Camera {camera_id} Stream", img)
-
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     out.release()
     cv2.destroyAllWindows()
     rclpy.shutdown()
-
-if __name__ == '__main__':
-    p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
-    p2 = Process(target=process_camera, args=(2, 'compressed_output1.avi'))
-
-    p1.start()
-    p2.start()
-
-    p1.join()
-    p2.join()
 
 def main(args=None):
     p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
