@@ -18,6 +18,12 @@ def process_camera(camera_id, output_file):
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     out = cv2.VideoWriter(output_file, fourcc, 60, (1920, 1080))
 
+    # Initialize blob detector
+    params = cv2.SimpleBlobDetector_Params()
+    params.filterByArea = True
+    params.minArea = 10  # Adjust this value based on your specific use case
+    detector = cv2.SimpleBlobDetector_create(params)
+
     frame_count = 0
     start_time = time.time()
     fps = 0
@@ -42,14 +48,13 @@ def process_camera(camera_id, output_file):
 
         mask = mask1 + mask2
 
-        # Detect circles in the mask
-        circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=0, maxRadius=0)
+        # Detect blobs in the mask
+        keypoints = detector.detect(mask)
 
-        # If some circles are detected, draw them on the original image
-        if circles is not None:
-            circles = np.round(circles[0, :]).astype("int")
-            for (x, y, r) in circles:
-                cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
+        # Draw detected blobs on the original image
+        for keypoint in keypoints:
+            x, y = map(int, keypoint.pt)
+            cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
 
         # Add FPS counter to the original image
         cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
