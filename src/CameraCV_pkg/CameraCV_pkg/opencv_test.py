@@ -27,6 +27,25 @@ def process_camera(camera_id, output_file):
             node.get_logger().warn(f"Failed to read frame from camera {camera_id}")
             break
 
+        # Convert to HSV color space
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        # Define lower and upper bounds for red color
+        lower_red = (0, 120, 70)
+        upper_red = (10, 255, 255)
+
+        # Create a mask for red color
+        mask1 = cv2.inRange(hsv, lower_red, upper_red)
+
+        lower_red = (160, 120, 70)
+        upper_red = (180, 255, 255)
+        mask2 = cv2.inRange(hsv, lower_red, upper_red)
+
+        mask = mask1 + mask2
+
+        # Show the mask
+        cv2.imshow(f"Camera {camera_id} Red Mask", mask)
+
         out.write(img)
         frame_count += 1
         elapsed_time = time.time() - start_time
@@ -49,7 +68,7 @@ def process_camera(camera_id, output_file):
 
 if __name__ == '__main__':
     p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
-    p2 = Process(target=process_camera, args=(1, 'compressed_output1.avi'))
+    p2 = Process(target=process_camera, args=(2, 'compressed_output1.avi'))
 
     p1.start()
     p2.start()
@@ -59,7 +78,7 @@ if __name__ == '__main__':
 
 def main(args=None):
     p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
-    p2 = Process(target=process_camera, args=(1, 'compressed_output1.avi'))
+    p2 = Process(target=process_camera, args=(2, 'compressed_output1.avi'))
 
     p1.start()
     p2.start()
