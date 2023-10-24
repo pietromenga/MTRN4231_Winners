@@ -57,8 +57,8 @@ def process_camera(camera_id, output_file):
             print(f"Camera {camera_id} Blue Dot Coordinates: X: {x}, Y: {y}")
 
             height, width = img.shape[:2]
-            fov_horizontal = 90  # horizontal field of view in degrees
-            fov_vertical = 50.625  # vertical field of view in degrees
+            fov_horizontal = 83  # horizontal field of view in degrees
+            fov_vertical = 53 # vertical field of view in degrees
 
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
