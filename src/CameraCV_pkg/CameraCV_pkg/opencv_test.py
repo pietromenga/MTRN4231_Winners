@@ -18,12 +18,6 @@ def process_camera(camera_id, output_file):
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     out = cv2.VideoWriter(output_file, fourcc, 60, (1920, 1080))
 
-    # Initialize blob detector
-    params = cv2.SimpleBlobDetector_Params()
-    params.filterByArea = True
-    params.minArea = 10  # Adjust this value based on your specific use case
-    detector = cv2.SimpleBlobDetector_create(params)
-
     frame_count = 0
     start_time = time.time()
     fps = 0
@@ -34,66 +28,42 @@ def process_camera(camera_id, output_file):
             node.get_logger().warn(f"Failed to read frame from camera {camera_id}")
             break
 
-        # Convert to HSV color space
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        if img is not None:
+            # Convert to HSV color space
+            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        # Define lower and upper bounds for red color
-        lower_red = (0, 120, 70)
-        upper_red = (10, 255, 255)
-        mask1 = cv2.inRange(hsv, lower_red, upper_red)
+            # Define lower and upper bounds for blue color
+            lower_blue = np.array([100, 50, 50])
+            upper_blue = np.array([140, 255, 255])
+            mask_blue = cv2.inRange(hsv, lower_blue, upper_blue)
 
-        lower_red = (160, 120, 70)
-        upper_red = (180, 255, 255)
-        mask2 = cv2.inRange(hsv, lower_red, upper_red)
+            # Define the kernel
+            kernel = np.ones((5, 5), np.uint8)
 
-        mask = mask1 + mask2
-        ######### PIETRO CHANGES #############
+            # Processing mask to reduce noise
+            mask_blue = cv2.erode(mask_blue, kernel, iterations=3)
+            mask_blue = cv2.dilate(mask_blue, kernel, iterations=3)
+            mask_blue = cv2.morphologyEx(mask_blue, cv2.MORPH_OPEN, kernel)
+            mask_blue = cv2.morphologyEx(mask_blue, cv2.MORPH_CLOSE, kernel)
 
-        # GREEN MASK
-        mask = cv2.inRange(hsv, (36,25,25), (76,240,240))
+            # Find the blue dot
+            dist = cv2.distanceTransform(mask_blue, cv2.DIST_L2, 5)
+            dist_output = cv2.normalize(dist, None, 0, 1.0, cv2.NORM_MINMAX)
+            indexMax = np.argmax(dist_output)
+            y = int(np.floor(indexMax / dist.shape[1]))
+            x = int(indexMax % dist.shape[1])
+            cv2.circle(img, (x, y), 10, (255, 0, 0), -1)  # Blue circle
 
-        # Define the kernel
-        kernel = np.ones((5, 5), np.uint8)
+            print(f"Camera {camera_id} Blue Dot Coordinates: X: {x}, Y: {y}")
 
-        # Processing mask to reduce noise
-        mask = cv2.erode(mask, kernel, iterations=3)
-        mask = cv2.dilate(mask, kernel, iterations=3)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+            height, width = img.shape[:2]
+            fov_horizontal = 90  # horizontal field of view in degrees
+            fov_vertical = 50.625  # vertical field of view in degrees
 
-        # METHOD 1 - DISTANCE
-        dist = cv2.distanceTransform(mask,cv2.DIST_L2, 5)
-        dist_output = cv2.normalize(dist, None, 0, 1.0, cv2.NORM_MINMAX) 
-        indexMax = np.argmax(dist_output)
-        y = int(np.floor(indexMax / dist.shape[1]))
-        x = int(indexMax % dist.shape[1])
-        cv2.circle(img, (x, y), 10, (255, 0, 0), -1)  # Green circle
+            yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
+            pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
 
-        # METHOD 2 - https://pyimagesearch.com/2015/09/14/ball-tracking-with-opencv/
-        # cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        # cnts = imutils.grab_contours(cnts)
-        # if len(cnts) > 0:
-        #     # find the largest contour in the mask, then use
-        #     # it to compute the minimum enclosing circle and
-        #     # centroid
-        #     c = max(cnts, key=cv2.contourArea)
-        #     ((x, y), radius) = cv2.minEnclosingCircle(c)
-        #     M = cv2.moments(c)
-        #     center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-        #     cv2.circle(img, center, 10, (255, 0, 0), -1)
-
-        #####################################
-
-        # # Detect blobs in the mask
-        # keypoints = detector.detect(mask)
-
-        # # Draw detected blobs on the original image
-        # for keypoint in keypoints:
-        #     x, y = map(int, keypoint.pt)
-        #     cv2.circle(img, (x, y), 7, (0, 255, 0), -1)  # Green circle
-
-        # Add FPS counter to the original image
-        # cv2.putText(img, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            print(f"Camera {camera_id} Yaw: {yaw:.2f}, Pitch: {pitch:.2f}")
 
         # Show the original image
         cv2.imshow(f"Camera {camera_id} Stream", img)
