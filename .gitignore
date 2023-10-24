@@ -85,3 +85,7 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
+# not sure
+src/install/
+src/log/

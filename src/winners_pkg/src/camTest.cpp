@@ -49,19 +49,21 @@ private:
 
 int main(int argc, char **argv)
 {
+
+    std::cout << "OpenCV version: " << CV_VERSION << std::endl;
     rclcpp::init(argc, argv);
 
-    auto camera_node_0 = std::make_shared<CameraNode>(0);
-    auto camera_node_1 = std::make_shared<CameraNode>(1);
+    auto camera_node_0 = std::make_shared<CameraNode>(0);  // For /dev/video0
+    auto camera_node_2 = std::make_shared<CameraNode>(2);  // For /dev/video2
 
     rclcpp::executors::MultiThreadedExecutor executor;
     executor.add_node(camera_node_0);
-    executor.add_node(camera_node_1);
+    executor.add_node(camera_node_2);
 
     while (rclcpp::ok())
     {
         camera_node_0->publish_frame();
-        camera_node_1->publish_frame();
+        camera_node_2->publish_frame();
         executor.spin_some();
     }
 

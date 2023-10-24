@@ -116,6 +116,8 @@ def process_camera(camera_id, output_file):
     rclpy.shutdown()
 
 def main(args=None):
+    print(cv2.__version__)
+
     p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
     p2 = Process(target=process_camera, args=(2, 'compressed_output1.avi'))
 
