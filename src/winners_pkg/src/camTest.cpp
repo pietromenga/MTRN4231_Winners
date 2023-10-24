@@ -1,86 +1,70 @@
-// Copyright 2016 Open Source Robotics Foundation, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-#include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/image.hpp>
+#include <vector>
 
-#include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/pose.hpp"
-
-using namespace std::chrono_literals;
-
-/* This example creates a subclass of Node and uses std::bind() to register a
- * member function as a callback from the timer. */
-
-class MinimalPublisher : public rclcpp::Node
+class CameraNode : public rclcpp::Node
 {
 public:
-    MinimalPublisher()
-    : Node("minimal_publisher"), count_(0)
+    CameraNode(int camera_id) : Node("camera_node_" + std::to_string(camera_id)), camera_id_(camera_id)
     {
-        publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("topic", 10);
-        timer_ = this->create_wall_timer(
-        2ms, std::bind(&MinimalPublisher::captureImg, this));
+        publisher_ = this->create_publisher<sensor_msgs::msg::Image>("/image_raw_" + std::to_string(camera_id), 10);
+        cap_.open(camera_id);
 
-        int deviceID;
-        std::cout << "Choose a /dev/video device num" << std::endl;
-        std::cin >> deviceID; // 0 = open default camera. Use v4l2-ctl --list-devices to find out which device id
-        int apiID = cv::CAP_ANY; 
-        cap.open(deviceID, apiID);
+        if (!cap_.isOpened())
+        {
+            RCLCPP_ERROR(this->get_logger(), "Could not open camera %d", camera_id);
+        }
+    }
 
-        // check if we succeeded
-        if (!cap.isOpened()) {
-            std::cerr << "#### ERROR! Unable to open camera\n";
+    void publish_frame()
+    {
+        cv::Mat frame;
+        sensor_msgs::msg::Image msg;
+
+        msg.encoding = "bgr8";
+        msg.height = 1080;
+        msg.width = 1920;
+        msg.step = 1920 * 3; // width * 3 bytes per pixel for BGR format
+
+        cap_ >> frame;
+
+        if (frame.empty())
+        {
+            RCLCPP_ERROR(this->get_logger(), "Captured frame is empty");
+            return;
         }
 
-        prevTime = std::chrono::system_clock::now();
+        msg.header.stamp = this->now();
+        msg.data = std::vector<uint8_t>(frame.data, frame.data + frame.total() * frame.elemSize());
+
+        publisher_->publish(msg);
     }
 
 private:
-    void captureImg();
-    rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr publisher_;
-    size_t count_;
-    cv::VideoCapture cap;
-    std::chrono::time_point<std::chrono::system_clock> prevTime;
+    int camera_id_;
+    cv::VideoCapture cap_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
 };
 
-void MinimalPublisher::captureImg() {
-
-    cv::Mat frame;
-    cap.read(frame);
-
-    if (!frame.empty()) {
-        cv::imshow("me", frame);
-        cv::waitKey(5);
-    }
-
-    std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = now - prevTime;
-    std::cout << "Elapsed time, " << elapsed_seconds.count() <<  " " << frame.size().height << " " << frame.size().width << std::endl;
-
-    prevTime = now;
-}
-
-int main(int argc, char * argv[])
+int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<MinimalPublisher>());
+
+    auto camera_node_0 = std::make_shared<CameraNode>(0);
+    auto camera_node_1 = std::make_shared<CameraNode>(1);
+
+    rclcpp::executors::MultiThreadedExecutor executor;
+    executor.add_node(camera_node_0);
+    executor.add_node(camera_node_1);
+
+    while (rclcpp::ok())
+    {
+        camera_node_0->publish_frame();
+        camera_node_1->publish_frame();
+        executor.spin_some();
+    }
+
     rclcpp::shutdown();
     return 0;
 }

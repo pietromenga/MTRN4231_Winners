@@ -15,7 +15,7 @@
   <depend>std_srvs</depend>
   <depend>visualization_msgs</depend>
   <depend>trajectory_msgs</depend>
-
+  <depend>opencv</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>control_msgs</depend>
