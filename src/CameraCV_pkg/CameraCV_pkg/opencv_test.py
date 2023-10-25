@@ -27,11 +27,16 @@ def closest_point_of_approach(p1, d1, p2, d2):
     e = np.dot(d2, w0)
     denom = a * c - b * b
 
-    # Calculate the closest points on each line
-    sc = (b * e - c * d) / denom
-    tc = (a * e - b * d) / denom
-    point_on_line1 = p1 + sc * d1
-    point_on_line2 = p2 + tc * d2
+    # Check if denom is zero
+    if denom != 0:
+        sc = (b * e - c * d) / denom
+        tc = (a * e - b * d) / denom
+        point_on_line1 = p1 + sc * d1
+        point_on_line2 = p2 + tc * d2
+    else:
+        print("Denominator is zero. Cannot proceed with the calculation.")
+        point_on_line1 = np.array([np.nan, np.nan, np.nan])
+        point_on_line2 = np.array([np.nan, np.nan, np.nan])
 
     # Calculate the midpoint between the closest points
     midpoint = (point_on_line1 + point_on_line2) / 2
@@ -87,7 +92,7 @@ def process_camera(camera_id, output_file, camera_position, shared_list):
             x = int(indexMax % dist.shape[1])
             cv2.circle(img, (x, y), 10, (255, 0, 0), -1)  # Blue circle
 
-            print(f"Camera {camera_id} Blue Dot Coordinates: X: {x}, Y: {y}")
+            # print(f"Camera {camera_id} Blue Dot Coordinates: X: {x}, Y: {y}")
 
             height, width = img.shape[:2]
             fov_horizontal = 83  # horizontal field of view in degrees
@@ -96,7 +101,7 @@ def process_camera(camera_id, output_file, camera_position, shared_list):
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
 
-            print(f"Camera {camera_id} Yaw: {yaw:.2f}, Pitch: {pitch:.2f}")
+            # print(f"Camera {camera_id} Yaw: {yaw:.2f}, Pitch: {pitch:.2f}")
 
             # Store yaw and pitch in the shared list
             shared_list.append((camera_id, yaw, pitch))
@@ -117,12 +122,12 @@ def process_camera(camera_id, output_file, camera_position, shared_list):
 
                 # Calculate the closest points and midpoint
                 point1, point2, midpoint = closest_point_of_approach(p1, d1, p2, d2)
-                print(f"Closest point on line 1: {point1}")
-                print(f"Closest point on line 2: {point2}")
+                # print(f"Closest point on line 1: {point1}")
+                # print(f"Closest point on line 2: {point2}")
                 print(f"Midpoint between closest points: {midpoint}")
 
                 # Clear the shared list for the next iteration
-                shared_list.clear()
+                shared_list[:] = []
 
         # Show the original image
         cv2.imshow(f"Camera {camera_id} Stream", img)
