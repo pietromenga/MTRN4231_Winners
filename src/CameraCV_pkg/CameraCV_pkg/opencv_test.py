@@ -5,17 +5,50 @@ import cv2
 import numpy as np
 import time
 from multiprocessing import Process
+from multiprocessing import Manager
+from scipy.spatial.distance import cdist
 
-def process_camera(camera_id, output_file):
+
+def calculate_direction_vector(yaw, pitch):
+    yaw_rad = np.radians(yaw)
+    pitch_rad = np.radians(pitch)
+    dx = np.sin(yaw_rad) * np.cos(pitch_rad)
+    dy = np.cos(yaw_rad) * np.cos(pitch_rad)
+    dz = np.sin(pitch_rad)
+    return np.array([dx, dy, dz])
+
+
+def closest_point_of_approach(p1, d1, p2, d2):
+    w0 = p1 - p2
+    a = np.dot(d1, d1)
+    b = np.dot(d1, d2)
+    c = np.dot(d2, d2)
+    d = np.dot(d1, w0)
+    e = np.dot(d2, w0)
+    denom = a * c - b * b
+
+    # Calculate the closest points on each line
+    sc = (b * e - c * d) / denom
+    tc = (a * e - b * d) / denom
+    point_on_line1 = p1 + sc * d1
+    point_on_line2 = p2 + tc * d2
+
+    # Calculate the midpoint between the closest points
+    midpoint = (point_on_line1 + point_on_line2) / 2
+
+    return point_on_line1, point_on_line2, midpoint
+
+
+def process_camera(camera_id, output_file, camera_position, shared_list):
     rclpy.init()
-    node = Node('my_node_' + str(camera_id))
+    node = Node("my_node_" + str(camera_id))
 
     cap = cv2.VideoCapture(camera_id)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
     cap.set(cv2.CAP_PROP_FPS, 60)
 
-    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    fourcc = cv2.VideoWriter_fourcc(*"MJPG")
     out = cv2.VideoWriter(output_file, fourcc, 60, (1920, 1080))
 
     frame_count = 0
@@ -58,12 +91,38 @@ def process_camera(camera_id, output_file):
 
             height, width = img.shape[:2]
             fov_horizontal = 83  # horizontal field of view in degrees
-            fov_vertical = 53 # vertical field of view in degrees
+            fov_vertical = 53  # vertical field of view in degrees
 
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
 
             print(f"Camera {camera_id} Yaw: {yaw:.2f}, Pitch: {pitch:.2f}")
+
+            # Store yaw and pitch in the shared list
+            shared_list.append((camera_id, yaw, pitch))
+
+            # Check if both cameras have stored their yaw and pitch
+            if len(shared_list) >= 2:
+                # Extract yaw and pitch for both cameras
+                id1, yaw1, pitch1 = shared_list[0]
+                id2, yaw2, pitch2 = shared_list[1]
+
+                # Calculate direction vectors
+                d1 = calculate_direction_vector(yaw1, pitch1)
+                d2 = calculate_direction_vector(yaw2, pitch2)
+
+                # Camera positions
+                p1 = np.array(camera_position[id1])
+                p2 = np.array(camera_position[id2])
+
+                # Calculate the closest points and midpoint
+                point1, point2, midpoint = closest_point_of_approach(p1, d1, p2, d2)
+                print(f"Closest point on line 1: {point1}")
+                print(f"Closest point on line 2: {point2}")
+                print(f"Midpoint between closest points: {midpoint}")
+
+                # Clear the shared list for the next iteration
+                shared_list.clear()
 
         # Show the original image
         cv2.imshow(f"Camera {camera_id} Stream", img)
@@ -78,18 +137,30 @@ def process_camera(camera_id, output_file):
             frame_count = 0
             start_time = time.time()
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     out.release()
     cv2.destroyAllWindows()
     rclpy.shutdown()
 
+
 def main(args=None):
     print(cv2.__version__)
 
-    p1 = Process(target=process_camera, args=(0, 'compressed_output0.avi'))
-    p2 = Process(target=process_camera, args=(2, 'compressed_output1.avi'))
+    manager = Manager()
+    shared_list = manager.list()
+
+    camera_position = {0: [10, 0, 0], 2: [-10, 0, 0]}
+
+    p1 = Process(
+        target=process_camera,
+        args=(0, "compressed_output0.avi", camera_position, shared_list),
+    )
+    p2 = Process(
+        target=process_camera,
+        args=(2, "compressed_output1.avi", camera_position, shared_list),
+    )
 
     p1.start()
     p2.start()
@@ -97,5 +168,6 @@ def main(args=None):
     p1.join()
     p2.join()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
