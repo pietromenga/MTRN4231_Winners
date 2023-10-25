@@ -27,7 +27,7 @@ using std::placeholders::_2;
 
 enum RobotControlMode {JOINT, SERVO};
 
-
+#define MAX_STEP 0.001
 
 class RobotControl : public rclcpp::Node
 {
@@ -35,8 +35,13 @@ public:
     RobotControl();
     ~RobotControl();
 private:
+    // Robot positions
     std::vector<double> catching_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
     std::vector<double> throwing_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
+
+    // Catching target position
+    geometry_msgs::msg::PoseStamped catch_target;
+    rclcpp::TimerBase::SharedPtr move_catch_timer_;
 
     // Clients
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client_servo_start_;
@@ -55,7 +60,7 @@ private:
     std::string planning_frame_id;
 
     // Subscriptions to catch and throw topics
-    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr catch_twist_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr update_ball_pred_sub_;
 
     // Services to change robot control mode
     RobotControlMode robot_mode;
@@ -70,8 +75,14 @@ private:
     void stop_catching_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
     bool stop_catching();
 
-    // Moves robot a delta movement based on where the ball is estimated to land
-    void move_to_catch(const geometry_msgs::msg::TwistStamped &twist);
+    // Every tick move toward target position
+    void move_to_catch();
+
+    // check if catch target is within catching bounds
+    bool validTarget();
+
+    // Sets a target for the catch function to reach
+    void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);
 
     // Waits for active services
     void wait_for_services();

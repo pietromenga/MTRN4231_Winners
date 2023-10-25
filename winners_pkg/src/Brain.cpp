@@ -108,7 +108,7 @@ void Brain::request_throw() {
 
 void Brain::on_key_press(const std_msgs::msg::String &keyString) {
     auto twist = geometry_msgs::msg::TwistStamped();
-    twist.header.frame_id = "tool0";
+    twist.header.frame_id = "base_link";
     twist.header.stamp = this->now();
     
     if (keyString.data == "up") {

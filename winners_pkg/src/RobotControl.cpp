@@ -1,12 +1,5 @@
 #include "RobotControl.hpp"
 
-/*
-* TODO
-* Angle Topic to adjust rotation of robot in catching
-* static and dynamic frames publishing
-* 
-*/
-
 RobotControl::RobotControl() : Node("RobotControl")
 {
     // Robot comm setup
@@ -26,7 +19,9 @@ RobotControl::RobotControl() : Node("RobotControl")
     // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
     // Sub to catching servo control
-    catch_twist_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>("catch_delta", 10, std::bind(&RobotControl::move_to_catch, this, _1));
+    update_ball_pred_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>("/ball_prediction", 10, std::bind(&RobotControl::set_catch_target, this, _1));
+    move_catch_timer_ = this->create_wall_timer(
+      10ms, std::bind(&RobotControl::move_to_catch, this));
     //throw_traj_sub_ ...
 
     // Mode 
@@ -56,12 +51,64 @@ void RobotControl::setup_collisions() {
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
-void RobotControl::move_to_catch(const geometry_msgs::msg::TwistStamped &twist) {
-    if (robot_mode == RobotControlMode::SERVO) {
-        auto msg = std::make_unique<geometry_msgs::msg::TwistStamped>(twist);
-        msg->header.stamp = this->now();
-        twist_cmd_pub_->publish(std::move(msg));
+bool RobotControl::validTarget() {
+    // check within box range
+    return true;
+}
+
+void RobotControl::move_to_catch() {
+    if (robot_mode != RobotControlMode::SERVO || !validTarget()) {
+        return;
     }
+
+    RCLCPP_INFO(this->get_logger(), "Attempting move to catch");
+
+    // Change in robot pos
+    geometry_msgs::msg::TwistStamped delta;
+    delta.header.stamp = this->now();
+    delta.header.frame_id = "base_link";
+
+    // Get current pose of the robot
+    auto currentPose = move_group_interface->getCurrentPose();
+    auto currentRPY = move_group_interface->getCurrentRPY();
+
+    // Calculate desired relative movement
+    auto xDiff = currentPose.pose.position.x - catch_target.pose.position.x;
+    auto yDiff = currentPose.pose.position.y - catch_target.pose.position.y;
+    auto zDiff = currentPose.pose.position.z - catch_target.pose.position.z;
+
+    // Clamp to max step per tick
+    auto xInc = std::clamp(xDiff, -MAX_STEP, MAX_STEP);
+    auto yInc = std::clamp(yDiff, -MAX_STEP, MAX_STEP);
+    auto zInc = std::clamp(zDiff, -MAX_STEP, MAX_STEP);
+
+    // add to twist
+    delta.twist.linear.x = xInc;
+    delta.twist.linear.y = yInc;
+    delta.twist.linear.z = zInc;
+
+    // Get target RPY
+    // auto q_target = tf2::Quaternion(
+    //     catch_target.orientation.x,
+    //     catch_target.orientation.y,
+    //     catch_target.orientation.z,
+    //     catch_target.orientation.w);
+    // tf2::Matrix3x3 m(q_target);
+    // double roll, pitch, yaw;
+    // m.getRPY(roll, pitch, yaw);
+
+    // Clamp to max step per tick
+    // auto xInc = std::clamp(xDiff, -MAX_STEP, MAX_STEP);
+    // auto yInc = std::clamp(yDiff, -MAX_STEP, MAX_STEP);
+    // auto zInc = std::clamp(zDiff, -MAX_STEP, MAX_STEP);
+    
+    // publishing
+    twist_cmd_pub_->publish(delta);
+}
+
+void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
+    RCLCPP_INFO(this->get_logger(), "Received ball target for catching");
+    catch_target = pose;
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {

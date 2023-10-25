@@ -27,7 +27,17 @@ void TFBroadcaster::tf_prediction(const geometry_msgs::msg::PoseStamped & msg)
     // RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.pose.position.x);
 
     geometry_msgs::msg::TransformStamped transform_msg;
-    transform_msg.header.frame_id = "ball_prediction_tf";
+    transform_msg.header.stamp = msg.header.stamp;
+    transform_msg.header.frame_id = "base_link";
+    transform_msg.child_frame_id = "ball_prediction_tf";
+    transform_msg.transform.translation.x = msg.pose.position.x;
+    transform_msg.transform.translation.y = msg.pose.position.y;
+    transform_msg.transform.translation.z = msg.pose.position.z;
+    transform_msg.transform.rotation.x = msg.pose.orientation.x;
+    transform_msg.transform.rotation.y = msg.pose.orientation.y;
+    transform_msg.transform.rotation.z = msg.pose.orientation.z;
+    transform_msg.transform.rotation.w = msg.pose.orientation.w;
+
     tf_broadcaster_->sendTransform(transform_msg);
 }
 

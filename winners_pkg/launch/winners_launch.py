@@ -98,19 +98,14 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='ballPose',
-            executable='ballPose',
-        ),
-        Node(
-            package='winners_pkg',
-            name='velcroPadPose',
-            executable='velcroPadPose',
+            name='BallPose',
+            executable='BallPose',
         ),
         Node(
             package='winners_pkg',
             name='Brain',
             executable='Brain',
-        ),        
+        ),
         Node(
             package='winners_pkg',
             name='RobotControl',
@@ -120,6 +115,11 @@ def generate_launch_description():
                 robot_description_semantic,
             ],
         ),
+        Node(
+            package='winners_pkg',
+            name='TrajectoryCalculator',
+            executable='TrajectoryCalculator',
+        ),      
         Node(
             package='winners_pkg',
             name='Visualisations',
