@@ -3,7 +3,7 @@
 Visualisations::Visualisations() : Node("Visualisations") {
     pubmarker = this->create_publisher<visualization_msgs::msg::Marker>("/visualization_marker", 10);
 	  timer = this->create_wall_timer(
-      1000ms, std::bind(&Visualisations::setupMarkers, this));
+      5000ms, std::bind(&Visualisations::setupMarkers, this));
     markerCount = 0;
     setupMarkers();
     RCLCPP_INFO(this->get_logger(), "Adding Markers to Scene");
@@ -11,14 +11,14 @@ Visualisations::Visualisations() : Node("Visualisations") {
 }
 
 void Visualisations::setupMarkers() {
-    visualization_msgs::msg::Marker camera1, camera2, ball, catchBox;
+    visualization_msgs::msg::Marker camera1, camera2, ball, catchBox, ballPred;
     visualization_msgs::msg::MarkerArray markers;
     
     // Camera 1 marker
     camera1.header.frame_id = "camera1";
     camera1.header.stamp = this->now();
     camera1.id = markerCount++;
-    camera1.lifetime.sec = 1;
+    camera1.lifetime.sec = MARKER_LIFETIME;
     camera1.action = visualization_msgs::msg::Marker::ADD;
     camera1.type = visualization_msgs::msg::Marker::CUBE;
     camera1.scale.x = 0.1;
@@ -34,7 +34,7 @@ void Visualisations::setupMarkers() {
     camera2.header.frame_id = "camera2";
     camera2.header.stamp = this->now();
     camera2.id = markerCount++;
-    camera2.lifetime.sec = 1;
+    camera2.lifetime.sec = MARKER_LIFETIME;
     camera2.action = visualization_msgs::msg::Marker::ADD;
     camera2.type = visualization_msgs::msg::Marker::CUBE;
     camera2.scale.x = 0.1;
@@ -50,7 +50,7 @@ void Visualisations::setupMarkers() {
     ball.header.frame_id = "ball_tf";
     ball.header.stamp = this->now();
     ball.id = markerCount++;
-    ball.lifetime.sec = 1;
+    ball.lifetime.sec = MARKER_LIFETIME;
     ball.action = visualization_msgs::msg::Marker::ADD;
     ball.type = visualization_msgs::msg::Marker::CUBE;
     ball.frame_locked = true;
@@ -66,7 +66,7 @@ void Visualisations::setupMarkers() {
     catchBox.header.frame_id = "catch_box";
     catchBox.header.stamp = this->now();
     catchBox.id = markerCount++;
-    catchBox.lifetime.sec = 1;
+    catchBox.lifetime.sec = MARKER_LIFETIME;
     catchBox.action = visualization_msgs::msg::Marker::ADD;
     catchBox.type = visualization_msgs::msg::Marker::CUBE;
     catchBox.scale.x = 1.0;
@@ -80,20 +80,20 @@ void Visualisations::setupMarkers() {
     catchBox.pose.position.x = -0.25;
 
     // ball predict arrow
-    catchBox.header.frame_id = "ball_prediction_tf";
-    catchBox.header.stamp = this->now();
-    catchBox.id = markerCount++;
-    catchBox.lifetime.sec = 1;
-    catchBox.action = visualization_msgs::msg::Marker::ADD;
-    catchBox.type = visualization_msgs::msg::Marker::ARROW;
-    catchBox.frame_locked = true;
-    catchBox.scale.x = 0.1;
-    catchBox.scale.y = 0.1;
-    catchBox.scale.z = 0.1;
-    catchBox.color.r = 1.0;
-    catchBox.color.g = 0.0;
-    catchBox.color.b = 0.0;
-    catchBox.color.a = 1.0;
+    ballPred.header.frame_id = "ball_prediction_tf";
+    ballPred.header.stamp = this->now();
+    ballPred.id = markerCount++;
+    ballPred.lifetime.sec = MARKER_LIFETIME;
+    ballPred.action = visualization_msgs::msg::Marker::ADD;
+    ballPred.type = visualization_msgs::msg::Marker::ARROW;
+    ballPred.frame_locked = true;
+    ballPred.scale.x = 0.2;
+    ballPred.scale.y = 0.05;
+    ballPred.scale.z = 0.05;
+    ballPred.color.r = 1.0;
+    ballPred.color.g = 0.0;
+    ballPred.color.b = 0.0;
+    ballPred.color.a = 1.0;
 
     // Publish all marker
     // markers.markers.push_back(camera1);
@@ -103,6 +103,7 @@ void Visualisations::setupMarkers() {
     pubmarker->publish(camera1);
     pubmarker->publish(camera2);
     pubmarker->publish(catchBox);
+    pubmarker->publish(ballPred);
 }
 
 int main(int argc, char * argv[])

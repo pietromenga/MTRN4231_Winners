@@ -9,6 +9,8 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
+#define MARKER_LIFETIME 5
+
 class Visualisations : public rclcpp::Node
 {
 public:

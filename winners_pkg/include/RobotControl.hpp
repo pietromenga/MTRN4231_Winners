@@ -19,6 +19,10 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/buffer.h"
+
 #include "Helpers.hpp"
 
 using namespace std::chrono_literals;
@@ -27,7 +31,7 @@ using std::placeholders::_2;
 
 enum RobotControlMode {JOINT, SERVO};
 
-#define MAX_STEP 0.001
+#define MAX_STEP 1.0
 
 class RobotControl : public rclcpp::Node
 {
@@ -43,12 +47,16 @@ private:
     geometry_msgs::msg::PoseStamped catch_target;
     rclcpp::TimerBase::SharedPtr move_catch_timer_;
 
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+
     // Clients
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client_servo_start_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client_servo_stop_;
     rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedPtr client_switch_controller_;
     // Client callbacks
-    void client_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
+    void client_start_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
+    void client_stop_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future);
     void client_switch_controller_response_callback(rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedFuture future);
 
     // Robot Control Publishers and moveit

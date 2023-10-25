@@ -36,8 +36,8 @@ Brain::Brain() : Node("Brain") {
 void Brain::tfCallback()
 {
     // Get transformation between ball and end effector 
-    std::string fromFrameRel = "end_effector"; // TODO get correct link name
-    std::string toFrameRel = "ball_tf";
+    std::string fromFrameRel = "ball_tf"; 
+    std::string toFrameRel = "tool0";
 
     geometry_msgs::msg::TransformStamped t;
 

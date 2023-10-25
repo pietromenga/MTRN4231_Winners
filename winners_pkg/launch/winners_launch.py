@@ -103,11 +103,6 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='Brain',
-            executable='Brain',
-        ),
-        Node(
-            package='winners_pkg',
             name='RobotControl',
             executable='RobotControl',
             parameters=[
@@ -124,5 +119,10 @@ def generate_launch_description():
             package='winners_pkg',
             name='Visualisations',
             executable='Visualisations',
+        ),
+        Node(
+            package='winners_pkg',
+            name='Brain',
+            executable='Brain',
         )
     ])

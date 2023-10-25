@@ -13,15 +13,18 @@ RobotControl::RobotControl() : Node("RobotControl")
     // Moveit objects
     move_group_interface = std::make_shared<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
     move_group_interface->setPlanningTime(10.0);
+    move_group_interface->setEndEffectorLink("tool0");
+    move_group_interface->startStateMonitor();
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
-    
-    // joint_pose_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>("/joint_trajectory_controller/joint_trajectory", 10);
 
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+    
     // Sub to catching servo control
     update_ball_pred_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>("/ball_prediction", 10, std::bind(&RobotControl::set_catch_target, this, _1));
     move_catch_timer_ = this->create_wall_timer(
-      10ms, std::bind(&RobotControl::move_to_catch, this));
+      2ms, std::bind(&RobotControl::move_to_catch, this));
     //throw_traj_sub_ ...
 
     // Mode 
@@ -60,8 +63,8 @@ void RobotControl::move_to_catch() {
     if (robot_mode != RobotControlMode::SERVO || !validTarget()) {
         return;
     }
+    // RCLCPP_INFO(this->get_logger(), std::to_string(this->now().seconds()));
 
-    RCLCPP_INFO(this->get_logger(), "Attempting move to catch");
 
     // Change in robot pos
     geometry_msgs::msg::TwistStamped delta;
@@ -69,13 +72,27 @@ void RobotControl::move_to_catch() {
     delta.header.frame_id = "base_link";
 
     // Get current pose of the robot
-    auto currentPose = move_group_interface->getCurrentPose();
-    auto currentRPY = move_group_interface->getCurrentRPY();
+    // auto currentPose = move_group_interface->getCurrentState();
+    // auto currentRPY = move_group_interface->getCurrentRPY();
+
+    // Find transformation of ball relative to robot base
+    std::string fromFrameRel = "tool0";
+    std::string toFrameRel = "base_link";
+    geometry_msgs::msg::TransformStamped t;
+    try {
+        t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
+    } catch (const tf2::TransformException & ex) {
+        RCLCPP_INFO( this->get_logger(), "Could not transform %s to %s: %s", toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+        return;
+    }
 
     // Calculate desired relative movement
-    auto xDiff = currentPose.pose.position.x - catch_target.pose.position.x;
-    auto yDiff = currentPose.pose.position.y - catch_target.pose.position.y;
-    auto zDiff = currentPose.pose.position.z - catch_target.pose.position.z;
+    auto xDiff = catch_target.pose.position.x - t.transform.translation.x;
+    auto yDiff = catch_target.pose.position.y - t.transform.translation.y;
+    auto zDiff = catch_target.pose.position.z - t.transform.translation.z;
+    // auto xDiff = t.transform.translation.x;
+    // auto yDiff = t.transform.translation.y;
+    // auto zDiff = t.transform.translation.z;
 
     // Clamp to max step per tick
     auto xInc = std::clamp(xDiff, -MAX_STEP, MAX_STEP);
@@ -86,6 +103,11 @@ void RobotControl::move_to_catch() {
     delta.twist.linear.x = xInc;
     delta.twist.linear.y = yInc;
     delta.twist.linear.z = zInc;
+
+    // RCLCPP_INFO( this->get_logger(), "&&&& TARGET %f %f %f", catch_target.pose.position.x, catch_target.pose.position.y, catch_target.pose.position.z);
+    // RCLCPP_INFO( this->get_logger(), "#### CURRENT %f %f %f", t.transform.translation.x, t.transform.translation.y, t.transform.translation.z);
+    // RCLCPP_INFO( this->get_logger(), "#### DIFF %f %f %f", xDiff, yDiff, zDiff);
+    // RCLCPP_INFO( this->get_logger(), "#### INC %f %f %f", xInc, yInc, zInc);
 
     // Get target RPY
     // auto q_target = tf2::Quaternion(
@@ -107,7 +129,7 @@ void RobotControl::move_to_catch() {
 }
 
 void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
-    RCLCPP_INFO(this->get_logger(), "Received ball target for catching");
+    // RCLCPP_INFO(this->get_logger(), "Received ball target for catching");
     catch_target = pose;
 }
 
@@ -171,8 +193,7 @@ void RobotControl::start_catching(
 
         tryMoveToTargetQ(catching_start_joint);
 
-        robot_mode = RobotControlMode::SERVO;
-        request_switch_controllers(robot_mode);
+        request_switch_controllers(RobotControlMode::SERVO);
         request_start_servo();
 
         response->success = true;
@@ -212,9 +233,8 @@ bool RobotControl::stop_catching() {
     if (robot_mode != RobotControlMode::JOINT) {
         RCLCPP_INFO(this->get_logger(), "Stopping Catching");
 
-        robot_mode = RobotControlMode::JOINT;
         request_stop_servo();
-        request_switch_controllers(robot_mode);
+        request_switch_controllers(RobotControlMode::JOINT);
         return true;
     }
 
@@ -224,12 +244,13 @@ bool RobotControl::stop_catching() {
 
 void RobotControl::request_start_servo() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = client_servo_start_->async_send_request(request, std::bind(&RobotControl::client_servo_response_callback, this, std::placeholders::_1));
+    auto result = client_servo_start_->async_send_request(request, std::bind(&RobotControl::client_start_servo_response_callback, this, std::placeholders::_1));
+    
 }
 
 void RobotControl::request_stop_servo() {
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-    auto result = client_servo_stop_->async_send_request(request, std::bind(&RobotControl::client_servo_response_callback, this, std::placeholders::_1));
+    auto result = client_servo_stop_->async_send_request(request, std::bind(&RobotControl::client_stop_servo_response_callback, this, std::placeholders::_1));
 }
 
 void RobotControl::request_switch_controllers(RobotControlMode mode) {
@@ -251,12 +272,23 @@ void RobotControl::request_switch_controllers(RobotControlMode mode) {
     auto result = client_switch_controller_->async_send_request(request, std::bind(&RobotControl::client_switch_controller_response_callback, this, std::placeholders::_1));
 }
 
-void RobotControl::client_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)
+void RobotControl::client_stop_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)
 {
     if (future.get()->success) {
-        RCLCPP_INFO(this->get_logger(), "Servo Mode Changed");
+        RCLCPP_INFO(this->get_logger(), "Servo Mode Off");
+        robot_mode = RobotControlMode::JOINT;
     } else {
-        shutdownControl("Servo Mode Change Failed");
+        shutdownControl("Stop Servo Mode Failed");
+    }
+}
+
+void RobotControl::client_start_servo_response_callback(rclcpp::Client<std_srvs::srv::Trigger>::SharedFuture future)
+{
+    if (future.get()->success) {
+        RCLCPP_INFO(this->get_logger(), "Servo Mode On");
+        robot_mode = RobotControlMode::SERVO;
+    } else {
+        shutdownControl("Start Servo Mode Failed");
     }
 }
 
@@ -296,8 +328,8 @@ void RobotControl::wait_for_services(){
 
 int main(int argc, char * argv[])
 {
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<RobotControl>());
-  rclcpp::shutdown();
-  return 0;
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<RobotControl>());
+    rclcpp::shutdown();
+    return 0;
 }
