@@ -17,7 +17,18 @@ void TFBroadcaster::tf_ball(const geometry_msgs::msg::PoseStamped & msg)
     // RCLCPP_INFO(this->get_logger(), "I heard: '%f'", msg.pose.position.x);
 
     geometry_msgs::msg::TransformStamped transform_msg;
-    transform_msg.header.frame_id = "ball_tf";
+
+    transform_msg.header.stamp = msg.header.stamp;
+    transform_msg.header.frame_id = "camera_origin";
+    transform_msg.child_frame_id = "ball_tf";
+    transform_msg.transform.translation.x = msg.pose.position.x;
+    transform_msg.transform.translation.y = msg.pose.position.y;
+    transform_msg.transform.translation.z = msg.pose.position.z;
+    transform_msg.transform.rotation.x = msg.pose.orientation.x;
+    transform_msg.transform.rotation.y = msg.pose.orientation.y;
+    transform_msg.transform.rotation.z = msg.pose.orientation.z;
+    transform_msg.transform.rotation.w = msg.pose.orientation.w;
+
     tf_broadcaster_->sendTransform(transform_msg);
 }
 
@@ -42,7 +53,7 @@ void TFBroadcaster::tf_prediction(const geometry_msgs::msg::PoseStamped & msg)
 }
 
 void TFBroadcaster::setupStaticTransforms() {
-	geometry_msgs::msg::TransformStamped camera1_static, camera2_static, catch_box;
+	geometry_msgs::msg::TransformStamped camera1_static, camera2_static, camera_origin, catch_box;
 
     // Camera1 static position and orientation
     camera1_static.header.frame_id = "base_link";
@@ -66,6 +77,16 @@ void TFBroadcaster::setupStaticTransforms() {
     camera2_static.transform.rotation.y = 0.0;
     camera2_static.transform.rotation.z = 0.0;
 
+    camera_origin.header.frame_id = "base_link";
+    camera_origin.child_frame_id = "camera_origin";
+    camera_origin.transform.translation.x = -0.25;
+    camera_origin.transform.translation.y = 0.25;
+    camera_origin.transform.translation.z = 0.0;
+    camera_origin.transform.rotation.w = 1.0;
+    camera_origin.transform.rotation.x = 0.0;
+    camera_origin.transform.rotation.y = 0.0;
+    camera_origin.transform.rotation.z = 0.0;
+
     // Camera2 static position and orientation
     catch_box.header.frame_id = "base_link";
     catch_box.child_frame_id = "catch_box";
@@ -80,6 +101,7 @@ void TFBroadcaster::setupStaticTransforms() {
     tf_static_broadcaster_->sendTransform(camera1_static);
     tf_static_broadcaster_->sendTransform(camera2_static);
     tf_static_broadcaster_->sendTransform(catch_box);
+    tf_static_broadcaster_->sendTransform(camera_origin);
 }
 
 

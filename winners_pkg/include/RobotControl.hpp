@@ -31,7 +31,7 @@ using std::placeholders::_2;
 
 enum RobotControlMode {JOINT, SERVO};
 
-#define MAX_STEP 1.0
+#define MAX_STEP 0.75
 
 class RobotControl : public rclcpp::Node
 {

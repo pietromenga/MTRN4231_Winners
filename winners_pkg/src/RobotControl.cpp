@@ -94,10 +94,10 @@ void RobotControl::move_to_catch() {
     // auto yDiff = t.transform.translation.y;
     // auto zDiff = t.transform.translation.z;
 
-    // Clamp to max step per tick
-    auto xInc = std::clamp(xDiff, -MAX_STEP, MAX_STEP);
-    auto yInc = std::clamp(yDiff, -MAX_STEP, MAX_STEP);
-    auto zInc = std::clamp(zDiff, -MAX_STEP, MAX_STEP);
+    // Clamp to max velocity per tick
+    auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
 
     // add to twist
     delta.twist.linear.x = xInc;

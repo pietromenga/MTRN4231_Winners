@@ -11,7 +11,7 @@ Visualisations::Visualisations() : Node("Visualisations") {
 }
 
 void Visualisations::setupMarkers() {
-    visualization_msgs::msg::Marker camera1, camera2, ball, catchBox, ballPred;
+    visualization_msgs::msg::Marker camera1, camera2, ball, catchBox, ballPred, camera_origin;
     visualization_msgs::msg::MarkerArray markers;
     
     // Camera 1 marker
@@ -45,6 +45,21 @@ void Visualisations::setupMarkers() {
     camera2.color.b = 1.0;
     camera2.color.a = 1.0;
     camera2.pose.position.z = camera2.scale.z / 2.0;
+
+    // Camera Origin marker
+    camera_origin.header.frame_id = "camera_origin";
+    camera_origin.header.stamp = this->now();
+    camera_origin.id = markerCount++;
+    camera_origin.lifetime.sec = MARKER_LIFETIME;
+    camera_origin.action = visualization_msgs::msg::Marker::ADD;
+    camera_origin.type = visualization_msgs::msg::Marker::CUBE;
+    camera_origin.scale.x = 0.05;
+    camera_origin.scale.y = 0.05;
+    camera_origin.scale.z = 0.05;
+    camera_origin.color.r = 0.0;
+    camera_origin.color.g = 0.0;
+    camera_origin.color.b = 0.0;
+    camera_origin.color.a = 1.0;
 
     // Ball marker
     ball.header.frame_id = "ball_tf";
