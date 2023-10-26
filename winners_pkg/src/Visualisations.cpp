@@ -119,6 +119,7 @@ void Visualisations::setupMarkers() {
     pubmarker->publish(camera2);
     pubmarker->publish(catchBox);
     pubmarker->publish(ballPred);
+    pubmarker->publish(camera_origin);
 }
 
 int main(int argc, char * argv[])
