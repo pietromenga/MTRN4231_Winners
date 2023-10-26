@@ -7,6 +7,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -72,10 +75,6 @@ ament_target_dependencies(Visualisations ${THIS_PACKAGE_INCLUDE_DEPENDS})
 add_executable(RobotControl src/RobotControl.cpp)
 ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
-# ROBOT CONTROL 
-add_executable(TrajectoryCalculator src/TrajectoryCalculator.cpp)
-ament_target_dependencies(TrajectoryCalculator ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
 # BRAIN
 add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
@@ -104,12 +103,20 @@ install(TARGETS
   Visualisations
   RobotControl
   Brain
-  TrajectoryCalculator
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python executables
+install(PROGRAMS
+  scripts/Trajectory.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

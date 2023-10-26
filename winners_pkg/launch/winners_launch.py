@@ -112,8 +112,8 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='TrajectoryCalculator',
-            executable='TrajectoryCalculator',
+            name='Trajectory',
+            executable='Trajectory',
         ),      
         Node(
             package='winners_pkg',
