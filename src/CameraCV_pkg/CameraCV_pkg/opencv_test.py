@@ -6,6 +6,7 @@ import numpy as np
 import time
 from multiprocessing import Process
 from multiprocessing import Manager
+from multiprocessing import Lock
 from scipy.spatial.distance import cdist
 
 
@@ -44,7 +45,7 @@ def closest_point_of_approach(p1, d1, p2, d2):
     return point_on_line1, point_on_line2, midpoint
 
 
-def process_camera(camera_id, output_file, camera_position, shared_list):
+def process_camera(camera_id, output_file, camera_position, shared_list, lock):
     rclpy.init()
     node = Node("my_node_" + str(camera_id))
 
@@ -106,28 +107,30 @@ def process_camera(camera_id, output_file, camera_position, shared_list):
             # Store yaw and pitch in the shared list
             shared_list.append((camera_id, yaw, pitch))
 
-            # Check if both cameras have stored their yaw and pitch
-            if len(shared_list) >= 2:
-                # Extract yaw and pitch for both cameras
-                id1, yaw1, pitch1 = shared_list[0]
-                id2, yaw2, pitch2 = shared_list[1]
+            # Inside process_camera()
+            with lock:  # Acquire lock before accessing shared_list
+                if len(shared_list) >= 2:
+                    try:
+                        id1, yaw1, pitch1 = shared_list[0]
+                        id2, yaw2, pitch2 = shared_list[1]
+                    except IndexError:
+                        print("IndexError caught. Shared list is shorter than expected.")
+                        continue  # Skip the rest of the loop iteration
 
-                # Calculate direction vectors
-                d1 = calculate_direction_vector(yaw1, pitch1)
-                d2 = calculate_direction_vector(yaw2, pitch2)
+                    # Calculate direction vectors
+                    d1 = calculate_direction_vector(yaw1, pitch1)
+                    d2 = calculate_direction_vector(yaw2, pitch2)
 
-                # Camera positions
-                p1 = np.array(camera_position[id1])
-                p2 = np.array(camera_position[id2])
+                    # Camera positions
+                    p1 = np.array(camera_position[id1])
+                    p2 = np.array(camera_position[id2])
 
-                # Calculate the closest points and midpoint
-                point1, point2, midpoint = closest_point_of_approach(p1, d1, p2, d2)
-                # print(f"Closest point on line 1: {point1}")
-                # print(f"Closest point on line 2: {point2}")
-                print(f"Midpoint between closest points: {midpoint}")
+                    # Calculate the closest points and midpoint
+                    point1, point2, midpoint = closest_point_of_approach(p1, d1, p2, d2)
+                    print(f"Midpoint between closest points: {midpoint}")
 
-                # Clear the shared list for the next iteration
-                shared_list[:] = []
+                    # Clear the shared list for the next iteration
+                    shared_list[:] = []
 
         # Show the original image
         cv2.imshow(f"Camera {camera_id} Stream", img)
@@ -151,6 +154,9 @@ def process_camera(camera_id, output_file, camera_position, shared_list):
 
 
 def main(args=None):
+
+    lock = Lock()
+
     print(cv2.__version__)
 
     manager = Manager()
@@ -160,11 +166,11 @@ def main(args=None):
 
     p1 = Process(
         target=process_camera,
-        args=(0, "compressed_output0.avi", camera_position, shared_list),
+        args=(0, "compressed_output0.avi", camera_position, shared_list, lock),
     )
     p2 = Process(
         target=process_camera,
-        args=(2, "compressed_output1.avi", camera_position, shared_list),
+        args=(2, "compressed_output1.avi", camera_position, shared_list, lock),
     )
 
     p1.start()
