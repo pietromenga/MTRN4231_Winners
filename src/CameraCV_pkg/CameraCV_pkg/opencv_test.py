@@ -100,10 +100,10 @@ def process_camera(camera_id, output_file, camera_position, shared_list, lock):
             # Calculate yaw and pitch based on the blue dot's position
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
-            # Store yaw and pitch in the shared list
-            shared_list.append((camera_id, yaw, pitch))
             # Lock the shared list before accessing
             with lock:
+                # Store yaw and pitch in the shared list
+                shared_list.append((camera_id, yaw, pitch))
                 # Check if both cameras have stored their yaw and pitch
                 if len(shared_list) >= 2:
                     try:
