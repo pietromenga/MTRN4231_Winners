@@ -23,7 +23,8 @@ class TrajectoryCalculator(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.timer = self.create_timer(0.05, self.timer_callback)
+        self.dt = 0.1
+        self.timer = self.create_timer(self.dt, self.timer_callback)
 
         self.itemCount = 0
         self.posX = []
@@ -56,7 +57,7 @@ class TrajectoryCalculator(Node):
             return
         
         # Store transforms
-        if self.itemCount < 4:
+        if self.itemCount < 5:
             self.appendTransform(tBall)
         else: # Enough to regress
             currentTime = time.time() - self.startTime
@@ -66,27 +67,34 @@ class TrajectoryCalculator(Node):
             yCoeff = np.polyfit(self.timeList, self.posY, 2)
             zCoeff = np.polyfit(self.timeList, self.posZ, 2)
 
-            dt = 0.05
-            timeSteps = np.arange(currentTime, currentTime + 3, dt)
+            dt = 0.01
+            timeSteps = np.arange(currentTime, currentTime + 1, dt)
             minDist = 100
             ballPredTarget = ()
-            for ti in reversed(timeSteps): # Reversed as solutions farthest away will be closest
-                # xyz at time step ti
-                x = int(xCoeff[0] * ti ** 2 + xCoeff[1] * ti + xCoeff[2])
-                y = int(yCoeff[0] * ti ** 2 + yCoeff[1] * ti + yCoeff[2])
-                z = int(zCoeff[0] * ti ** 2 + zCoeff[1] * ti + zCoeff[2])
+            # for ti in reversed(timeSteps): # Reversed as solutions farthest away will be closest
+            #     # xyz at time step ti
+            #     x = float(xCoeff[0] * ti ** 2 + xCoeff[1] * ti + xCoeff[2])
+            #     y = float(yCoeff[0] * ti ** 2 + yCoeff[1] * ti + yCoeff[2])
+            #     z = float(zCoeff[0] * ti ** 2 + zCoeff[1] * ti + zCoeff[2])
 
                 # Calc distance to tool
-                dist2tool = np.sqrt(
-                    (x - tEndEff.transform.translation.x)**2 + 
-                    (y - tEndEff.transform.translation.y)**2 +
-                    (z - tEndEff.transform.translation.z)**2 
-                )
+                # dist2tool = np.sqrt(
+                #     (x - tEndEff.transform.translation.x)**2 + 
+                #     (y - tEndEff.transform.translation.y)**2 +
+                #     (z - tEndEff.transform.translation.z)**2 
+                # )
 
                 # Update mindist
-                if dist2tool < minDist and self.inCatchingRange(x,y,z):
-                    minDist = dist2tool 
-                    ballPredTarget = (x,y,z)
+                # if dist2tool < minDist and self.inCatchingRange(x,y,z):
+                    # minDist = dist2tool 
+                    # ballPredTarget = (x,y,z)
+
+            secondInFuture = currentTime + 1
+            x = float(xCoeff[0] * secondInFuture ** 2 + xCoeff[1] * secondInFuture + xCoeff[2])
+            y = float(yCoeff[0] * secondInFuture ** 2 + yCoeff[1] * secondInFuture + yCoeff[2])
+            z = float(zCoeff[0] * secondInFuture ** 2 + zCoeff[1] * secondInFuture + zCoeff[2])
+            ballPredTarget = (x,y,z)
+                
 
             # send off prediction
             if ballPredTarget != ():
@@ -97,7 +105,7 @@ class TrajectoryCalculator(Node):
 
     def sendBallPred(self, x,y,z):
         pred = PoseStamped()
-        pred.header.stamp = self.get_clock().now()
+        pred.header.stamp = self.get_clock().now().to_msg()
         pred.header.frame_id = "base_link"
         pred.pose.position.x = x
         pred.pose.position.y = y
@@ -105,16 +113,16 @@ class TrajectoryCalculator(Node):
         self.pred_publisher_.publish(pred)
 
     def inCatchingRange(self, x, y, z):
-        xRange = x > self.minX and x < self.maxX
-        yRange = y > self.minY and y < self.maxY
-        zRange = z > self.minZ and z < self.maxZ    
-        return xRange and yRange and zRange
+        # xRange = x > self.minX and x < self.maxX
+        # yRange = y > self.minY and y < self.maxY
+        # zRange = z > self.minZ and z < self.maxZ    
+        return True
 
     def removeLast(self):
-        self.posX.pop(0)
-        self.posY.pop(0)
-        self.posZ.pop(0)
-        self.timeList.pop(0)
+        self.posX.clear()
+        self.posY.clear()
+        self.posZ.clear()
+        self.timeList.clear()
         self.itemCount -= 1
     
     def appendTransform(self, t): 
