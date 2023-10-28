@@ -116,13 +116,12 @@ class BallPose(Node):
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             # Define the color range for detecting blue
 
+            # Define the color range for detecting blue
+            lower_blue = np.array([100, 50, 50])
+            upper_blue = np.array([140, 255, 255])
+            
             # Create a mask to isolate blue regions
-
-            # mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
-
-            # mask1 = cv2.inRange(hsv, (170,120,70), (180,255,255))
-            mask2 = cv2.inRange(hsv, (2,150,150), (8,255,255))
-            mask = mask2
+            mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
             # Define a kernel for morphological operations
             # Clean up the mask

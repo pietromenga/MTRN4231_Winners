@@ -87,9 +87,6 @@ def get_robot_description_semantic():
     return robot_description_semantic
 
 def generate_launch_description():
-    robot_description = get_robot_description()
-    robot_description_semantic = get_robot_description_semantic()
-
     return LaunchDescription([
         Node(
             package='winners_pkg',
@@ -103,26 +100,7 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='RobotControl',
-            executable='RobotControl',
-            parameters=[
-                robot_description,
-                robot_description_semantic,
-            ],
-        ),
-        Node(
-            package='winners_pkg',
             name='Trajectory',
             executable='Trajectory',
-        ),      
-        Node(
-            package='winners_pkg',
-            name='Visualisations',
-            executable='Visualisations',
         ),
-        Node(
-            package='winners_pkg',
-            name='Brain',
-            executable='Brain',
-        )
     ])

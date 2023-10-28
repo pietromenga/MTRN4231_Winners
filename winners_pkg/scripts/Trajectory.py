@@ -2,7 +2,6 @@
 
 import rclpy
 from rclpy.node import Node
-import time
 from geometry_msgs.msg import PoseStamped
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
@@ -22,8 +21,11 @@ class TrajectoryCalculator(Node):
         self.dt = 0.1
         self.timer = self.create_timer(self.dt, self.timer_callback)
 
-        self.last_x = self.last_y = self.last_z = None
-        self.vx = self.vy = self.vz = 0
+        self.last_x_hat = self.last_y_hat = self.last_z_hat = None
+        self.vx_hat = self.vy_hat = self.vz_hat = 0
+
+        self.alpha = 0.8  # Tunable parameter for position update
+        self.beta = 0.02  # Tunable parameter for velocity update
 
     def timer_callback(self):
 
@@ -40,22 +42,23 @@ class TrajectoryCalculator(Node):
         x, y, z = tBall.transform.translation.x, tBall.transform.translation.y, tBall.transform.translation.z
 
         # If this is the first measurement, just store the position
-        if self.last_x is None:
-            self.last_x, self.last_y, self.last_z = x, y, z
+        if self.last_x_hat is None:
+            self.last_x_hat, self.last_y_hat, self.last_z_hat = x, y, z
             return
 
-        # Compute velocity (assuming constant time step for simplicity)
-        self.vx = (x - self.last_x) / self.dt
-        self.vy = (y - self.last_y) / self.dt
-        self.vz = (z - self.last_z) / self.dt
+        # Alpha-Beta filter update
+        self.vx_hat = self.vx_hat + self.beta * ((x - self.last_x_hat) - self.vx_hat * self.dt)
+        self.vy_hat = self.vy_hat + self.beta * ((y - self.last_y_hat) - self.vy_hat * self.dt)
+        self.vz_hat = self.vz_hat + self.beta * ((z - self.last_z_hat) - self.vz_hat * self.dt - 9.81 * 0.5 * self.dt**2)
+
+        self.last_x_hat = self.last_x_hat + self.vx_hat * self.dt + self.alpha * ((x - self.last_x_hat) - self.vx_hat * self.dt)
+        self.last_y_hat = self.last_y_hat + self.vy_hat * self.dt + self.alpha * ((y - self.last_y_hat) - self.vy_hat * self.dt)
+        self.last_z_hat = self.last_z_hat + self.vz_hat * self.dt + self.alpha * ((z - self.last_z_hat) - self.vz_hat * self.dt - 9.81 * 0.5 * self.dt**2)
 
         # Predict next position
-        predicted_x = x + self.vx * self.dt
-        predicted_y = y + self.vy * self.dt
-        predicted_z = z + self.vz * self.dt - 9.81 * 0.5 * self.dt**2  # accounting for gravity
-
-        # Update last position
-        self.last_x, self.last_y, self.last_z = x, y, z
+        predicted_x = self.last_x_hat + self.vx_hat * self.dt
+        predicted_y = self.last_y_hat + self.vy_hat * self.dt
+        predicted_z = self.last_z_hat + self.vz_hat * self.dt - 9.81 * 0.5 * self.dt**2  # accounting for gravity
 
         # Send off prediction
         self.sendBallPred(predicted_x, predicted_y, predicted_z)
