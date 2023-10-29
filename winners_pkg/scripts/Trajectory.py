@@ -5,6 +5,7 @@ from geometry_msgs.msg import PoseStamped
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
+from collections import deque
 
 class TrajectoryCalculator(Node):
 
@@ -17,10 +18,13 @@ class TrajectoryCalculator(Node):
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
         self.dt = 0.5  # Prediction time
-        self.timer = self.create_timer(self.dt, self.timer_callback)
+        self.timer = self.create_timer(0.01, self.timer_callback)
 
         self.last_x = self.last_y = self.last_z = None
         self.last_time = None
+
+        self.last_positions = deque(maxlen=5)  # Stores the last 5 positions
+        self.last_times = deque(maxlen=5)  # Stores the last 5 timestamps
 
     def timer_callback(self):
 
@@ -30,23 +34,41 @@ class TrajectoryCalculator(Node):
             return
 
         current_time = tBall.header.stamp.sec + tBall.header.stamp.nanosec * 1e-9  # Convert to seconds
-        x, y, z = tBall.transform.translation.x, tBall.transform.translation.y, tBall.transform.translation.z
+        current_position = (tBall.transform.translation.x, tBall.transform.translation.y, tBall.transform.translation.z)
 
-        if self.last_x is not None:
-            elapsed_time = current_time - self.last_time
-            vx = (x - self.last_x) / elapsed_time
-            vy = (y - self.last_y) / elapsed_time
-            vz = (z - self.last_z) / elapsed_time
+        self.last_positions.append(current_position)
+        self.last_times.append(current_time)
 
-            # Predict next position
-            predicted_x = x + vx * self.dt
-            predicted_y = y + vy * self.dt
-            predicted_z = z + vz * self.dt
+        if len(self.last_positions) < 5:
+            return  # Not enough data points yet
 
-            self.sendBallPred(predicted_x, predicted_y, predicted_z)
+        # Calculate average velocity
+        dx = dy = dz = dt = 0
+        for i in range(4):
+            dx += self.last_positions[i+1][0] - self.last_positions[i][0]
+            dy += self.last_positions[i+1][1] - self.last_positions[i][1]
+            dz += self.last_positions[i+1][2] - self.last_positions[i][2]
+            dt += self.last_times[i+1] - self.last_times[i]
 
-        self.last_x, self.last_y, self.last_z = x, y, z
+        # Safety measure to avoid division by zero
+        if dt == 0:
+            return
+
+        vx = dx / dt
+        vy = dy / dt
+        vz = dz / dt
+
+        # Predict next position
+        predicted_x = current_position[0] + vx * self.dt
+        predicted_y = current_position[1] + vy * self.dt
+        predicted_z = current_position[2] + vz * self.dt
+
+        self.sendBallPred(predicted_x, predicted_y, predicted_z)
+
+        # This line is the culprit. Replace x, y, z with current_position[0], current_position[1], current_position[2]
+        self.last_x, self.last_y, self.last_z = current_position[0], current_position[1], current_position[2]
         self.last_time = current_time
+
 
     def sendBallPred(self, x, y, z):
         pred = PoseStamped()
