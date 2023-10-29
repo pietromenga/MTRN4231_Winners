@@ -1,0 +1,34 @@
+[0.035s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_common -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_common
+[0.090s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.219s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.350s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.431s] -- Added test 'copyright' to check source files copyright and LICENSE
+[0.435s] -- Added test 'lint_cmake' to check CMake code style
+[0.438s] -- Added test 'xmllint' to check XML markup files
+[0.441s] -- Configuring done
+[0.443s] -- Generating done
+[0.444s] -- Build files have been written to: /home/mtrn/4231/ws_moveit2/build/moveit_common
+[0.447s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_common -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_common
+[0.447s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_common -- -j4 -l4
+[0.468s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_common -- -j4 -l4
+[0.485s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_common
+[0.489s] -- Install configuration: "Release"
+[0.489s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/ament_index/resource_index/package_run_dependencies/moveit_common
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/ament_index/resource_index/parent_prefix_path/moveit_common
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/environment/ament_prefix_path.sh
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/environment/ament_prefix_path.dsv
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/environment/path.sh
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/environment/path.dsv
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/local_setup.bash
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/local_setup.sh
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/local_setup.zsh
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/local_setup.dsv
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/package.dsv
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/ament_index/resource_index/packages/moveit_common
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake/moveit_common-extras.cmake
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake/moveit_commonConfig.cmake
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake/moveit_commonConfig-version.cmake
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/package.xml
+[0.490s] -- Up-to-date: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake
+[0.490s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake/moveit_package.cmake
+[0.494s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_common

@@ -1,0 +1,6 @@
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/srdfdom': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/srdfdom -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/srdfdom
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/srdfdom' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/srdfdom -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/srdfdom
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/srdfdom': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/srdfdom -- -j4 -l4
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/srdfdom' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/srdfdom -- -j4 -l4
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/srdfdom': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/srdfdom
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/srdfdom' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/srdfdom

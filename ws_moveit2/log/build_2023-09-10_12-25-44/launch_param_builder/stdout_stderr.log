@@ -1,0 +1,50 @@
+running egg_info
+creating ../../build/launch_param_builder/launch_param_builder.egg-info
+writing ../../build/launch_param_builder/launch_param_builder.egg-info/PKG-INFO
+writing dependency_links to ../../build/launch_param_builder/launch_param_builder.egg-info/dependency_links.txt
+writing entry points to ../../build/launch_param_builder/launch_param_builder.egg-info/entry_points.txt
+writing requirements to ../../build/launch_param_builder/launch_param_builder.egg-info/requires.txt
+writing top-level names to ../../build/launch_param_builder/launch_param_builder.egg-info/top_level.txt
+writing manifest file '../../build/launch_param_builder/launch_param_builder.egg-info/SOURCES.txt'
+reading manifest file '../../build/launch_param_builder/launch_param_builder.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/launch_param_builder/launch_param_builder.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build
+creating /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib
+creating /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder
+copying launch_param_builder/launch_param_builder.py -> /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder
+copying launch_param_builder/utils.py -> /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder
+copying launch_param_builder/__init__.py -> /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder
+running install
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running install_lib
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder
+copying /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder/launch_param_builder.py -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder
+copying /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder/utils.py -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder
+copying /home/mtrn/4231/ws_moveit2/build/launch_param_builder/build/lib/launch_param_builder/__init__.py -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder
+byte-compiling /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder/launch_param_builder.py to launch_param_builder.cpython-310.pyc
+byte-compiling /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder/utils.py to utils.cpython-310.pyc
+byte-compiling /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder/__init__.py to __init__.cpython-310.pyc
+running install_data
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/ament_index
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/ament_index/resource_index
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/ament_index/resource_index/packages
+copying resource/launch_param_builder -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/ament_index/resource_index/packages
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/launch
+copying example/launch_param_builder_example.launch.py -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/launch
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying test/data/parameter.xacro -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying test/data/parameters_injection.yaml -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying test/data/param_file_to_inject.yaml -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying test/data/parameter_file -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying test/data/parameters.yaml -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder/config
+copying package.xml -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/share/launch_param_builder
+creating /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/launch_param_builder
+copying example/example_node.py -> /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/launch_param_builder
+running install_egg_info
+Copying ../../build/launch_param_builder/launch_param_builder.egg-info to /home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages/launch_param_builder-0.1.1-py3.10.egg-info
+running install_scripts
+writing list of installed files to '/home/mtrn/4231/ws_moveit2/build/launch_param_builder/install.log'

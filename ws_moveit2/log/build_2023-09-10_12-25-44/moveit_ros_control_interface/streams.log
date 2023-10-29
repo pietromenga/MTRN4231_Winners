@@ -1,0 +1,118 @@
+[0.013s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_plugins/moveit_ros_control_interface -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface
+[0.048s] -- The C compiler identification is GNU 11.4.0
+[0.087s] -- The CXX compiler identification is GNU 11.4.0
+[0.092s] -- Detecting C compiler ABI info
+[0.136s] -- Detecting C compiler ABI info - done
+[0.141s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.141s] -- Detecting C compile features
+[0.141s] -- Detecting C compile features - done
+[0.143s] -- Detecting CXX compiler ABI info
+[0.198s] -- Detecting CXX compiler ABI info - done
+[0.203s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.203s] -- Detecting CXX compile features
+[0.203s] -- Detecting CXX compile features - done
+[0.206s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.328s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.384s] -- Found rclcpp_action: 16.0.5 (/opt/ros/humble/share/rclcpp_action/cmake)
+[0.412s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.415s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.420s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.433s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.445s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.544s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.546s] -- Found rmw_cyclonedds_cpp: 1.3.4 (/opt/ros/humble/share/rmw_cyclonedds_cpp/cmake)
+[0.573s] -- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+[0.573s] -- Looking for pthread.h
+[0.619s] -- Looking for pthread.h - found
+[0.619s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.661s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.662s] -- Found Threads: TRUE  
+[0.789s] -- Found controller_manager_msgs: 2.30.0 (/opt/ros/humble/share/controller_manager_msgs/cmake)
+[0.848s] -- Found moveit_core: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_core/share/moveit_core/cmake)
+[0.871s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[0.880s] -- Found parameter_traits: 0.3.6 (/opt/ros/humble/share/parameter_traits/cmake)
+[0.898s] -- Found rclcpp_lifecycle: 16.0.5 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)
+[0.917s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.011s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.269s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[1.269s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.002s] -- Found moveit_simple_controller_manager: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/share/moveit_simple_controller_manager/cmake)
+[2.005s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread 
+[2.304s] -- Found moveit_common: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake)
+[2.354s] -- Found libdw: /usr/lib/x86_64-linux-gnu/libdw.so  
+[2.355s] -- Could NOT find libbfd (missing: LIBBFD_LIBRARY LIBBFD_INCLUDE_DIR) 
+[2.355s] -- BACKWARD_HAS_UNWIND=1
+[2.355s] -- BACKWARD_HAS_BACKTRACE=0
+[2.355s] -- BACKWARD_HAS_BACKTRACE_SYMBOL=0
+[2.355s] -- BACKWARD_HAS_DW=1
+[2.355s] -- BACKWARD_HAS_BFD=0
+[2.356s] -- Found Backward: /opt/ros/humble/share/backward_ros/cmake  
+[2.360s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system thread 
+[2.371s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.384s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.385s] -- Configured cppcheck include dirs: /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_plugins/moveit_ros_control_interface/include
+[2.385s] -- Configured cppcheck exclude dirs and/or files: 
+[2.386s] -- Added test 'lint_cmake' to check CMake code style
+[2.386s] -- Added test 'xmllint' to check XML markup files
+[2.387s] -- Configuring done
+[2.425s] -- Generating done
+[2.427s] -- Build files have been written to: /home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface
+[2.440s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_plugins/moveit_ros_control_interface -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface
+[2.440s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface -- -j4 -l4
+[2.475s] [ 12%] [32mBuilding CXX object CMakeFiles/moveit_ros_control_interface_gripper_plugin.dir/src/gripper_controller_plugin.cpp.o[0m
+[2.476s] [ 25%] [32mBuilding CXX object CMakeFiles/moveit_ros_control_interface_plugin.dir/src/controller_manager_plugin.cpp.o[0m
+[2.478s] [ 37%] [32mBuilding CXX object CMakeFiles/moveit_ros_control_interface_trajectory_plugin.dir/src/joint_trajectory_controller_plugin.cpp.o[0m
+[2.482s] [ 50%] [32mBuilding CXX object CMakeFiles/moveit_ros_control_interface_empty_plugin.dir/src/empty_controller_plugin.cpp.o[0m
+[5.582s] [ 62%] [32m[1mLinking CXX shared library libmoveit_ros_control_interface_empty_plugin.so[0m
+[5.817s] [ 62%] Built target moveit_ros_control_interface_empty_plugin
+[7.502s] [ 75%] [32m[1mLinking CXX shared library libmoveit_ros_control_interface_trajectory_plugin.so[0m
+[7.621s] [ 87%] [32m[1mLinking CXX shared library libmoveit_ros_control_interface_gripper_plugin.so[0m
+[7.680s] [ 87%] Built target moveit_ros_control_interface_trajectory_plugin
+[7.784s] [ 87%] Built target moveit_ros_control_interface_gripper_plugin
+[12.600s] [100%] [32m[1mLinking CXX shared library libmoveit_ros_control_interface_plugin.so[0m
+[12.738s] [100%] Built target moveit_ros_control_interface_plugin
+[12.746s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface -- -j4 -l4
+[12.770s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface
+[12.776s] -- Install configuration: "Release"
+[12.776s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_plugin.so.2.5.4
+[12.776s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_plugin.so.2.5.4" to ""
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_plugin.so
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_trajectory_plugin.so.2.5.4
+[12.777s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_trajectory_plugin.so.2.5.4" to ""
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_trajectory_plugin.so
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_gripper_plugin.so.2.5.4
+[12.777s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_gripper_plugin.so.2.5.4" to ""
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_gripper_plugin.so
+[12.777s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_empty_plugin.so.2.5.4
+[12.777s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_empty_plugin.so.2.5.4" to ""
+[12.778s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/lib/libmoveit_ros_control_interface_empty_plugin.so
+[12.778s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/include
+[12.778s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/include/moveit_ros_control_interface
+[12.778s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/include/moveit_ros_control_interface/ControllerHandle.h
+[12.778s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/moveit_core_plugins.xml
+[12.781s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/moveit_ros_control_interface_plugins.xml
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/library_path.sh
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/library_path.dsv
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/ament_index/resource_index/package_run_dependencies/moveit_ros_control_interface
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/ament_index/resource_index/parent_prefix_path/moveit_ros_control_interface
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/ament_prefix_path.sh
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/ament_prefix_path.dsv
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/path.sh
+[12.782s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/environment/path.dsv
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/local_setup.bash
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/local_setup.sh
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/local_setup.zsh
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/local_setup.dsv
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/package.dsv
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/ament_index/resource_index/packages/moveit_ros_control_interface
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/ament_index/resource_index/moveit_core__pluginlib__plugin/moveit_ros_control_interface
+[12.783s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/ament_index/resource_index/moveit_ros_control_interface__pluginlib__plugin/moveit_ros_control_interface
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/export_moveit_ros_control_interfaceExport.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/export_moveit_ros_control_interfaceExport-release.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/ConfigExtras.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/ament_cmake_export_targets-extras.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/ament_cmake_export_dependencies-extras.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/moveit_ros_control_interfaceConfig.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/cmake/moveit_ros_control_interfaceConfig-version.cmake
+[12.784s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_control_interface/share/moveit_ros_control_interface/package.xml
+[12.793s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_simple_controller_manager/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_ros_control_interface

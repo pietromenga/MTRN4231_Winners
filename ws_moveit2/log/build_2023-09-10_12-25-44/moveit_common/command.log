@@ -1,0 +1,6 @@
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_common -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_common
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_common -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_common
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_common -- -j4 -l4
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_common -- -j4 -l4
+Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_common': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_common
+Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_common

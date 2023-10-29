@@ -1,0 +1,123 @@
+[0.024s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_ros/benchmarks -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks
+[0.060s] -- The C compiler identification is GNU 11.4.0
+[0.094s] -- The CXX compiler identification is GNU 11.4.0
+[0.099s] -- Detecting C compiler ABI info
+[0.143s] -- Detecting C compiler ABI info - done
+[0.147s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.147s] -- Detecting C compile features
+[0.148s] -- Detecting C compile features - done
+[0.149s] -- Detecting CXX compiler ABI info
+[0.206s] -- Detecting CXX compiler ABI info - done
+[0.210s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.211s] -- Detecting CXX compile features
+[0.211s] -- Detecting CXX compile features - done
+[0.212s] -- Found moveit_common: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_common/share/moveit_common/cmake)
+[0.213s] -- Found ament_cmake: 1.3.5 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.334s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.447s] -- Found libdw: /usr/lib/x86_64-linux-gnu/libdw.so  
+[0.450s] -- Could NOT find libbfd (missing: LIBBFD_LIBRARY LIBBFD_INCLUDE_DIR) 
+[0.450s] -- BACKWARD_HAS_UNWIND=1
+[0.450s] -- BACKWARD_HAS_BACKTRACE=0
+[0.450s] -- BACKWARD_HAS_BACKTRACE_SYMBOL=0
+[0.450s] -- BACKWARD_HAS_DW=1
+[0.450s] -- BACKWARD_HAS_BFD=0
+[0.450s] -- Found Backward: /opt/ros/humble/share/backward_ros/cmake  
+[0.452s] -- Found rclcpp: 16.0.5 (/opt/ros/humble/share/rclcpp/cmake)
+[0.478s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.481s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.487s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.501s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.515s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.563s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.565s] -- Found rmw_cyclonedds_cpp: 1.3.4 (/opt/ros/humble/share/rmw_cyclonedds_cpp/cmake)
+[0.591s] -- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+[0.598s] -- Looking for pthread.h
+[0.665s] -- Looking for pthread.h - found
+[0.665s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.728s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.728s] -- Found Threads: TRUE  
+[0.833s] -- Found tf2_eigen: 0.25.3 (/opt/ros/humble/share/tf2_eigen/cmake)
+[1.110s] -- Found moveit_core: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_core/share/moveit_core/cmake)
+[1.136s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[1.156s] -- Found parameter_traits: 0.3.6 (/opt/ros/humble/share/parameter_traits/cmake)
+[1.172s] -- Found rclcpp_lifecycle: 16.0.5 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)
+[1.205s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.292s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.561s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[1.561s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.084s] -- Found moveit_ros_planning: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/share/moveit_ros_planning/cmake)
+[2.087s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[2.385s] -- Found moveit_ros_warehouse: 2.5.4 (/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/share/moveit_ros_warehouse/cmake)
+[2.389s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[2.579s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem 
+[2.589s] -- Found ament_lint_auto: 0.12.7 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.601s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.601s] -- Configured cppcheck include dirs: /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_ros/benchmarks/include
+[2.601s] -- Configured cppcheck exclude dirs and/or files: 
+[2.601s] -- Added test 'lint_cmake' to check CMake code style
+[2.602s] -- Added test 'xmllint' to check XML markup files
+[2.602s] -- Configuring done
+[2.641s] -- Generating done
+[2.643s] -- Build files have been written to: /home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks
+[2.655s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake /home/mtrn/4231/ws_moveit2/src/moveit2/moveit_ros/benchmarks -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks
+[2.656s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks -- -j4 -l4
+[2.694s] [ 28%] [32mBuilding CXX object CMakeFiles/moveit_ros_benchmarks.dir/src/BenchmarkOptions.cpp.o[0m
+[2.694s] [ 28%] [32mBuilding CXX object CMakeFiles/moveit_ros_benchmarks.dir/src/BenchmarkExecutor.cpp.o[0m
+[18.303s] [ 42%] [32m[1mLinking CXX shared library libmoveit_ros_benchmarks.so[0m
+[18.510s] [ 42%] Built target moveit_ros_benchmarks
+[18.529s] [ 57%] [32mBuilding CXX object CMakeFiles/moveit_combine_predefined_poses_benchmark.dir/src/simple_benchmarks/CombinePredefinedPosesBenchmark.cpp.o[0m
+[18.529s] [ 71%] [32mBuilding CXX object CMakeFiles/moveit_run_benchmark.dir/src/RunBenchmark.cpp.o[0m
+[26.358s] [ 85%] [32m[1mLinking CXX executable moveit_run_benchmark[0m
+[26.586s] [ 85%] Built target moveit_run_benchmark
+[26.973s] [100%] [32m[1mLinking CXX executable moveit_combine_predefined_poses_benchmark[0m
+[27.212s] [100%] Built target moveit_combine_predefined_poses_benchmark
+[27.219s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks -- -j4 -l4
+[27.247s] Invoking command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks
+[27.253s] -- Install configuration: "Release"
+[27.253s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/libmoveit_ros_benchmarks.so.2.5.4
+[27.254s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/libmoveit_ros_benchmarks.so.2.5.4" to ""
+[27.254s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/libmoveit_ros_benchmarks.so
+[27.254s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/library_path.sh
+[27.254s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/library_path.dsv
+[27.254s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/moveit_ros_benchmarks/moveit_run_benchmark
+[27.254s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/moveit_ros_benchmarks/moveit_run_benchmark" to ""
+[27.254s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/moveit_ros_benchmarks/moveit_combine_predefined_poses_benchmark
+[27.255s] -- Set runtime path of "/home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/moveit_ros_benchmarks/moveit_combine_predefined_poses_benchmark" to ""
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/include
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/include/moveit
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/include/moveit/benchmarks
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/include/moveit/benchmarks/BenchmarkOptions.h
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/include/moveit/benchmarks/BenchmarkExecutor.h
+[27.255s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/lib/moveit_ros_benchmarks/moveit_benchmark_statistics.py
+[27.256s] -- Up-to-date: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks
+[27.257s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda_all_planners.launch
+[27.257s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda_all_planners.yaml
+[27.257s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda_predefined_poses.launch.py
+[27.257s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda.launch.py
+[27.258s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_fanuc.launch
+[27.258s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo2.yaml
+[27.259s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda_all_planners_obstacles.launch
+[27.259s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_panda_predefined_poses.yaml
+[27.259s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo_obstacles.yaml
+[27.259s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/demo1.yaml
+[27.259s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/ament_index/resource_index/package_run_dependencies/moveit_ros_benchmarks
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/ament_index/resource_index/parent_prefix_path/moveit_ros_benchmarks
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/ament_prefix_path.sh
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/ament_prefix_path.dsv
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/path.sh
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/environment/path.dsv
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/local_setup.bash
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/local_setup.sh
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/local_setup.zsh
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/local_setup.dsv
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/package.dsv
+[27.260s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/ament_index/resource_index/packages/moveit_ros_benchmarks
+[27.261s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/export_moveit_ros_benchmarksExport.cmake
+[27.261s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/export_moveit_ros_benchmarksExport-release.cmake
+[27.261s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/ConfigExtras.cmake
+[27.261s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/ament_cmake_export_targets-extras.cmake
+[27.261s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/ament_cmake_export_dependencies-extras.cmake
+[27.262s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/moveit_ros_benchmarksConfig.cmake
+[27.263s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/cmake/moveit_ros_benchmarksConfig-version.cmake
+[27.263s] -- Installing: /home/mtrn/4231/ws_moveit2/install/moveit_ros_benchmarks/share/moveit_ros_benchmarks/package.xml
+[27.268s] Invoked command in '/home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks' returned '0': AMENT_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/home/mtrn/4231/ws_moveit2/install/launch_param_builder:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor:/home/mtrn/4231/ws_moveit2/install/moveit_core:/home/mtrn/4231/ws_moveit2/install/srdfdom:/home/mtrn/4231/ws_moveit2/install/moveit_common:/opt/ros/humble LD_LIBRARY_PATH=/home/mtrn/4231/ws_moveit2/install/moveit_ros_warehouse/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_planning/lib:/home/mtrn/4231/ws_moveit2/install/moveit_ros_occupancy_map_monitor/lib:/home/mtrn/4231/ws_moveit2/install/moveit_core/lib:/home/mtrn/4231/ws_moveit2/install/srdfdom/lib:${LD_LIBRARY_PATH} PATH=/home/mtrn/4231/ws_moveit2/install/moveit_core/bin:${PATH} PYTHONPATH=/home/mtrn/4231/ws_moveit2/install/moveit_configs_utils/lib/python3.10/site-packages:/home/mtrn/4231/ws_moveit2/install/srdfdom/local/lib/python3.10/dist-packages:/home/mtrn/4231/ws_moveit2/install/launch_param_builder/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/mtrn/4231/ws_moveit2/build/moveit_ros_benchmarks
