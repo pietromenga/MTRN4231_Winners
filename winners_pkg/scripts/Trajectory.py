@@ -18,7 +18,7 @@ class TrajectoryCalculator(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.dt = 0.1
+        self.dt = 0.5
         self.timer = self.create_timer(self.dt, self.timer_callback)
 
         self.last_x_hat = self.last_y_hat = self.last_z_hat = None
