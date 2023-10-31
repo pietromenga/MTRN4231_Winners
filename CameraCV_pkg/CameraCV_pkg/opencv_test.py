@@ -13,6 +13,13 @@ from builtin_interfaces.msg import Time
 class BallPose(Node):
 
     def __init__(self):
+
+        # Load calibration data
+        self.camera_matrix1 = np.load('camera_matrix1.npy')
+        self.dist_coeffs1 = np.load('dist_coeffs1.npy')
+        self.camera_matrix2 = np.load('camera_matrix2.npy')
+        self.dist_coeffs2 = np.load('dist_coeffs2.npy')
+
         super().__init__('Trajectory_Calculator')
 
         # Create a lock for the shared list
@@ -105,6 +112,11 @@ class BallPose(Node):
     def process_camera(self, camera_id):
         # Capture a frame
         success, img = self.caps[camera_id].read()
+        # Undistort the image
+        if camera_id == 0:
+            img = cv2.undistort(img, self.camera_matrix1, self.dist_coeffs1)
+        else:
+            img = cv2.undistort(img, self.camera_matrix2, self.dist_coeffs2)
         # If we can't read a frame, warn and break
         if not success:
             self.get_logger().warn(f"Failed to read frame from camera {camera_id}")
@@ -140,8 +152,8 @@ class BallPose(Node):
             cv2.circle(img, (x, y), 10, (255, 0, 0), -1)
             # Calculate the camera's field of view
             height, width = img.shape[:2]
-            fov_horizontal = 83  # in degrees
-            fov_vertical = 53  # in degrees
+            fov_horizontal = 81.6  # in degrees
+            fov_vertical = 54.4  # in degrees
             # Calculate yaw and pitch based on the blue dot's position
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
