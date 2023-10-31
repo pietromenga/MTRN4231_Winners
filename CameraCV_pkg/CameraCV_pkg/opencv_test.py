@@ -10,27 +10,12 @@ from scipy.spatial.distance import cdist
 from geometry_msgs.msg import PoseStamped
 from builtin_interfaces.msg import Time 
 
-# Camera IDs defined at top of file
 camera1_id = 0
 camera2_id = 2
 
 class BallPose(Node):
 
     def __init__(self):
-
-        # Load calibration data
-        self.camera_matrix1 = np.array([[4.09089114e+03, 0.00000000e+00, 3.06405070e+03],
-                                        [0.00000000e+00, 4.09934714e+03, 1.61934230e+03],
-                                        [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]])
-
-        self.dist_coeffs1 = np.array([[0.03505681, -0.49013993, -0.00605223, 0.00648785, 1.57388501]])
-
-        self.camera_matrix2 = np.array([[4.09089114e+03, 0.00000000e+00, 3.06405070e+03],
-                                        [0.00000000e+00, 4.09934714e+03, 1.61934230e+03],
-                                        [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]])
-
-        self.dist_coeffs2 = np.array([[0.03505681, -0.49013993, -0.00605223, 0.00648785, 1.57388501]])
-
         super().__init__('Trajectory_Calculator')
 
         # Create a lock for the shared list
@@ -42,7 +27,7 @@ class BallPose(Node):
         # Create the shared list
         self.shared_list = self.manager.list()
         # Define the positions of the cameras
-        self.camera_position = {camera1_id: [10, 0, 0], camera2_id: [-10, 0, 0]}
+        self.camera_position = {0: [10, 0, 0], 2: [-10, 0, 0]}
         # Create processes for each camera
 
         self.ball_pub = self.create_publisher(PoseStamped, 'ball_pose', 10)
@@ -114,20 +99,15 @@ class BallPose(Node):
         return point_on_line1, point_on_line2, midpoint
 
     def process_camera1(self):
-        self.process_camera(camera1_id)
+        self.process_camera(0)
 
     def process_camera2(self):
-        self.process_camera(camera2_id)
+        self.process_camera(1)
 
     # Function to handle each camera
     def process_camera(self, camera_id):
         # Capture a frame
         success, img = self.caps[camera_id].read()
-        # Undistort the image
-        if camera_id == camera1_id:
-            img = cv2.undistort(img, self.camera_matrix1, self.dist_coeffs1)
-        else:
-            img = cv2.undistort(img, self.camera_matrix2, self.dist_coeffs2)
         # If we can't read a frame, warn and break
         if not success:
             self.get_logger().warn(f"Failed to read frame from camera {camera_id}")
@@ -186,8 +166,8 @@ class BallPose(Node):
                     d1 = self.calculate_direction_vector(yaw1, pitch1)
                     d2 = self.calculate_direction_vector(yaw2, pitch2)
                     # Get the camera positions
-                    p1 = np.array(self.camera_position[camera1_id]) #todo change
-                    p2 = np.array(self.camera_position[camera2_id])
+                    p1 = np.array(self.camera_position[0]) #todo change
+                    p2 = np.array(self.camera_position[2])
                     # Calculate the closest points and midpoint
                     point1, point2, midpoint = self.closest_point_of_approach(p1, d1, p2, d2)
 
