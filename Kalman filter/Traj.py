@@ -31,7 +31,7 @@ class TrajectoryCalculator(Node):
         measurement_noise = np.eye(6) * 0.1
 
         # Create a Kalman filter instance
-        kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
+        self.kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
 
         self.dt = 0.5  # Prediction time
         self.timer = self.create_timer(0.01, self.timer_callback)
@@ -76,10 +76,10 @@ class TrajectoryCalculator(Node):
 
         # Predict next position
         measurements = np.array([current_position[0], current_position[1], current_position[2], vx, vy, vz])
-        kf.predict()
-        kf.update(measurement)
+        self.kf.predict()
+        self.kf.update(measurement)
 
-        self.sendBallPred(kf.state[0], kf.state[1], kf.state[2])
+        self.sendBallPred(self.kf.state[0], self.kf.state[1], self.kf.state[2])
 
         # This line is the culprit. Replace x, y, z with current_position[0], current_position[1], current_position[2]
         self.last_x, self.last_y, self.last_z = current_position[0], current_position[1], current_position[2]
