@@ -39,6 +39,7 @@ class TrajectoryCalculator(Node):
         self.minZ, self.maxZ = 0, 0.25
 
     def timer_callback(self):
+        self.sendBallPred(0,0,0)
 
         # Get position of ball in base frame
         try:
@@ -47,21 +48,32 @@ class TrajectoryCalculator(Node):
                 'ball_tf',
                 rclpy.time.Time())
             
-            tEndEff = self.tf_buffer.lookup_transform(
-                self.to_frame_rel,
-                'tool0',
-                rclpy.time.Time())
+            # tEndEff = self.tf_buffer.lookup_transform(
+            #     self.to_frame_rel,
+            #     'tool0',
+            #     rclpy.time.Time())
         except TransformException as ex:
             # self.get_logger().info(
             #     f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
             return
         
-        # Store transforms
+        # Find target
+        # ballPredTarget = self.predictBall(tBall)
+        # ballPredTarget = (tBall.transform.translation.x,tBall.transform.translation.y,tBall.transform.translation.z)
+            
+
+        # send off prediction
+        # if ballPredTarget != ():
+        #     self.sendBallPred(*ballPredTarget) #unpack tuple into args
+
+    def predictBall(self, transform):
+        ballPredTarget = ()
+
         if self.itemCount < 5:
-            self.appendTransform(tBall)
+            self.appendTransform(transform)
         else: # Enough to regress
             currentTime = time.time() - self.startTime
-            self.appendTransform(tBall)
+            self.appendTransform(transform)
 
             xCoeff = np.polyfit(self.timeList, self.posX, 2)
             yCoeff = np.polyfit(self.timeList, self.posY, 2)
@@ -70,7 +82,6 @@ class TrajectoryCalculator(Node):
             dt = 0.01
             timeSteps = np.arange(currentTime, currentTime + 1, dt)
             minDist = 100
-            ballPredTarget = ()
             # for ti in reversed(timeSteps): # Reversed as solutions farthest away will be closest
             #     # xyz at time step ti
             #     x = float(xCoeff[0] * ti ** 2 + xCoeff[1] * ti + xCoeff[2])
@@ -94,22 +105,17 @@ class TrajectoryCalculator(Node):
             y = float(yCoeff[0] * secondInFuture ** 2 + yCoeff[1] * secondInFuture + yCoeff[2])
             z = float(zCoeff[0] * secondInFuture ** 2 + zCoeff[1] * secondInFuture + zCoeff[2])
             ballPredTarget = (x,y,z)
-                
-
-            # send off prediction
-            if ballPredTarget != ():
-                self.sendBallPred(*ballPredTarget) #unpack tuple into args
-
-            # Remove last point to get new regression
             self.removeLast()
+
+        return ballPredTarget
 
     def sendBallPred(self, x,y,z):
         pred = PoseStamped()
         pred.header.stamp = self.get_clock().now().to_msg()
         pred.header.frame_id = "base_link"
-        pred.pose.position.x = x
-        pred.pose.position.y = y
-        pred.pose.position.z = z
+        pred.pose.position.x = -0.75 #x
+        pred.pose.position.y =  0.3 #y
+        pred.pose.position.z =  0.2 #z
         self.pred_publisher_.publish(pred)
 
     def inCatchingRange(self, x, y, z):

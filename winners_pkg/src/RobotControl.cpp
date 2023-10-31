@@ -15,6 +15,8 @@ RobotControl::RobotControl() : Node("RobotControl")
     move_group_interface->setPlanningTime(10.0);
     move_group_interface->setEndEffectorLink("tool0");
     move_group_interface->startStateMonitor();
+    move_group_interface->setMaxVelocityScalingFactor(1.0);
+    move_group_interface->setMaxAccelerationScalingFactor(1.0);
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
 
@@ -95,9 +97,15 @@ void RobotControl::move_to_catch() {
     // auto zDiff = t.transform.translation.z;
 
     // Clamp to max velocity per tick
-    auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    if (abs(xDiff) < 0.020 || abs(yDiff) < 0.020 || abs(zDiff) < 0.020) {
+        return;
+    }
+    // auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    // auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    // auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    auto xInc = MAX_STEP * sgn(xDiff);
+    auto yInc = MAX_STEP * sgn(yDiff);
+    auto zInc = MAX_STEP * sgn(zDiff);
 
     // add to twist
     delta.twist.linear.x = xInc;

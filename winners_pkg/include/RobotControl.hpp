@@ -41,7 +41,7 @@ public:
 private:
     // Robot positions
     std::vector<double> catching_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
-    std::vector<double> throwing_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
+    std::vector<double> throwing_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
 
     // Catching target position
     geometry_msgs::msg::PoseStamped catch_target;

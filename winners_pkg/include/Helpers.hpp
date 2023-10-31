@@ -44,6 +44,10 @@ auto generatePoseMsg(float x,float y, float z,float qx,float qy,float qz,float q
     return msg;
 }
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 // template <typename T>
 // auto wait_for_service(typename rclcpp::Client<T>::SharedPtr client) -> void {
 //     while (!client->wait_for_service(std::chrono::seconds(1))) {

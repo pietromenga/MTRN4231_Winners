@@ -96,11 +96,11 @@ def generate_launch_description():
             name='Transforms',
             executable='Transforms',
         ),
-        Node(
-            package='winners_pkg',
-            name='BallPose',
-            executable='BallPose',
-        ),
+        # Node(
+        #     package='winners_pkg',
+        #     name='BallPose',
+        #     executable='BallPose',
+        # ),
         Node(
             package='winners_pkg',
             name='RobotControl',
@@ -113,7 +113,7 @@ def generate_launch_description():
         Node(
             package='winners_pkg',
             name='Trajectory',
-            executable='Trajectory',
+            executable='Trajectory.py',
         ),      
         Node(
             package='winners_pkg',

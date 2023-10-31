@@ -17,9 +17,10 @@
 #include <memory>
 #include <string>
 #include <stdio.h>
-#include <opencv2/opencv.hpp>
+// #include <opencv2/opencv.hpp>
 
 #include "rclcpp/rclcpp.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 #include "sensor_msgs/msg/image.hpp"
 
@@ -33,7 +34,7 @@ public:
     : Node("BallPosePublisher"), count_(0)
     {
         // Pub to ball pose
-        publisher_ = this->create_publisher<geometry_msgs::msg::Pose>("ball_pose", 10); 
+        publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("ball_pose", 10); 
 
         // Sub from camera output
         cam_sub_ = this->create_subscription<sensor_msgs::msg::Image>("image_raw", 10, std::bind(&BallPosePublisher::find_ball, this, _1));
@@ -41,7 +42,7 @@ public:
 
 private:
     void find_ball(const sensor_msgs::msg::Image & img);
-    rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr publisher_;
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr publisher_;
     rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr cam_sub_;
     size_t count_;
 };
@@ -49,7 +50,11 @@ private:
 void BallPosePublisher::find_ball(const sensor_msgs::msg::Image & img) {
     // Read img in from sub and process ball pose
     
-    geometry_msgs::msg::Pose ballPose;
+    geometry_msgs::msg::PoseStamped ballPose;
+    ballPose.header.stamp = this->now();
+    ballPose.pose.position.x = -0.6;
+    ballPose.pose.position.y = 0.3;
+    ballPose.pose.position.z = 0.2;
     publisher_->publish(ballPose);
 }
 
