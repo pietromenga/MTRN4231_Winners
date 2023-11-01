@@ -9,9 +9,12 @@ Camera::Camera() : Node("Camera") {
 
     pubImage = this->create_publisher<sensor_msgs::msg::Image>(topic, 10);
     timer = this->create_wall_timer(
-      10ms, std::bind(&Camera::pubCamera, this));
+      5ms, std::bind(&Camera::pubCamera, this));
 
     cap = cv::VideoCapture(camera_id * 2); // vid cap 0 and 2
+    // cap.set(cv::CAP_PROP_FRAME_WIDTH, 1920);
+    // cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);
+    // cap.set(cv::CAP_PROP_FPS, 60);
 
     if (!cap.isOpened())
     {
@@ -35,6 +38,7 @@ void Camera::pubCamera() {
     msg.encoding = sensor_msgs::image_encodings::BGR8; // Or whatever
     msg.image    = frame; // Your cv::Mat
     pubImage->publish(*msg.toImageMsg());
+    // RCLCPP_INFO(this->get_logger(), "grabbed");
 }
 
 int main(int argc, char * argv[])

@@ -113,5 +113,10 @@ def generate_launch_description():
             parameters=[
                 {"camera_id": 1}
             ]
+        ),
+        Node(
+            package='winners_pkg',
+            name='BallPose',
+            executable='BallPose.py',
         )
     ])

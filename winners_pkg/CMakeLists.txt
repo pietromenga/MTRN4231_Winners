@@ -62,8 +62,8 @@ add_executable(camTest src/camTest.cpp)
 ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BALL POSE
-add_executable(BallPose src/BallPose.cpp)
-ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
+# add_executable(BallPose src/BallPose.cpp)
+# ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(Transforms src/Transforms.cpp)
@@ -104,7 +104,6 @@ endif()
 
 install(TARGETS
   camTest
-  BallPose
   Transforms
   Visualisations
   RobotControl
@@ -124,6 +123,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/Trajectory.py
   scripts/TriKalman.py
+  scripts/BallPose.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
