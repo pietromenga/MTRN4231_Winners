@@ -6,6 +6,8 @@ from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 from collections import deque
+from TriKalman import KalmanFilter3D
+import numpy as np
 
 class TrajectoryCalculator(Node):
 
@@ -17,7 +19,22 @@ class TrajectoryCalculator(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.dt = 0.5  # Prediction time
+        # Initial state estimate [x, y, z, vx, vy, vz]
+        initial_state = np.array([0, 0, 0, 1, 1, 1])
+
+        # Initial covariance matrix
+        initial_covariance = np.eye(6)
+
+        # Process noise covariance matrix
+        process_noise = np.eye(6) * 0.01
+
+        # Measurement noise covariance matrix
+        measurement_noise = np.eye(6) * 0.1
+
+        # Create a Kalman filter instance
+        self.kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
+
+        self.dt = 1.0  # Prediction time
         self.timer = self.create_timer(0.01, self.timer_callback)
 
         self.last_x = self.last_y = self.last_z = None
@@ -59,11 +76,11 @@ class TrajectoryCalculator(Node):
         vz = dz / dt
 
         # Predict next position
-        predicted_x = current_position[0] + vx * self.dt
-        predicted_y = current_position[1] + vy * self.dt
-        predicted_z = current_position[2] + vz * self.dt
+        measurements = np.array([current_position[0], current_position[1], current_position[2], vx, vy, vz])
+        self.kf.predict()
+        self.kf.update(measurements)
 
-        self.sendBallPred(predicted_x, predicted_y, predicted_z)
+        self.sendBallPred(self.kf.state[0], self.kf.state[1], self.kf.state[2])
 
         # This line is the culprit. Replace x, y, z with current_position[0], current_position[1], current_position[2]
         self.last_x, self.last_y, self.last_z = current_position[0], current_position[1], current_position[2]

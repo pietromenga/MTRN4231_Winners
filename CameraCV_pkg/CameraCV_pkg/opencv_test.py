@@ -57,11 +57,11 @@ class BallPose(Node):
 
         self.kernel = np.ones((5, 5), np.uint8)
         # BLUE
-        self.lower_range = np.array([105, 100, 100])
-        self.upper_range = np.array([125, 255, 255])
+        # self.lower_range = np.array([105, 100, 100])
+        # self.upper_range = np.array([125, 255, 255])
         # GREEN
-        # self.lower_range = np.array([60,25,25])
-        # self.upper_range = np.array([80,255,255])
+        self.lower_range = np.array([60,25,25])
+        self.upper_range = np.array([80,255,255])
 
     # Function to calculate the direction the camera is pointing
     def calculate_direction_vector(self, yaw, pitch):
@@ -120,11 +120,11 @@ class BallPose(Node):
             # Define the color range for detecting blue
 
             # Define the color range for detecting blue
-            lower_blue = np.array([100, 50, 50])
-            upper_blue = np.array([140, 255, 255])
+            # lower_blue = np.array([100, 50, 50])
+            # upper_blue = np.array([140, 255, 255])
             
             # Create a mask to isolate blue regions
-            mask = cv2.inRange(hsv, lower_blue, upper_blue)
+            mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
 
             # Define a kernel for morphological operations
             # Clean up the mask
@@ -170,6 +170,8 @@ class BallPose(Node):
                     p2 = np.array(self.camera_position[2])
                     # Calculate the closest points and midpoint
                     point1, point2, midpoint = self.closest_point_of_approach(p1, d1, p2, d2)
+                    if midpoint[1] < 0:
+                        midpoint *= -1.0
 
                     if not np.isnan(midpoint).all():
                         print(f"Midpoint between closest points: {midpoint}")

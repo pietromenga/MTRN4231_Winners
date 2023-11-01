@@ -95,12 +95,12 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='BallPose',
-            executable='BallPose',
+            name='Trajectory',
+            executable='Trajectory.py',
         ),
         Node(
-            package='winners_pkg',
-            name='Trajectory',
-            executable='Trajectory',
-        ),
+            package='CameraCV_pkg',
+            name='test_node',
+            executable='test_node'
+        )
     ])
