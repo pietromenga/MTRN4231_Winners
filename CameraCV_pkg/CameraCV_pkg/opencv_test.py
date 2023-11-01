@@ -52,8 +52,10 @@ class BallPose(Node):
         self.start_time = time.time()
         self.fps = 0
 
-        self.event = Event()
-        self.event.clear()
+        self.event1 = Event()
+        self.event1.clear()
+        self.event2 = Event()
+        self.event2.clear()
         
         self.timer1 = self.create_timer(0.01, self.process_camera1)
         self.timer2 = self.create_timer(0.01, self.process_camera2)
@@ -103,17 +105,18 @@ class BallPose(Node):
         return point_on_line1, point_on_line2, midpoint
 
     def process_camera1(self):
-        self.event.wait()
+        self.event1.wait()
         self.process_camera(0)
-        self.event.clear()
+        self.event1.clear()
     
     def process_camera2(self):
-        self.event.wait()
+        self.event2.wait()
         self.process_camera(1)
-        self.event.clear()
+        self.event2.clear()
 
     def trigger_cameras(self):
-        self.event.set()
+        self.event1.set()
+        self.event2.set()
 
     # Function to handle each camera
     def process_camera(self, camera_id):
