@@ -29,7 +29,7 @@ class TrajectoryCalculator(Node):
         process_noise = np.eye(6) * 0.01
 
         # Measurement noise covariance matrix
-        measurement_noise = np.eye(6) * 0.1
+        measurement_noise = np.eye(6) * 0.5
 
         # Create a Kalman filter instance
         self.kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)

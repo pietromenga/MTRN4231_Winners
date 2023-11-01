@@ -5,7 +5,7 @@ from rclpy.node import Node
 import cv2
 import numpy as np
 import time
-from multiprocessing import Process, Manager, Lock, Event
+from multiprocessing import Process, Manager, Lock
 from scipy.spatial.distance import cdist
 from geometry_msgs.msg import PoseStamped
 from builtin_interfaces.msg import Time 
@@ -51,15 +51,9 @@ class BallPose(Node):
         self.frame_count = 0
         self.start_time = time.time()
         self.fps = 0
-
-        self.event1 = Event()
-        self.event1.clear()
-        self.event2 = Event()
-        self.event2.clear()
         
         self.timer1 = self.create_timer(0.01, self.process_camera1)
         self.timer2 = self.create_timer(0.01, self.process_camera2)
-        self.timer_trigger = self.create_timer(0.01, self.trigger_cameras)
 
         self.kernel = np.ones((5, 5), np.uint8)
         # BLUE
@@ -105,23 +99,17 @@ class BallPose(Node):
         return point_on_line1, point_on_line2, midpoint
 
     def process_camera1(self):
-        self.event1.wait()
         self.process_camera(0)
-        self.event1.clear()
-    
-    def process_camera2(self):
-        self.event2.wait()
-        self.process_camera(1)
-        self.event2.clear()
 
-    def trigger_cameras(self):
-        self.event1.set()
-        self.event2.set()
+    def process_camera2(self):
+        self.process_camera(1)
 
     # Function to handle each camera
     def process_camera(self, camera_id):
         # Capture a frame
         success, img = self.caps[camera_id].read()
+        # self.get_logger().info(f"{camera_id} : {time.time()}")
+
         # If we can't read a frame, warn and break
         if not success:
             self.get_logger().warn(f"Failed to read frame from camera {camera_id}")
