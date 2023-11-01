@@ -30,6 +30,7 @@ find_package(moveit_visual_tools REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(controller_manager_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
 find_package(rviz_visual_tools)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -47,6 +48,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   tf2
   tf2_ros
   tf2_geometry_msgs
+  cv_bridge
 )
 
 
@@ -79,6 +81,10 @@ ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
 add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
+# BRAIN
+add_executable(Camera src/Camera.cpp)
+ament_target_dependencies(Camera ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
 
 # add_executable(ballPose src/ballPose.cpp)
 # ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
@@ -103,6 +109,7 @@ install(TARGETS
   Visualisations
   RobotControl
   Brain
+  Camera
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY

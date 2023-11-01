@@ -88,19 +88,30 @@ def get_robot_description_semantic():
 
 def generate_launch_description():
     return LaunchDescription([
+        # Node(
+        #     package='winners_pkg',
+        #     name='Transforms',
+        #     executable='Transforms',
+        # ),
+        # Node(
+        #     package='winners_pkg',
+        #     name='Trajectory',
+        #     executable='Trajectory.py',
+        # ),
         Node(
             package='winners_pkg',
-            name='Transforms',
-            executable='Transforms',
+            name='Camera0',
+            executable='Camera',
+            parameters=[
+                {"camera_id": 0}
+            ]
         ),
         Node(
             package='winners_pkg',
-            name='Trajectory',
-            executable='Trajectory.py',
-        ),
-        Node(
-            package='CameraCV_pkg',
-            name='test_node',
-            executable='test_node'
+            name='Camera1',
+            executable='Camera',
+            parameters=[
+                {"camera_id": 1}
+            ]
         )
     ])
