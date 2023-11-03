@@ -31,7 +31,7 @@ using std::placeholders::_2;
 
 enum RobotControlMode {JOINT, SERVO};
 
-#define MAX_STEP 0.75
+#define MAX_STEP 1.0
 
 class RobotControl : public rclcpp::Node
 {
@@ -87,7 +87,7 @@ private:
     void move_to_catch();
 
     // check if catch target is within catching bounds
-    bool validTarget();
+    bool validTarget(double x, double y, double z);
 
     // Sets a target for the catch function to reach
     void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);

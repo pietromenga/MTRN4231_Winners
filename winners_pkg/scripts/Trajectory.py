@@ -59,12 +59,12 @@ class TrajectoryCalculator(Node):
         
         # Find target
         # ballPredTarget = self.predictBall(tBall)
-        # ballPredTarget = (tBall.transform.translation.x,tBall.transform.translation.y,tBall.transform.translation.z)
+        ballPredTarget = (tBall.transform.translation.x,tBall.transform.translation.y,tBall.transform.translation.z)
             
 
         # send off prediction
-        # if ballPredTarget != ():
-        #     self.sendBallPred(*ballPredTarget) #unpack tuple into args
+        if ballPredTarget != ():
+            self.sendBallPred(*ballPredTarget) #unpack tuple into args
 
     def predictBall(self, transform):
         ballPredTarget = ()
@@ -113,9 +113,9 @@ class TrajectoryCalculator(Node):
         pred = PoseStamped()
         pred.header.stamp = self.get_clock().now().to_msg()
         pred.header.frame_id = "base_link"
-        pred.pose.position.x = -0.75 #x
-        pred.pose.position.y =  0.3 #y
-        pred.pose.position.z =  0.2 #z
+        pred.pose.position.x = float(x)
+        pred.pose.position.y = float(y)
+        pred.pose.position.z = float(z)
         self.pred_publisher_.publish(pred)
 
     def inCatchingRange(self, x, y, z):

@@ -15,8 +15,8 @@ RobotControl::RobotControl() : Node("RobotControl")
     move_group_interface->setPlanningTime(10.0);
     move_group_interface->setEndEffectorLink("tool0");
     move_group_interface->startStateMonitor();
-    move_group_interface->setMaxVelocityScalingFactor(1.0);
-    move_group_interface->setMaxAccelerationScalingFactor(1.0);
+    move_group_interface->setMaxVelocityScalingFactor(0.5);
+    move_group_interface->setMaxAccelerationScalingFactor(0.5);
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
 
@@ -56,13 +56,13 @@ void RobotControl::setup_collisions() {
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
-bool RobotControl::validTarget() {
-    // check within box range
-    return true;
+bool RobotControl::validTarget(double x, double y, double z) {
+    auto valid = (x <= -0.450 && y >= 0 && z >= 0 && x >= -0.700 && y <= 0.400 && z <= 0.300);
+    return valid;
 }
 
 void RobotControl::move_to_catch() {
-    if (robot_mode != RobotControlMode::SERVO || !validTarget()) {
+    if (robot_mode != RobotControlMode::SERVO) {
         return;
     }
     // RCLCPP_INFO(this->get_logger(), std::to_string(this->now().seconds()));
@@ -88,10 +88,17 @@ void RobotControl::move_to_catch() {
         return;
     }
 
+    auto x = t.transform.translation.x;
+    auto y = t.transform.translation.y;
+    auto z = t.transform.translation.z;
+    if (!validTarget(x, y, z)) {
+        return;
+    }
+
     // Calculate desired relative movement
-    auto xDiff = catch_target.pose.position.x - t.transform.translation.x;
-    auto yDiff = catch_target.pose.position.y - t.transform.translation.y;
-    auto zDiff = catch_target.pose.position.z - t.transform.translation.z;
+    auto xDiff = catch_target.pose.position.x - x;
+    auto yDiff = catch_target.pose.position.y - y;
+    auto zDiff = catch_target.pose.position.z - z;
     // auto xDiff = t.transform.translation.x;
     // auto yDiff = t.transform.translation.y;
     // auto zDiff = t.transform.translation.z;
@@ -337,7 +344,10 @@ void RobotControl::wait_for_services(){
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<RobotControl>());
+    auto node = std::make_shared<RobotControl>();
+    auto executor = std::make_unique<rclcpp::executors::MultiThreadedExecutor>();
+    executor->add_node(node);
+    executor->spin();
     rclcpp::shutdown();
     return 0;
 }

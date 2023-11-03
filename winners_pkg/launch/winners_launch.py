@@ -6,17 +6,29 @@ from launch.substitutions import PathJoinSubstitution, Command, FindExecutable
 from launch_ros.substitutions import FindPackageShare
 
 def get_robot_description():
+    # joint_limit_params = PathJoinSubstitution(
+    #     [FindPackageShare("ur_description"), "config", "ur5e", "joint_limits.yaml"]
+    # )
+    # kinematics_params = PathJoinSubstitution(
+    #     [FindPackageShare("ur_description"), "config", "ur5e", "default_kinematics.yaml"]
+    # )
+    # physical_params = PathJoinSubstitution(
+    #     [FindPackageShare("ur_description"), "config", "ur5e", "physical_parameters.yaml"]
+    # )
+    # visual_params = PathJoinSubstitution(
+    #     [FindPackageShare("ur_description"), "config", "ur5e", "visual_parameters.yaml"]
+    # )
     joint_limit_params = PathJoinSubstitution(
-        [FindPackageShare("ur_description"), "config", "ur5e", "joint_limits.yaml"]
+        [FindPackageShare("winners_pkg"), "config", "joint_limits.yaml"]
     )
     kinematics_params = PathJoinSubstitution(
-        [FindPackageShare("ur_description"), "config", "ur5e", "default_kinematics.yaml"]
+        [FindPackageShare("winners_pkg"), "config", "default_kinematics.yaml"]
     )
     physical_params = PathJoinSubstitution(
-        [FindPackageShare("ur_description"), "config", "ur5e", "physical_parameters.yaml"]
+        [FindPackageShare("winners_pkg"), "config", "physical_parameters.yaml"]
     )
     visual_params = PathJoinSubstitution(
-        [FindPackageShare("ur_description"), "config", "ur5e", "visual_parameters.yaml"]
+        [FindPackageShare("winners_pkg"), "config", "visual_parameters.yaml"]
     )
     robot_description_content = Command(
         [
@@ -95,6 +107,11 @@ def generate_launch_description():
             package='winners_pkg',
             name='Transforms',
             executable='Transforms',
+        ),
+        Node(
+            package='CameraCV_pkg',
+            name='test_node',
+            executable='test_node',
         ),
         # Node(
         #     package='winners_pkg',
