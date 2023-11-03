@@ -48,17 +48,17 @@ void Brain::tfCallback()
         return;
     }
 
-    // Distance to end eff
-    auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
+    // // Distance to end eff
+    // auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
 
-    // If within distance stop catching and initiate throw
-    if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
-        // Transition to throw mode and attemp a throw 
-        request_stop_catching();
-        if (robotState == RobotState::THROWING) {
-            request_throw();
-        }
-    }
+    // // If within distance stop catching and initiate throw
+    // if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
+    //     // Transition to throw mode and attemp a throw 
+    //     request_stop_catching();
+    //     if (robotState == RobotState::THROWING) {
+    //         request_throw();
+    //     }
+    // }
 }
 
 void Brain::request_start_catching() {

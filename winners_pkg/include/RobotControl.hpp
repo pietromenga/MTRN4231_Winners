@@ -87,7 +87,7 @@ private:
     void move_to_catch();
 
     // check if catch target is within catching bounds
-    bool validTarget();
+    bool validTarget(double x, double y, double z);
 
     // Sets a target for the catch function to reach
     void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);

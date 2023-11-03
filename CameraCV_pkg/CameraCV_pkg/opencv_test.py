@@ -10,9 +10,6 @@ from scipy.spatial.distance import cdist
 from geometry_msgs.msg import PoseStamped
 from builtin_interfaces.msg import Time 
 
-camera1_id = 0
-camera2_id = 2
-
 class BallPose(Node):
 
     def __init__(self):
@@ -33,8 +30,8 @@ class BallPose(Node):
         self.ball_pub = self.create_publisher(PoseStamped, 'ball_pose', 10)
     
         # Set up the camera
-        self.id1 = camera1_id
-        self.id2 = camera2_id
+        self.id1 = 0
+        self.id2 = 2
         self.cap1 = cv2.VideoCapture(self.id1)
         self.cap2 = cv2.VideoCapture(self.id2)
         self.caps = [self.cap1, self.cap2]
@@ -57,11 +54,11 @@ class BallPose(Node):
 
         self.kernel = np.ones((5, 5), np.uint8)
         # BLUE
-        # self.lower_range = np.array([105, 100, 100])
-        # self.upper_range = np.array([125, 255, 255])
+        self.lower_range = np.array([105, 100, 100])
+        self.upper_range = np.array([125, 255, 255])
         # GREEN
-        self.lower_range = np.array([60,25,25])
-        self.upper_range = np.array([80,255,255])
+        # self.lower_range = np.array([60,25,25])
+        # self.upper_range = np.array([80,255,255])
 
     # Function to calculate the direction the camera is pointing
     def calculate_direction_vector(self, yaw, pitch):
@@ -108,8 +105,6 @@ class BallPose(Node):
     def process_camera(self, camera_id):
         # Capture a frame
         success, img = self.caps[camera_id].read()
-        # self.get_logger().info(f"{camera_id} : {time.time()}")
-
         # If we can't read a frame, warn and break
         if not success:
             self.get_logger().warn(f"Failed to read frame from camera {camera_id}")
@@ -121,12 +116,13 @@ class BallPose(Node):
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             # Define the color range for detecting blue
 
-            # Define the color range for detecting blue
-            # lower_blue = np.array([100, 50, 50])
-            # upper_blue = np.array([140, 255, 255])
-            
             # Create a mask to isolate blue regions
-            mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
+
+            # mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
+
+            # mask1 = cv2.inRange(hsv, (170,120,70), (180,255,255))
+            mask2 = cv2.inRange(hsv, (2,150,150), (8,255,255))
+            mask = mask2
 
             # Define a kernel for morphological operations
             # Clean up the mask
@@ -145,8 +141,8 @@ class BallPose(Node):
             cv2.circle(img, (x, y), 10, (255, 0, 0), -1)
             # Calculate the camera's field of view
             height, width = img.shape[:2]
-            fov_horizontal = 81.6  # in degrees
-            fov_vertical = 54.4  # in degrees
+            fov_horizontal = 83  # in degrees
+            fov_vertical = 53  # in degrees
             # Calculate yaw and pitch based on the blue dot's position
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
@@ -172,8 +168,6 @@ class BallPose(Node):
                     p2 = np.array(self.camera_position[2])
                     # Calculate the closest points and midpoint
                     point1, point2, midpoint = self.closest_point_of_approach(p1, d1, p2, d2)
-                    if midpoint[1] < 0:
-                        midpoint *= -1.0
 
                     if not np.isnan(midpoint).all():
                         print(f"Midpoint between closest points: {midpoint}")

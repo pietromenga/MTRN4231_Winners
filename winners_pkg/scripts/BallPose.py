@@ -22,12 +22,13 @@ class BallPose(Node):
 
         self.camSub0 = self.create_subscription(Image, '/camera0/image_raw', self.getYawPitch0, 10)
         self.camSub1 = self.create_subscription(Image, '/camera1/image_raw', self.getYawPitch1, 10)
+        self.timer = self.create_timer(0.01, self.process_camera)
 
         self.start_time = time.time()
         
         self.kernel = np.ones((5, 5), np.uint8)
-        self.yawPitch0 = (0,0)
-        self.yawPitch1 = (0,0)
+        self.yawPitch0 = None
+        self.yawPitch1 = None
 
         # BLUE
         # self.lower_range = np.array([105, 100, 100])
@@ -42,9 +43,9 @@ class BallPose(Node):
 
     def getYawPitch1(self, imgMsg: Image):
         self.yawPitch1 = self.getYawPitch(imgMsg)
-        self.process_camera()
 
     def getYawPitch(self, imgMsg: Image):
+        start = time.time()
         # Convert to cv image
         bridge = CvBridge()
         img = bridge.imgmsg_to_cv2(imgMsg, desired_encoding='passthrough')
@@ -75,6 +76,10 @@ class BallPose(Node):
         # Calculate yaw and pitch based on the blue dot's position
         yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
         pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
+
+        end = time.time()
+
+        self.get_logger().info(f"duration {end - start}")
 
         return yaw, pitch
 
@@ -115,14 +120,13 @@ class BallPose(Node):
 
     # Function to handle each camera
     def process_camera(self):
-        try:
-            # Extract yaw and pitch for both cameras
-            yaw1, pitch1 = self.yawPitch0
-            yaw2, pitch2 = self.yawPitch1
-        except IndexError:
-            # If the list is shorter than expected, print an error and continue
-            print("IndexError caught. Shared list is shorter than expected.")
+        # self.get_logger().info(f"yaw0 {self.yawPitch0 == None}, yaw1: {self.yawPitch1 == None}")
+        if self.yawPitch0 is None or self.yawPitch1 is None:
             return
+        
+        yaw1, pitch1 = self.yawPitch0
+        yaw2, pitch2 = self.yawPitch1
+
         # Calculate direction vectors for both cameras
         d1 = self.calculate_direction_vector(yaw1, pitch1)
         d2 = self.calculate_direction_vector(yaw2, pitch2)
@@ -146,6 +150,9 @@ class BallPose(Node):
             pose.pose.position.y = midpoint[1]
             pose.pose.position.z = midpoint[2]
             self.ball_pub.publish(pose)
+
+        self.yawPitch0 = None
+        self.yawPitch1 = None
 
 # Main function to set up the cameras
 def main(args=None):
