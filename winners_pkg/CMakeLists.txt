@@ -30,6 +30,7 @@ find_package(moveit_visual_tools REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(controller_manager_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
 find_package(rviz_visual_tools)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -47,6 +48,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   tf2
   tf2_ros
   tf2_geometry_msgs
+  cv_bridge
 )
 
 
@@ -60,8 +62,8 @@ add_executable(camTest src/camTest.cpp)
 ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # BALL POSE
-add_executable(BallPose src/BallPose.cpp)
-ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
+# add_executable(BallPose src/BallPose.cpp)
+# ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(Transforms src/Transforms.cpp)
@@ -78,6 +80,10 @@ ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
 # BRAIN
 add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+# BRAIN
+add_executable(Camera src/Camera.cpp)
+ament_target_dependencies(Camera ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 
 # add_executable(ballPose src/ballPose.cpp)
@@ -98,11 +104,11 @@ endif()
 
 install(TARGETS
   camTest
-  BallPose
   Transforms
   Visualisations
   RobotControl
   Brain
+  Camera
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
@@ -116,6 +122,8 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 install(PROGRAMS
   scripts/Trajectory.py
+  scripts/TriKalman.py
+  scripts/BallPose.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

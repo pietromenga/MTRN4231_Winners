@@ -5,6 +5,11 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
+
 // Generates a collission box of size and pos
 auto generateCollisionObject(float sx,float sy, float sz, float x, float y, float z, std::string frame_id, std::string id) -> moveit_msgs::msg::CollisionObject {
     moveit_msgs::msg::CollisionObject collision_object;

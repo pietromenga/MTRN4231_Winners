@@ -15,6 +15,8 @@ RobotControl::RobotControl() : Node("RobotControl")
     move_group_interface->setPlanningTime(10.0);
     move_group_interface->setEndEffectorLink("tool0");
     move_group_interface->startStateMonitor();
+    move_group_interface->setMaxVelocityScalingFactor(0.5);
+    move_group_interface->setMaxAccelerationScalingFactor(0.5);
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
 
@@ -54,17 +56,16 @@ void RobotControl::setup_collisions() {
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
-bool RobotControl::validTarget() {
-    // check within box range
-    return true;
+bool RobotControl::validTarget(double x, double y, double z) {
+    auto valid = (x <= -0.450 && y >= 0 && z >= 0.1 && x >= -0.700 && y <= 0.400 && z <= 0.300);
+    return valid;
 }
 
 void RobotControl::move_to_catch() {
-    if (robot_mode != RobotControlMode::SERVO || !validTarget()) {
+    if (robot_mode != RobotControlMode::SERVO) {
         return;
     }
     // RCLCPP_INFO(this->get_logger(), std::to_string(this->now().seconds()));
-
 
     // Change in robot pos
     geometry_msgs::msg::TwistStamped delta;
@@ -86,18 +87,46 @@ void RobotControl::move_to_catch() {
         return;
     }
 
+
+    auto x = t.transform.translation.x;
+    auto y = t.transform.translation.y;
+    auto z = t.transform.translation.z;
+
     // Calculate desired relative movement
-    auto xDiff = catch_target.pose.position.x - t.transform.translation.x;
-    auto yDiff = catch_target.pose.position.y - t.transform.translation.y;
-    auto zDiff = catch_target.pose.position.z - t.transform.translation.z;
+    auto xDiff = catch_target.pose.position.x - x;
+    auto yDiff = catch_target.pose.position.y - y;
+    auto zDiff = catch_target.pose.position.z - z;
     // auto xDiff = t.transform.translation.x;
     // auto yDiff = t.transform.translation.y;
     // auto zDiff = t.transform.translation.z;
 
-    // Clamp to max velocity per tick
-    auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    // Stop if close
+    if (abs(xDiff) < 0.020 && abs(yDiff) < 0.020 && abs(zDiff) < 0.020) {
+        return;
+    }
+    // auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    // auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    // auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
+    auto xInc = MAX_STEP * sgn(xDiff);
+    auto yInc = MAX_STEP * sgn(yDiff);
+    auto zInc = MAX_STEP * sgn(zDiff);
+
+    auto futureX = x + 0.020*sgn(xDiff);
+    auto futureY = y + 0.020*sgn(yDiff);
+    auto futureZ = z + 0.020*sgn(zDiff);
+    if (futureX > -0.450 || futureX < -0.75) {
+        xInc = 0;
+    } 
+    if (futureY < 0 || futureY > 0.450) {
+        yInc = 0;
+    }
+    if (futureZ < -0.15 || futureZ > 0.3) {
+        zInc = 0;
+    }
+    // RCLCPP_INFO( this->get_logger(), "xinc %f yinc %f zinc %f", xInc, yInc, zInc);
+    // RCLCPP_INFO( this->get_logger(), "x %f y %f z %f", x, y, z);
+
+
 
     // add to twist
     delta.twist.linear.x = xInc;
@@ -130,7 +159,9 @@ void RobotControl::move_to_catch() {
 
 void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
     // RCLCPP_INFO(this->get_logger(), "Received ball target for catching");
-    catch_target = pose;
+    if (pose.pose.position.x <= -0.450) {
+        catch_target = pose;
+    }
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
@@ -329,7 +360,10 @@ void RobotControl::wait_for_services(){
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<RobotControl>());
+    auto node = std::make_shared<RobotControl>();
+    auto executor = std::make_unique<rclcpp::executors::MultiThreadedExecutor>();
+    executor->add_node(node);
+    executor->spin();
     rclcpp::shutdown();
     return 0;
 }

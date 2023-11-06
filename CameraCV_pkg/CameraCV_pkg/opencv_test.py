@@ -10,9 +10,6 @@ from scipy.spatial.distance import cdist
 from geometry_msgs.msg import PoseStamped
 from builtin_interfaces.msg import Time 
 
-camera1_id = 0
-camera2_id = 2
-
 class BallPose(Node):
 
     def __init__(self):
@@ -33,8 +30,8 @@ class BallPose(Node):
         self.ball_pub = self.create_publisher(PoseStamped, 'ball_pose', 10)
     
         # Set up the camera
-        self.id1 = camera1_id
-        self.id2 = camera2_id
+        self.id1 = 0
+        self.id2 = 2
         self.cap1 = cv2.VideoCapture(self.id1)
         self.cap2 = cv2.VideoCapture(self.id2)
         self.caps = [self.cap1, self.cap2]
@@ -119,12 +116,13 @@ class BallPose(Node):
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             # Define the color range for detecting blue
 
-            # Define the color range for detecting blue
-            lower_blue = np.array([100, 50, 50])
-            upper_blue = np.array([140, 255, 255])
-            
             # Create a mask to isolate blue regions
-            mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+            # mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
+
+            # mask1 = cv2.inRange(hsv, (170,120,70), (180,255,255))
+            mask2 = cv2.inRange(hsv, (2,150,150), (8,255,255))
+            mask = mask2
 
             # Define a kernel for morphological operations
             # Clean up the mask
@@ -143,8 +141,8 @@ class BallPose(Node):
             cv2.circle(img, (x, y), 10, (255, 0, 0), -1)
             # Calculate the camera's field of view
             height, width = img.shape[:2]
-            fov_horizontal = 81.6  # in degrees
-            fov_vertical = 54.4  # in degrees
+            fov_horizontal = 83  # in degrees
+            fov_vertical = 53  # in degrees
             # Calculate yaw and pitch based on the blue dot's position
             yaw = ((x - width / 2) / (width / 2)) * (fov_horizontal / 2)
             pitch = -((y - height / 2) / (height / 2)) * (fov_vertical / 2)
