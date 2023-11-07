@@ -112,21 +112,21 @@ def generate_launch_description():
         #     name='BallPose',
         #     executable='BallPose.py',
         # ),
-        Node(
-            package='CameraCV_pkg',
-            name='test_node',
-            executable='test_node',
-        ),
+        # Node(
+        #     package='CameraCV_pkg',
+        #     name='test_node',
+        #     executable='test_node',
+        # ),
         Node(
             package='winners_pkg',
             name='Transforms',
             executable='Transforms',
         ),
-        Node(
-            package='winners_pkg',
-            name='Trajectory',
-            executable='Trajectory.py',
-        ),
+        # Node(
+        #     package='winners_pkg',
+        #     name='Trajectory',
+        #     executable='Trajectory.py',
+        # ),
         Node(
             package='winners_pkg',
             name='RobotControl',

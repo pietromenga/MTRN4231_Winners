@@ -32,6 +32,7 @@ find_package(controller_manager_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(rviz_visual_tools)
+find_package(winners_interfaces REQUIRED)  
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp 
@@ -49,6 +50,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   tf2_ros
   tf2_geometry_msgs
   cv_bridge
+  winners_interfaces
 )
 
 

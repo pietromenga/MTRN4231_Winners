@@ -22,6 +22,8 @@
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
+#include "winners_interfaces/srv/throw.hpp"
+#include <math.h>
 
 #include "Helpers.hpp"
 
@@ -29,7 +31,7 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-enum RobotControlMode {JOINT, SERVO};
+enum RobotControlMode {CATCH, THROW};
 
 #define MAX_STEP 0.75
 
@@ -37,7 +39,6 @@ class RobotControl : public rclcpp::Node
 {
 public:
     RobotControl();
-    ~RobotControl();
 private:
     // Robot positions
     std::vector<double> catching_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
@@ -78,16 +79,6 @@ private:
 
     // Sets robot to servo mode and allows robot control to use catch calculation and move robot.
     void start_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
-
-    // Sets robot to joint control and stops catch calculation movement
-    void stop_catching_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
-    bool stop_catching();
-
-    // Every tick move toward target position
-    void move_to_catch();
-
-    // check if catch target is within catching bounds
-    bool validTarget(double x, double y, double z);
 
     // Sets a target for the catch function to reach
     void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);

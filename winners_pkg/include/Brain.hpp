@@ -10,7 +10,8 @@
 #include <string>
 
 #include "std_srvs/srv/trigger.hpp"
-#include "geometry_msgs/msg/twist_stamped.hpp"
+#include "winners_interfaces/srv/throw.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
 
@@ -30,21 +31,13 @@ private:
 
     // Clients
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr start_catching_client_;
-    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr stop_catching_client_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr throw_client_;
-
-    // Subscriptions
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr keyboard_sub_; // Testing for now
-    rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr test_catch_twist_pub_;
 
     RobotState robotState = RobotState::THROWING;
 
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
     rclcpp::TimerBase::SharedPtr timer_;
-
-    // Function for testing topics
-    void on_key_press(const std_msgs::msg::String &keyString);
 
     // Waits for all services to become available
     void wait_for_services();

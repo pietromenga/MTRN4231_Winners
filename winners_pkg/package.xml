@@ -30,6 +30,7 @@
   <depend>moveit_visual_tools</depend>
   <depend>rviz_visual_tools</depend>
   <depend>controller_manager_msgs</depend>
+  <depend>winners_interfaces</depend>
 
   <exec_depend>ros2launch</exec_depend>
 
