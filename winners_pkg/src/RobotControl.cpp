@@ -50,7 +50,21 @@ void RobotControl::setup_collisions() {
 
 void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
     if (robot_mode == RobotControlMode::CATCH) {
-        move_group_interface->setPositionTarget(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z);
+        geometry_msgs::msg::Pose newPose;
+        newPose.position.x = pose.pose.position.x;
+        newPose.position.y = pose.pose.position.y;
+        newPose.position.z = pose.pose.position.z;
+        newPose.orientation.w = -0.494082;
+        newPose.orientation.x = -0.492382;
+        newPose.orientation.y = 0.515817;
+        newPose.orientation.z = 0.49737;
+        std::vector<geometry_msgs::msg::Pose> path {newPose}; //move_group_interface->getCurrentPose("tool0").pose
+        moveit_msgs::msg::RobotTrajectory trajectory;
+        const double jump_threshold = 0.0;
+        const double eef_step = 0.01;
+        auto frac = move_group_interface->computeCartesianPath(path, eef_step, jump_threshold, trajectory);
+        // RCLCPP_INFO(this->get_logger(), "3################ FRACTION %f", frac);
+        // move_group_interface->setPoseTarget(newPose);
         moveit::planning_interface::MoveGroupInterface::Plan planMessage;
         bool planSuccess = static_cast<bool>(move_group_interface->plan(planMessage));
         // Execute movement
@@ -131,54 +145,66 @@ void RobotControl::throw_ball_request(
     robot_mode = RobotControlMode::THROW;
     RCLCPP_INFO(this->get_logger(), "Starting throwing");
     tryMoveToTargetQ(throwing_start_joint);
+
     request_switch_controllers(RobotControlMode::THROW);
     request_start_servo();
 
     // Adjust until close to target
     auto aim_angle = M_PI;
     auto launch_angle = M_PI;
-    auto start_time = std::chrono::high_resolution_clock::now();
-    auto current_time = std::chrono::high_resolution_clock::now();
-    auto timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
-    while (aim_angle > 2*M_PI/180.0 && launch_angle > 2*M_PI/180.0 && timeElapsed < 10.0) {
-        std::string fromFrameRel = "target_tf"; 
-        std::string toFrameRel = "tool0";
-        geometry_msgs::msg::TransformStamped t;
+    std::string fromFrameRel = "target_tf"; 
+    std::string toFrameRel = "tool0";
+    geometry_msgs::msg::TransformStamped t;
+    while (aim_angle > 2*M_PI/180.0 && launch_angle > 2*M_PI/180.0) {
+        std::this_thread::sleep_for(2ms);
+
         try {
             t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
         } catch (const tf2::TransformException & ex) {
-            continue;
+            RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
+            break;
         }
 
         auto x = t.transform.translation.x;
         auto y = t.transform.translation.y;
-        auto z = t.transform.translation.z;
-        aim_angle = std::atan2(y, x);
-        launch_angle = std::atan2(z, x);
-        auto rx = std::clamp(launch_angle * 10, -M_PI, M_PI);
-        auto ry = std::clamp(aim_angle * 10, -M_PI, M_PI);
+        auto z = t.transform.translation.z; // artifically increase if needed
+        aim_angle = std::atan2(x,z);
+        launch_angle = std::atan2(y,z);
+
+        if (abs(aim_angle) > M_PI/3 || abs(launch_angle) > M_PI/4) {
+            // RCLCPP_INFO(this->get_logger(), "angle bad");
+            continue;
+        }
+        auto rx = std::clamp(launch_angle, -M_PI, M_PI);
+        auto ry = std::clamp(aim_angle, -M_PI, M_PI);
 
         geometry_msgs::msg::TwistStamped twist;
         twist.header.frame_id = "tool0";
         twist.header.stamp = this->now();
-        twist.twist.angular.x = rx;
+        twist.twist.angular.x = -rx;
         twist.twist.angular.y = ry;
         twist_cmd_pub_->publish(twist);
-
-        current_time = std::chrono::high_resolution_clock::now();
-        timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
-        RCLCPP_INFO( this->get_logger(), "elapsed time %f", timeElapsed);
     }
 
     // Stop Servoing
     request_stop_servo();
     request_switch_controllers(RobotControlMode::CATCH);
 
+    // throwing_start_joint[0] -= 20.0;
+    // tryMoveToTargetQ(throwing_start_joint);
+
     // DO LAUNCH
     std::this_thread::sleep_for(2000ms);
 
     robot_mode = RobotControlMode::CATCH;
     response->success = true;
+    RCLCPP_INFO(this->get_logger(), "Throwing finished");
+
+}
+
+RobotControl::~RobotControl() {
+    request_stop_servo();
+    request_switch_controllers(RobotControlMode::CATCH);
 }
 
 void RobotControl::request_start_servo() {

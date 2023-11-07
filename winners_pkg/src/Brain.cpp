@@ -58,12 +58,14 @@ void Brain::request_start_catching() {
 }
 
 void Brain::request_throw() {
+    RCLCPP_INFO(this->get_logger(), "Requesting Throw");
+
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result = throw_client_->async_send_request(request);
     robotState = RobotState::THROWING;
 
     if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_INFO(this->get_logger(), "Throw Service Call Succeeded");
+        RCLCPP_INFO(this->get_logger(), "Throwing finished, requesting catch");
         request_start_catching();
     } else {
         RCLCPP_ERROR(this->get_logger(), "Throw Service Call Failed");
