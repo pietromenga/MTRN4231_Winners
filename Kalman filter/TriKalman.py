@@ -48,10 +48,10 @@ if __name__ == "__main__":
     initial_covariance = np.eye(6)
 
     # Process noise covariance matrix
-    process_noise = np.eye(6) * 0.01
+    process_noise = np.eye(6) * 0.05
 
     # Measurement noise covariance matrix
-    measurement_noise = np.eye(6) * 0.1
+    measurement_noise = np.eye(6) * 0.5
 
     # Create a Kalman filter instance
     kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
@@ -59,9 +59,9 @@ if __name__ == "__main__":
     # Simulate measurements
     measurements = np.array([1, 1, 1, 2, 2, 2])
 
-    for measurement in measurements:
-        # Predict and update the Kalman filter
-        kf.predict()
-        kf.update(measurement)
 
-        print("Estimated state:", kf.state)
+    # Predict and update the Kalman filter
+    kf.predict()
+    kf.update(measurements)
+
+    print("Estimated state:", kf.state)
