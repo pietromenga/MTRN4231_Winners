@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 from geometry_msgs.msg import PoseStamped
 
-class BallDetectorNode(Node):
+class TargetDetectorNode(Node):
     def __init__(self):
         super().__init__('ball_detector_node')
         self.bridge = CvBridge()
@@ -23,9 +23,9 @@ class BallDetectorNode(Node):
             self.depth_callback,
             10)
         self.depth_image = None
-        self.ball_pub = self.create_publisher(PoseStamped,'ball_pose',10)
-        self.lower_blue = np.array([(200/2), (80/100)*255, (30/100)*255])
-        self.upper_blue = np.array([(240/2), (100/100)*255, (100/100)*255])
+        self.target_pub = self.create_publisher(PoseStamped,'shoot_target',10)
+        self.lowerRange = np.array([(200/2), (80/100)*255, (30/100)*255]) # CHANGE TO GLOVE COLOUR
+        self.upperRange = np.array([(240/2), (100/100)*255, (100/100)*255])
         self.kernel = np.ones((3, 3), np.uint8)
 
     def depth_callback(self, data):
@@ -34,7 +34,7 @@ class BallDetectorNode(Node):
     def image_callback(self, data):
         cv_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='bgr8')
         hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, self.lower_blue, self.upper_blue)
+        mask = cv2.inRange(hsv, self.lowerRange, self.upperRange)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.kernel)
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
@@ -49,14 +49,6 @@ class BallDetectorNode(Node):
                 cv2.circle(mask, (cX, cY), 5, (0, 0, 255), -1)
 
                 if self.depth_image is not None:
-                    # Mark the centroid on the depth image
-                    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(self.depth_image, alpha=0.03), cv2.COLORMAP_JET)
-                    cv2.circle(depth_colormap, (cX, cY), 5, (0, 0, 255), -1)
-
-                    # Show the depth image
-                    cv2.imshow('Depth Image with Centroid', depth_colormap)
-                    cv2.waitKey(1)
-
                     depth = self.depth_image[cY, cX]
                     self.get_logger().info(f'Depth to centroid: {depth} units')
 
@@ -83,20 +75,20 @@ class BallDetectorNode(Node):
                     # Logging the 3D coordinates
                     self.get_logger().info(f'3D Coordinates: X={x_coord}, Y={y_coord}, Z={z_coord}')
                     pose = PoseStamped()
-                    pose.header.frame_id = "ball_pose"
+                    pose.header.frame_id = "shoot_target"
                     pose.header.stamp = self.get_clock().now().to_msg()
                     pose.pose.position.x = x_coord
                     pose.pose.position.y = y_coord
                     pose.pose.position.z = z_coord
-                    self.ball_pub.publish(pose)
+                    self.target_pub.publish(pose)
                 
         # Show the mask with centroid
-        cv2.imshow('Mask with Centroid', mask)
+        cv2.imshow('Mask with Target Centroid', mask)
         cv2.waitKey(1)
 
 def main(args=None):
     rclpy.init(args=args)
-    node = BallDetectorNode()
+    node = TargetDetectorNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

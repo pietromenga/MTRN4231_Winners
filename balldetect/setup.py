@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ball_detector = balldetect.ball_detector:main',
+            'target_detector = balldetect.target_detector:main',
         ],
     },
 )
