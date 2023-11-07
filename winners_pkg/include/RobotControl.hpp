@@ -84,7 +84,7 @@ private:
     void start_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
     // Sets a target for the catch function to reach
-    void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);
+    void set_catch_target(geometry_msgs::msg::PoseStamped pose);
 
     // Waits for active services
     void wait_for_services();

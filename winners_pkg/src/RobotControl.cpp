@@ -49,29 +49,37 @@ void RobotControl::setup_collisions() {
 
 
 
-void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
+void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
     if (robot_mode == RobotControlMode::CATCH) {
-        geometry_msgs::msg::Pose newPose;
-        newPose.position.x = pose.pose.position.x;
-        newPose.position.y = pose.pose.position.y;
-        newPose.position.z = pose.pose.position.z;
-        newPose.orientation.w = -0.494082;
-        newPose.orientation.x = -0.492382;
-        newPose.orientation.y = 0.515817;
-        newPose.orientation.z = 0.49737;
-        std::vector<geometry_msgs::msg::Pose> path {newPose}; //move_group_interface->getCurrentPose("tool0").pose
+        pose.pose.orientation.w = -0.494082;
+        pose.pose.orientation.x = -0.492382;
+        pose.pose.orientation.y = 0.515817;
+        pose.pose.orientation.z = 0.49737;
+
+        geometry_msgs::msg::TransformStamped t;
+        try {
+            t = tf_buffer_->lookupTransform( "base_link", "tool0", tf2::TimePointZero);
+        } catch (const tf2::TransformException & ex) {
+            RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
+            return;
+        }
+
+        geometry_msgs::msg::Pose startPose;
+        startPose.position.x = t.transform.translation.x;
+        startPose.position.y = t.transform.translation.y;
+        startPose.position.z = t.transform.translation.z;
+        startPose.orientation.w = t.transform.rotation.w;
+        startPose.orientation.x = t.transform.rotation.x;
+        startPose.orientation.y = t.transform.rotation.y;
+        startPose.orientation.z = t.transform.rotation.z;
+
+        std::vector<geometry_msgs::msg::Pose> path {startPose, pose.pose}; //move_group_interface->getCurrentPose("tool0").pose
         moveit_msgs::msg::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
         const double eef_step = 0.01;
         auto frac = move_group_interface->computeCartesianPath(path, eef_step, jump_threshold, trajectory);
-        // RCLCPP_INFO(this->get_logger(), "3################ FRACTION %f", frac);
-        // move_group_interface->setPoseTarget(newPose);
-        moveit::planning_interface::MoveGroupInterface::Plan planMessage;
-        bool planSuccess = static_cast<bool>(move_group_interface->plan(planMessage));
-        // Execute movement
-        if (planSuccess) {
-            bool executeSuccess = static_cast<bool>(move_group_interface->execute(planMessage));
-        }
+
+        bool executeSuccess = static_cast<bool>(move_group_interface->execute(trajectory));
     }
 }
 
