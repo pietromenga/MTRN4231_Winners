@@ -10,7 +10,6 @@
 #include <string>
 
 #include "std_srvs/srv/trigger.hpp"
-#include "winners_interfaces/srv/throw.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"

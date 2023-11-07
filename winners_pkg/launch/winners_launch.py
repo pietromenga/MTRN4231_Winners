@@ -92,41 +92,20 @@ def generate_launch_description():
 
     return LaunchDescription([
         # Node(
-        #     package='winners_pkg',
-        #     name='Camera0',
-        #     executable='Camera',
-        #     parameters=[
-        #         {"camera_id": 0}
-        #     ]
+        #     package='balldetect',
+        #     name='ball_detector',
+        #     executable='ball_detector',
         # ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='Camera1',
-        #     executable='Camera',
-        #     parameters=[
-        #         {"camera_id": 1}
-        #     ]
-        # ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='BallPose',
-        #     executable='BallPose.py',
-        # ),
-        # Node(
-        #     package='CameraCV_pkg',
-        #     name='test_node',
-        #     executable='test_node',
-        # ),
+        Node(
+            package='balldetect',
+            name='target_detector',
+            executable='target_detector',
+        ),
         Node(
             package='winners_pkg',
             name='Transforms',
             executable='Transforms',
         ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='Trajectory',
-        #     executable='Trajectory.py',
-        # ),
         Node(
             package='winners_pkg',
             name='RobotControl',

@@ -9,6 +9,7 @@ RobotControl::RobotControl() : Node("RobotControl")
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
+    launch_pub = this->create_publisher<std_msgs::msg::Bool>("/ee_launch", 10);
 
     // Moveit objects
     move_group_interface = std::make_shared<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
@@ -155,8 +156,8 @@ void RobotControl::throw_ball_request(
     std::string fromFrameRel = "target_tf"; 
     std::string toFrameRel = "tool0";
     geometry_msgs::msg::TransformStamped t;
-    while (aim_angle > 2*M_PI/180.0 && launch_angle > 2*M_PI/180.0) {
-        std::this_thread::sleep_for(2ms);
+    while (abs(aim_angle) > 0.5*M_PI/180.0 || abs(launch_angle) > 0.5*M_PI/180.0) {
+        std::this_thread::sleep_for(1ms);
 
         try {
             t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
@@ -170,13 +171,15 @@ void RobotControl::throw_ball_request(
         auto z = t.transform.translation.z; // artifically increase if needed
         aim_angle = std::atan2(x,z);
         launch_angle = std::atan2(y,z);
+        // RCLCPP_INFO(this->get_logger(), "aim %f launch %f x %f y %f z %f", aim_angle, launch_angle, x,y,z);
+
 
         if (abs(aim_angle) > M_PI/3 || abs(launch_angle) > M_PI/4) {
             // RCLCPP_INFO(this->get_logger(), "angle bad");
             continue;
         }
-        auto rx = std::clamp(launch_angle, -M_PI, M_PI);
-        auto ry = std::clamp(aim_angle, -M_PI, M_PI);
+        auto rx = std::clamp(launch_angle*10, -M_PI, M_PI);
+        auto ry = std::clamp(aim_angle*10, -M_PI, M_PI);
 
         geometry_msgs::msg::TwistStamped twist;
         twist.header.frame_id = "tool0";
@@ -190,11 +193,10 @@ void RobotControl::throw_ball_request(
     request_stop_servo();
     request_switch_controllers(RobotControlMode::CATCH);
 
-    // throwing_start_joint[0] -= 20.0;
-    // tryMoveToTargetQ(throwing_start_joint);
-
     // DO LAUNCH
-    std::this_thread::sleep_for(2000ms);
+    std_msgs::msg::Bool launchMsg;
+    launchMsg.data = true;
+    launch_pub->publish(launchMsg);
 
     robot_mode = RobotControlMode::CATCH;
     response->success = true;

@@ -80,7 +80,7 @@ void TFBroadcaster::setupStaticTransforms() {
     camera_origin.child_frame_id = "camera_origin";
     camera_origin.transform.translation.x = 0.386;
     camera_origin.transform.translation.y = 0.742;
-    camera_origin.transform.translation.z = 0.577;
+    camera_origin.transform.translation.z = 0.320;
     camera_origin.transform.rotation.w = 0.707;
     camera_origin.transform.rotation.x = 0.0;
     camera_origin.transform.rotation.y = 0.0;

@@ -14,19 +14,27 @@ class BallDetectorNode(Node):
         self.bridge = CvBridge()
         self.subscription = self.create_subscription(
             Image,
-            '/camera/camera/color/image_raw',
+            '/camera/color/image_raw',
             self.image_callback,
             10)
         self.depth_subscription = self.create_subscription(
             Image,
-            '/camera/camera/aligned_depth_to_color/image_raw',
+            '/camera/aligned_depth_to_color/image_raw',
             self.depth_callback,
             10)
         self.depth_image = None
         self.ball_pub = self.create_publisher(PoseStamped,'ball_pose',10)
-        self.lower_blue = np.array([(200/2), (80/100)*255, (30/100)*255])
-        self.upper_blue = np.array([(240/2), (100/100)*255, (100/100)*255])
+        # BLUE
+        # self.lower_range = np.array([(200/2), (80/100)*255, (30/100)*255])
+        # self.upper_blue = np.array([(240/2), (100/100)*255, (100/100)*255])
+        # GREEN
+        self.lower_range = np.array([137.5/2,200,0.255*255])
+        self.upper_range = np.array([155.8/2,255,0.757*255])
+
         self.kernel = np.ones((3, 3), np.uint8)
+
+        self.fov_horizontal = 69.4  # in degrees
+        self.fov_vertical = 42.5  # in degrees
 
     def depth_callback(self, data):
         self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='16UC1')
@@ -34,7 +42,7 @@ class BallDetectorNode(Node):
     def image_callback(self, data):
         cv_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='bgr8')
         hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, self.lower_blue, self.upper_blue)
+        mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.kernel)
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
@@ -58,18 +66,17 @@ class BallDetectorNode(Node):
                     cv2.waitKey(1)
 
                     depth = self.depth_image[cY, cX]
-                    self.get_logger().info(f'Depth to centroid: {depth} units')
+                    # self.get_logger().info(f'Depth to centroid: {depth} units')
 
                     # Camera's field of view parameters
-                    fov_horizontal = 83  # in degrees
-                    fov_vertical = 53  # in degrees
+
                     
                     # Screen dimensions
                     height, width = self.depth_image.shape
                     
                     # Calculate yaw and pitch based on the centroid's position
-                    yaw = ((cX - width / 2) / (width / 2)) * (fov_horizontal / 2)
-                    pitch = -((cY - height / 2) / (height / 2)) * (fov_vertical / 2)
+                    yaw = ((cX - width / 2) / (width / 2)) * (self.fov_horizontal / 2)
+                    pitch = -((cY - height / 2) / (height / 2)) * (self.fov_vertical / 2)
 
                     # Convert yaw and pitch to radians
                     yaw_rad = np.deg2rad(yaw)
@@ -81,7 +88,7 @@ class BallDetectorNode(Node):
                     z_coord = depth * np.sin(pitch_rad) * 0.001
                     
                     # Logging the 3D coordinates
-                    self.get_logger().info(f'3D Coordinates: X={x_coord}, Y={y_coord}, Z={z_coord}')
+                    # self.get_logger().info(f'3D Coordinates: X={x_coord}, Y={y_coord}, Z={z_coord}')
                     pose = PoseStamped()
                     pose.header.frame_id = "ball_pose"
                     pose.header.stamp = self.get_clock().now().to_msg()
