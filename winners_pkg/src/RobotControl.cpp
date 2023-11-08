@@ -51,29 +51,36 @@ void RobotControl::setup_collisions() {
 
 void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
     if (robot_mode == RobotControlMode::CATCH) {
-        pose.pose.orientation.w = -0.494082;
-        pose.pose.orientation.x = -0.492382;
-        pose.pose.orientation.y = 0.515817;
-        pose.pose.orientation.z = 0.49737;
+        // pose.pose.orientation.w = -0.494082;
+        // pose.pose.orientation.x = -0.492382;
+        // pose.pose.orientation.y = 0.515817;
+        // pose.pose.orientation.z = 0.49737;
 
         geometry_msgs::msg::TransformStamped t;
         try {
-            t = tf_buffer_->lookupTransform( "base_link", "tool0", tf2::TimePointZero);
+            t = tf_buffer_->lookupTransform( "base_link", "ball_prediction", tf2::TimePointZero);
         } catch (const tf2::TransformException & ex) {
             RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
             return;
         }
 
-        geometry_msgs::msg::Pose startPose;
-        startPose.position.x = t.transform.translation.x;
-        startPose.position.y = t.transform.translation.y;
-        startPose.position.z = t.transform.translation.z;
-        startPose.orientation.w = t.transform.rotation.w;
-        startPose.orientation.x = t.transform.rotation.x;
-        startPose.orientation.y = t.transform.rotation.y;
-        startPose.orientation.z = t.transform.rotation.z;
+        auto x = t.transform.translation.x;
+        auto y = t.transform.translation.y;
+        auto z = t.transform.translation.z;
+        if (!validTarget(x,y,z)) {
+            return;
+        }
 
-        std::vector<geometry_msgs::msg::Pose> path {startPose, pose.pose}; //move_group_interface->getCurrentPose("tool0").pose
+        geometry_msgs::msg::Pose targetPose;
+        targetPose.position.x = x;
+        targetPose.position.y = y;
+        targetPose.position.z = z;
+        targetPose.orientation.w = -0.494082;
+        targetPose.orientation.x = -0.492382;
+        targetPose.orientation.y = 0.515817;
+        targetPose.orientation.z = 0.49737;
+
+        std::vector<geometry_msgs::msg::Pose> path {targetPose}; //move_group_interface->getCurrentPose("tool0").pose
         moveit_msgs::msg::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
         const double eef_step = 0.01;
@@ -81,6 +88,10 @@ void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
 
         bool executeSuccess = static_cast<bool>(move_group_interface->execute(trajectory));
     }
+}
+
+bool RobotControl::validTarget(double x, double y, double z) {
+    return x < -0.45 && y > 0.2;
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
