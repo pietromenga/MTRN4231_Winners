@@ -39,7 +39,6 @@ class TrajectoryCalculator(Node):
         self.minZ, self.maxZ = 0, 0.25
 
     def timer_callback(self, pose: PoseStamped):
-
         # Get position of ball in base frame
         # try:
         #     tBall = self.tf_buffer.lookup_transform(
@@ -47,7 +46,7 @@ class TrajectoryCalculator(Node):
         #     )
         # except TransformException as ex:
         #     return
-        
+
         self.appendTransform(pose)
 
         # Find target
@@ -73,19 +72,35 @@ class TrajectoryCalculator(Node):
                 self.timeList[-1] - self.timeList[-2]
             )
 
-            # Predict positions one second into the future
-            dt = 1.0 # One second into the future
-            gravity = -9.81  # Gravity constant in m/s^2
+            # Gravity constant in m/s^2 (negative because it's acting downwards)
+            gravity = -9.81
 
-            # Since x and y are not affected by gravity, we only apply the velocity
-            pred_x = self.posX[-1] + vx * dt
-            pred_y = self.posY[-1] + vy * dt
+            # z = -0.2 plane
+            z_target = -0.2
 
-            # For z, we apply gravity
-            pred_z = self.posZ[-1] + vz * dt + 0.5 * gravity * dt**2
+            # Calculate time to reach z = -0.2 plane using quadratic formula
+            A = 0.5 * gravity
+            B = vz
+            C = self.posZ[-1] - z_target
 
-            ballPredTarget = (pred_x, pred_y, pred_z)
-            self.clearLists()  # This might not be necessary; see the comment below
+            # Calculate discriminant
+            discriminant = B**2 - 4 * A * C
+            if discriminant >= 0:
+                # Compute the two possible solutions for time
+                t1 = (-B + np.sqrt(discriminant)) / (2 * A)
+                t2 = (-B - np.sqrt(discriminant)) / (2 * A)
+                # We want the positive, smallest time at which the ball crosses z = -0.2
+                t = min(filter(lambda t: t > 0, [t1, t2]), default=None)
+
+                if t is not None:
+                    # Calculate future positions for x and y
+                    pred_x = self.posX[-1] + vx * t
+                    pred_y = self.posY[-1] + vy * t
+
+                    # We already know pred_z since it's the z_target
+                    pred_z = z_target
+
+                    ballPredTarget = (pred_x, pred_y, pred_z)
 
         return ballPredTarget
 
