@@ -56,20 +56,33 @@ class TrajectoryCalculator(Node):
         if ballPredTarget != ():
             self.sendBallPred(*ballPredTarget)  # unpack tuple into args
 
+    def moving_average(self, values, window_size):
+        weights = np.ones(window_size) / window_size
+        return np.convolve(values, weights, mode="valid")
+
     def predictBall(self):
         ballPredTarget = ()
 
+        # Ensure we have enough points to calculate velocity and apply the moving average
+        window_size = 5  # for example, average over the last 5 samples
+        if self.itemCount >= window_size:
+            # Apply the moving average filter
+            posX_smooth = self.moving_average(self.posX, window_size)
+            posY_smooth = self.moving_average(self.posY, window_size)
+            posZ_smooth = self.moving_average(self.posZ, window_size)
+            timeList_smooth = self.moving_average(self.timeList, window_size)
+
         # Ensure we have at least two points to calculate velocity
         if self.itemCount >= 2:
-            # Calculate velocities
-            vx = (self.posX[-1] - self.posX[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
+            # Calculate velocities using smoothed positions
+            vx = (posX_smooth[-1] - posX_smooth[-2]) / (
+                timeList_smooth[-1] - timeList_smooth[-2]
             )
-            vy = (self.posY[-1] - self.posY[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
+            vy = (posY_smooth[-1] - posY_smooth[-2]) / (
+                timeList_smooth[-1] - timeList_smooth[-2]
             )
-            vz = (self.posZ[-1] - self.posZ[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
+            vz = (posZ_smooth[-1] - posZ_smooth[-2]) / (
+                timeList_smooth[-1] - timeList_smooth[-2]
             )
 
             # Gravity constant in m/s^2 (negative because it's acting downwards)
