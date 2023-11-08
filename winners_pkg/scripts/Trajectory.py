@@ -33,20 +33,16 @@ class TrajectoryCalculator(Node):
         self.timeList = []
         self.startTime = time.time()
         self.to_frame_rel = "base_link"
+        self.prevPosX = 0
+        self.prevPosY = 0
+        self.prevPosZ = 0
+        self.prevTime = 0
 
         self.minY, self.maxY = 0, 0.4
         self.minX, self.maxX = -0.9, -0.5
         self.minZ, self.maxZ = 0, 0.25
 
     def timer_callback(self, pose: PoseStamped):
-        # Get position of ball in base frame
-        # try:
-        #     tBall = self.tf_buffer.lookup_transform(
-        #         self.to_frame_rel, "ball_tf", rclpy.time.Time()
-        #     )
-        # except TransformException as ex:
-        #     return
-
         self.appendTransform(pose)
 
         # Find target
@@ -64,25 +60,22 @@ class TrajectoryCalculator(Node):
         ballPredTarget = ()
 
         # Ensure we have enough points to calculate velocity and apply the moving average
-        window_size = 5  # for example, average over the last 5 samples
-        if self.itemCount >= window_size:
+        if self.itemCount >= 5:
             # Apply the moving average filter
-            posX_smooth = self.moving_average(self.posX, window_size)
-            posY_smooth = self.moving_average(self.posY, window_size)
-            posZ_smooth = self.moving_average(self.posZ, window_size)
-            timeList_smooth = self.moving_average(self.timeList, window_size)
+            posX_smooth = np.mean(self.posX)
+            posY_smooth = np.mean(self.posY)
+            posZ_smooth = np.mean(self.posZ)
+            timeList_smooth = np.mean(self.timeList)
 
-        # Ensure we have at least two points to calculate velocity
-        if self.itemCount >= 2:
             # Calculate velocities using smoothed positions
-            vx = (posX_smooth[-1] - posX_smooth[-2]) / (
-                timeList_smooth[-1] - timeList_smooth[-2]
+            vx = (posX_smooth - self.prevPosX) / (
+                timeList_smooth - self.prevTime
             )
-            vy = (posY_smooth[-1] - posY_smooth[-2]) / (
-                timeList_smooth[-1] - timeList_smooth[-2]
+            vy = (posY_smooth - self.prevPosY) / (
+                timeList_smooth - self.prevTime
             )
-            vz = (posZ_smooth[-1] - posZ_smooth[-2]) / (
-                timeList_smooth[-1] - timeList_smooth[-2]
+            vz = (posZ_smooth - self.prevPosZ) / (
+                timeList_smooth - self.prevTime
             )
 
             # Gravity constant in m/s^2 (negative because it's acting downwards)
@@ -120,6 +113,11 @@ class TrajectoryCalculator(Node):
 
                         ballPredTarget = (pred_x, pred_y, pred_z)
 
+            self.prevPosX = posX_smooth
+            self.prevPosY = posY_smooth
+            self.prevPosZ = posZ_smooth
+            self.prevTime = timeList_smooth
+            self.removeOne()
         return ballPredTarget
 
     def sendBallPred(self, x, y, z):
@@ -137,12 +135,12 @@ class TrajectoryCalculator(Node):
         # zRange = z > self.minZ and z < self.maxZ
         return True
 
-    def clearLists(self):
-        self.posX.clear()
-        self.posY.clear()
-        self.posZ.clear()
-        self.timeList.clear()
-        self.itemCount = 0
+    def removeOne(self):
+        self.posX.pop(0)
+        self.posY.pop(0)
+        self.posZ.pop(0)
+        self.timeList.pop(0)
+        self.itemCount -= 1
 
     def appendTransform(self, pose: PoseStamped):
         self.posX.append(pose.pose.position.x)

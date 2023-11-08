@@ -58,7 +58,7 @@ void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
 
         geometry_msgs::msg::TransformStamped t;
         try {
-            t = tf_buffer_->lookupTransform( "base_link", "ball_prediction", tf2::TimePointZero);
+            t = tf_buffer_->lookupTransform( "base_link", "ball_prediction_tf", tf2::TimePointZero);
         } catch (const tf2::TransformException & ex) {
             RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
             return;
@@ -83,7 +83,7 @@ void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
         std::vector<geometry_msgs::msg::Pose> path {targetPose}; //move_group_interface->getCurrentPose("tool0").pose
         moveit_msgs::msg::RobotTrajectory trajectory;
         const double jump_threshold = 0.0;
-        const double eef_step = 0.01;
+        const double eef_step = 0.05;
         auto frac = move_group_interface->computeCartesianPath(path, eef_step, jump_threshold, trajectory);
 
         bool executeSuccess = static_cast<bool>(move_group_interface->execute(trajectory));
@@ -91,7 +91,7 @@ void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
 }
 
 bool RobotControl::validTarget(double x, double y, double z) {
-    return x < -0.45 && y > 0.2;
+    return x < -0.45 && y > 0.2 && x > -0.7;
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
