@@ -13,6 +13,7 @@
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
+#include "std_msgs/msg/bool.hpp"
 
 #include "Helpers.hpp"
 
@@ -26,13 +27,15 @@ class Brain : public rclcpp::Node
   public:
     Brain();
 private:
-    #define CATCH_THRESHOLD 0.10
+    #define CATCH_THRESHOLD 0.25
 
     // Clients
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr start_catching_client_;
     rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr throw_client_;
 
     RobotState robotState = RobotState::THROWING;
+
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr finished_throwing;
 
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -53,4 +56,5 @@ private:
     //
     void request_throw();
 
+    void throwFinished(std_msgs::msg::Bool fin);
 };

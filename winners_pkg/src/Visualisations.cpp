@@ -1,18 +1,55 @@
 #include "Visualisations.hpp"
 
 Visualisations::Visualisations() : Node("Visualisations") {
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
     pubmarker = this->create_publisher<visualization_msgs::msg::Marker>("/visualization_marker", 10);
 	  timer = this->create_wall_timer(
       5000ms, std::bind(&Visualisations::setupMarkers, this));
     markerCount = 0;
+    ghostTimer = this->create_wall_timer(
+      100ms, std::bind(&Visualisations::ghostBall, this));
     setupMarkers();
     RCLCPP_INFO(this->get_logger(), "Adding Markers to Scene");
+  
+}
 
+void Visualisations::ghostBall() {
+    geometry_msgs::msg::TransformStamped t;
+    try {
+        t = tf_buffer_->lookupTransform( "base_link", "ball_tf", tf2::TimePointZero);
+    } catch (const tf2::TransformException & ex) {
+        // RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
+        return;
+    }
+
+    visualization_msgs::msg::Marker ghostBallMarker;
+    
+    // ghost ball
+    ghostBallMarker.header.frame_id = "base_link";
+    ghostBallMarker.header.stamp = this->now();
+    ghostBallMarker.id = markerCount++;
+    ghostBallMarker.lifetime.sec = 1.5;
+    ghostBallMarker.action = visualization_msgs::msg::Marker::ADD;
+    ghostBallMarker.type = visualization_msgs::msg::Marker::SPHERE;
+    ghostBallMarker.frame_locked = true;
+    ghostBallMarker.scale.x = 0.05;
+    ghostBallMarker.scale.y = 0.05;
+    ghostBallMarker.scale.z = 0.05;
+    ghostBallMarker.color.r = 1.0;
+    ghostBallMarker.color.g = 1.0;
+    ghostBallMarker.color.b = 1.0;
+    ghostBallMarker.color.a = 1.0;
+    ghostBallMarker.pose.position.x = t.transform.translation.x;
+    ghostBallMarker.pose.position.y = t.transform.translation.y;
+    ghostBallMarker.pose.position.z = t.transform.translation.z;
+
+    pubmarker->publish(ghostBallMarker);
 }
 
 void Visualisations::setupMarkers() {
     visualization_msgs::msg::Marker camera1, camera2, ball, catchBox, ballPred, camera_origin, target;
-    visualization_msgs::msg::MarkerArray markers;
     
     // Camera 1 marker
 

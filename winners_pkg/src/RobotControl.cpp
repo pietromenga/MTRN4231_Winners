@@ -10,6 +10,7 @@ RobotControl::RobotControl() : Node("RobotControl")
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
     launch_pub = this->create_publisher<std_msgs::msg::Bool>("/ee_launch", 10);
+    throw_fin_pub = this->create_publisher<std_msgs::msg::Bool>("/throw_finished", 10);
 
     // Moveit objects
     move_group_interface = std::make_shared<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
@@ -39,11 +40,11 @@ RobotControl::RobotControl() : Node("RobotControl")
 
 void RobotControl::setup_collisions() {
     auto col_object_table = generateCollisionObject( 2.4, 1.2, 0.04, 0.85, 0.25, -0.03, planning_frame_id, "table");
-    auto col_object_backWall = generateCollisionObject( 4, 0.04, 2.0, 0.85, -0.31, 0.0, planning_frame_id, "backWall");
+    // auto col_object_backWall = generateCollisionObject( 4, 0.04, 2.0, 0.85, -0.31, 0.0, planning_frame_id, "backWall");
     auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.31, 0.25, -0.5, planning_frame_id, "sideWall");
 
     planning_scene_interface->applyCollisionObject(col_object_table);
-    planning_scene_interface->applyCollisionObject(col_object_backWall);
+    // planning_scene_interface->applyCollisionObject(col_object_backWall);
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
@@ -217,7 +218,10 @@ void RobotControl::throw_ball_request(
     launchMsg.data = true;
     launch_pub->publish(launchMsg);
 
+    throw_fin_pub->publish(launchMsg);
+
     robot_mode = RobotControlMode::CATCH;
+    tryMoveToTargetQ(catching_start_joint);
     response->success = true;
     RCLCPP_INFO(this->get_logger(), "Throwing finished");
 

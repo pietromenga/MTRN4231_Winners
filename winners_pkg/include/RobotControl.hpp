@@ -66,6 +66,7 @@ private:
     rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr launch_pub;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr throw_fin_pub;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface> planning_scene_interface;

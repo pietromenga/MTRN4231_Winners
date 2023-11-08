@@ -91,7 +91,7 @@ void TFBroadcaster::setupStaticTransforms() {
     catch_box.child_frame_id = "catch_box";
     catch_box.transform.translation.x = -0.5;
     catch_box.transform.translation.y = 0.25;
-    catch_box.transform.translation.z = 0.0;
+    catch_box.transform.translation.z = 0.12;
     catch_box.transform.rotation.w = 1.0;
     catch_box.transform.rotation.x = 0.0;
     catch_box.transform.rotation.y = 0.0;

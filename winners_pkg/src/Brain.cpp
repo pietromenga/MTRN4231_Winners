@@ -12,10 +12,16 @@ Brain::Brain() : Node("Brain") {
     // Timers
     timer_ = this->create_wall_timer( std::chrono::milliseconds(10), std::bind(&Brain::tfCallback, this));
 
+    finished_throwing = create_subscription<std_msgs::msg::Bool>("/throw_finished", 10, std::bind(&Brain::throwFinished, this, _1));
+
     wait_for_services();
 
     std::this_thread::sleep_for(2000ms);
     request_throw();
+}
+
+void Brain::throwFinished(std_msgs::msg::Bool fin) {
+    robotState = RobotState::CATCHING;
 }
 
 void Brain::tfCallback()
@@ -33,13 +39,13 @@ void Brain::tfCallback()
         return;
     }
 
-    // // Distance to end eff
-    // auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
+    // Distance to end eff
+    auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
 
-    // // If within distance stop catching and initiate throw
-    // if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
-    //         request_throw();
-    // }
+    // If within distance stop catching and initiate throw
+    if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
+        request_throw();
+    }
 }
 
 void Brain::request_start_catching() {
@@ -47,14 +53,14 @@ void Brain::request_start_catching() {
 
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result = start_catching_client_->async_send_request(request);
+    robotState = RobotState::CATCHING;
 
-    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_INFO(this->get_logger(), "Request Start Catching Call Succeeded");
-        robotState = RobotState::CATCHING;
-    } else {
-        RCLCPP_ERROR(this->get_logger(), "Request Start Catching Call Failed");
-        rclcpp::shutdown();
-    }
+    // if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
+    //     RCLCPP_INFO(this->get_logger(), "Request Start Catching Call Succeeded");
+    // } else {
+    //     RCLCPP_ERROR(this->get_logger(), "Request Start Catching Call Failed");
+    //     rclcpp::shutdown();
+    // }
 }
 
 void Brain::request_throw() {
@@ -64,13 +70,13 @@ void Brain::request_throw() {
     auto result = throw_client_->async_send_request(request);
     robotState = RobotState::THROWING;
 
-    if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_INFO(this->get_logger(), "Throwing finished, requesting catch");
-        request_start_catching();
-    } else {
-        RCLCPP_ERROR(this->get_logger(), "Throw Service Call Failed");
-        rclcpp::shutdown();
-    }
+    // if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS) {
+    //     RCLCPP_INFO(this->get_logger(), "Throwing finished, requesting catch");
+    //     request_start_catching();
+    // } else {
+    //     RCLCPP_ERROR(this->get_logger(), "Throw Service Call Failed");
+    //     rclcpp::shutdown();
+    // }
 }
 
 void Brain::wait_for_services() {

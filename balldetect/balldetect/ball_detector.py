@@ -42,6 +42,13 @@ class BallDetectorNode(Node):
         self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='16UC1')
 
     def image_callback(self, data):
+        pose = PoseStamped()
+        pose.header.frame_id = "ball_pose"
+        pose.header.stamp = self.get_clock().now().to_msg()
+        pose.pose.position.x = 0.0
+        pose.pose.position.y = 3.0
+        pose.pose.position.z = 0.0
+        
         cv_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='bgr8')
         hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, self.lower_range, self.upper_range)
@@ -87,13 +94,10 @@ class BallDetectorNode(Node):
                     
                     # Logging the 3D coordinates
                     # self.get_logger().info(f'3D Coordinates: X={x_coord}, Y={y_coord}, Z={z_coord}')
-                    pose = PoseStamped()
-                    pose.header.frame_id = "ball_pose"
-                    pose.header.stamp = self.get_clock().now().to_msg()
                     pose.pose.position.x = x_coord
                     pose.pose.position.y = y_coord
                     pose.pose.position.z = z_coord
-                    self.ball_pub.publish(pose)
+        self.ball_pub.publish(pose)
                 
         # Show the mask with centroid
         if self.debug:
