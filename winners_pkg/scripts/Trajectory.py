@@ -61,30 +61,39 @@ class TrajectoryCalculator(Node):
         ballPredTarget = ()
 
         # Ensure we have at least two points to calculate velocity
-        if self.itemCount >= 2:
-            # Calculate velocities
-            vx = (self.posX[-1] - self.posX[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
-            )
-            vy = (self.posY[-1] - self.posY[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
-            )
-            vz = (self.posZ[-1] - self.posZ[-2]) / (
-                self.timeList[-1] - self.timeList[-2]
-            )
+        if self.itemCount >= 10:
+            xCoeff = np.polyfit(self.timeList, self.posX, 2)
+            yCoeff = np.polyfit(self.timeList, self.posY, 2)
+            zCoeff = np.polyfit(self.timeList, self.posZ, 2)
 
-            # Predict positions one second into the future
-            dt = 1.0 # One second into the future
-            gravity = -9.81  # Gravity constant in m/s^2
+            ti = time.time() - self.startTime + 1.0
+            x = float(xCoeff[0] * ti ** 2 + xCoeff[1] * ti + xCoeff[2])
+            y = float(yCoeff[0] * ti ** 2 + yCoeff[1] * ti + yCoeff[2])
+            z = float(zCoeff[0] * ti ** 2 + zCoeff[1] * ti + zCoeff[2])
 
-            # Since x and y are not affected by gravity, we only apply the velocity
-            pred_x = self.posX[-1] + vx * dt
-            pred_y = self.posY[-1] + vy * dt
+            # # Calculate velocities
+            # vx = (self.posX[-1] - self.posX[-2]) / (
+            #     self.timeList[-1] - self.timeList[-2]
+            # )
+            # vy = (self.posY[-1] - self.posY[-2]) / (
+            #     self.timeList[-1] - self.timeList[-2]
+            # )
+            # vz = (self.posZ[-1] - self.posZ[-2]) / (
+            #     self.timeList[-1] - self.timeList[-2]
+            # )
 
-            # For z, we apply gravity
-            pred_z = self.posZ[-1] + vz * dt + 0.5 * gravity * dt**2
+            # # Predict positions one second into the future
+            # dt = 1.0 # One second into the future
+            # gravity = -9.81  # Gravity constant in m/s^2
 
-            ballPredTarget = (pred_x, pred_y, pred_z)
+            # # Since x and y are not affected by gravity, we only apply the velocity
+            # pred_x = self.posX[-1] + vx * dt
+            # pred_y = self.posY[-1] + vy * dt
+
+            # # For z, we apply gravity
+            # pred_z = self.posZ[-1] + vz * dt + 0.5 * gravity * dt**2
+
+            ballPredTarget = (x, y, z)
             self.clearLists()  # This might not be necessary; see the comment below
 
         return ballPredTarget
