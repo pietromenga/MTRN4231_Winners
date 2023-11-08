@@ -34,7 +34,7 @@ class TargetDetectorNode(Node):
         self.fov_horizontal = 69.4  # in degrees
         self.fov_vertical = 42.5  # in degrees
 
-        self.debug = True
+        self.debug = False
 
     def depth_callback(self, data):
         self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='16UC1')

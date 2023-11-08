@@ -22,8 +22,9 @@ class TrajectoryCalculator(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.dt = 0.1
-        self.timer = self.create_timer(self.dt, self.timer_callback)
+        # self.dt = 0.1
+        # self.timer = self.create_timer(self.dt, self.timer_callback)
+        self.create_subscription(PoseStamped, "/ball_pose", self.timer_callback, 10)
 
         self.itemCount = 0
         self.posX = []
@@ -37,31 +38,20 @@ class TrajectoryCalculator(Node):
         self.minX, self.maxX = -0.9, -0.5
         self.minZ, self.maxZ = 0, 0.25
 
-    def timer_callback(self):
-        self.sendBallPred(0, 0, 0)
+    def timer_callback(self, pose: PoseStamped):
 
         # Get position of ball in base frame
-        try:
-            tBall = self.tf_buffer.lookup_transform(
-                self.to_frame_rel, "ball_tf", rclpy.time.Time()
-            )
-
-            # tEndEff = self.tf_buffer.lookup_transform(
-            #     self.to_frame_rel,
-            #     'tool0',
-            #     rclpy.time.Time())
-        except TransformException as ex:
-            # self.get_logger().info(
-            #     f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
-            return
+        # try:
+        #     tBall = self.tf_buffer.lookup_transform(
+        #         self.to_frame_rel, "ball_tf", rclpy.time.Time()
+        #     )
+        # except TransformException as ex:
+        #     return
+        
+        self.appendTransform(pose)
 
         # Find target
-        # ballPredTarget = self.predictBall(tBall)
-        ballPredTarget = (
-            tBall.transform.translation.x,
-            tBall.transform.translation.y,
-            tBall.transform.translation.z,
-        )
+        ballPredTarget = self.predictBall()
 
         # send off prediction
         if ballPredTarget != ():
@@ -84,7 +74,7 @@ class TrajectoryCalculator(Node):
             )
 
             # Predict positions one second into the future
-            dt = 1.0  # One second into the future
+            dt = 1.0 # One second into the future
             gravity = -9.81  # Gravity constant in m/s^2
 
             # Since x and y are not affected by gravity, we only apply the velocity
@@ -95,7 +85,7 @@ class TrajectoryCalculator(Node):
             pred_z = self.posZ[-1] + vz * dt + 0.5 * gravity * dt**2
 
             ballPredTarget = (pred_x, pred_y, pred_z)
-            self.removeLast()  # This might not be necessary; see the comment below
+            self.clearLists()  # This might not be necessary; see the comment below
 
         return ballPredTarget
 
@@ -114,19 +104,20 @@ class TrajectoryCalculator(Node):
         # zRange = z > self.minZ and z < self.maxZ
         return True
 
-    def removeLast(self):
+    def clearLists(self):
         self.posX.clear()
         self.posY.clear()
         self.posZ.clear()
         self.timeList.clear()
-        self.itemCount -= 1
+        self.itemCount = 0
 
-    def appendTransform(self, t):
-        self.posX.append(t.transform.translation.x)
-        self.posY.append(t.transform.translation.y)
-        self.posZ.append(t.transform.translation.z)
+    def appendTransform(self, pose: PoseStamped):
+        self.posX.append(pose.pose.position.x)
+        self.posY.append(pose.pose.position.y)
+        self.posZ.append(pose.pose.position.z)
         self.timeList.append(time.time() - self.startTime)
         self.itemCount += 1
+        # self.get_logger().info(f"Time: {time.time() - self.startTime}")
 
 
 def main(args=None):

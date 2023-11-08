@@ -60,7 +60,7 @@ void TFBroadcaster::tf_prediction(const geometry_msgs::msg::PoseStamped & msg)
 
     geometry_msgs::msg::TransformStamped transform_msg;
     transform_msg.header.stamp = msg.header.stamp;
-    transform_msg.header.frame_id = "base_link";
+    transform_msg.header.frame_id = "camera_origin";
     transform_msg.child_frame_id = "ball_prediction_tf";
     transform_msg.transform.translation.x = msg.pose.position.x;
     transform_msg.transform.translation.y = msg.pose.position.y;
