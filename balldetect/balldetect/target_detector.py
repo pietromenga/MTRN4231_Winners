@@ -24,12 +24,17 @@ class TargetDetectorNode(Node):
             10)
         self.depth_image = None
         self.target_pub = self.create_publisher(PoseStamped,'shoot_target',10)
-        self.lower_range = np.array([137.5/2,200,0.255*255])
-        self.upper_range = np.array([155.8/2,255,0.757*255])
+
+        # GLOVE GREEN
+        self.lower_range = np.array([65/2,155,0.302*255])
+        self.upper_range = np.array([75/2,255,0.8*255])
+
         self.kernel = np.ones((3, 3), np.uint8)
 
         self.fov_horizontal = 69.4  # in degrees
         self.fov_vertical = 42.5  # in degrees
+
+        self.debug = True
 
     def depth_callback(self, data):
         self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='16UC1')
@@ -41,15 +46,13 @@ class TargetDetectorNode(Node):
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, self.kernel)
         contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
+        cX, cY = 0,0
         if contours:
             largest_contour = max(contours, key=cv2.contourArea)
             M = cv2.moments(largest_contour)
             if M["m00"] != 0:
                 cX = int(M["m10"] / M["m00"])
                 cY = int(M["m01"] / M["m00"])
-                
-                # Mark the centroid on the mask
-                cv2.circle(mask, (cX, cY), 5, (0, 0, 255), -1)
 
                 if self.depth_image is not None:
                     depth = self.depth_image[cY, cX]
@@ -82,8 +85,11 @@ class TargetDetectorNode(Node):
                     self.target_pub.publish(pose)
                 
         # Show the mask with centroid
-        cv2.imshow('Mask with Target Centroid', mask)
-        cv2.waitKey(1)
+        if self.debug:
+            # Mark the centroid on the mask
+            cv2.circle(mask, (cX, cY), 5, (0, 0, 255), -1)
+            cv2.imshow('Mask with Target Centroid', mask)
+            cv2.waitKey(1)
 
 def main(args=None):
     rclpy.init(args=args)
