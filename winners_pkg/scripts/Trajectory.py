@@ -93,14 +93,19 @@ class TrajectoryCalculator(Node):
                 t = min(filter(lambda t: t > 0, [t1, t2]), default=None)
 
                 if t is not None:
-                    # Calculate future positions for x and y
-                    pred_x = self.posX[-1] + vx * t
-                    pred_y = self.posY[-1] + vy * t
+                    # Calculate the z-velocity at the intersection time
+                    vz_intersection = vz + gravity * t
 
-                    # We already know pred_z since it's the z_target
-                    pred_z = z_target
+                    # Ensure that the z-velocity is negative (ball is moving downwards)
+                    if vz_intersection < 0:
+                        # Calculate future positions for x and y
+                        pred_x = self.posX[-1] + vx * t
+                        pred_y = self.posY[-1] + vy * t
 
-                    ballPredTarget = (pred_x, pred_y, pred_z)
+                        # We already know pred_z since it's the z_target
+                        pred_z = z_target
+
+                        ballPredTarget = (pred_x, pred_y, pred_z)
 
         return ballPredTarget
 
