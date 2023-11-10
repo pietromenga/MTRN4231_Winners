@@ -2,7 +2,7 @@
 
 from rclpy.node import Node
 import rclpy
-from geometry_msgs.msg import Pose, Twist
+from geometry_msgs.msg import Pose, Twist, PoseStamped
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int64MultiArray, Float32MultiArray, Bool
@@ -11,6 +11,9 @@ import numpy as np
 import roboticstoolbox as rtb
 import spatialmath as sm
 from spatialmath.base import q2r, r2q
+
+from tf2_ros.buffer import Buffer
+from tf2_ros.transform_listener import TransformListener
 
 JOINT_ORDER = [5, 0, 1, 2, 3, 4]
 CATCHING_JOINTS = [136.8, -64.91, 117.28, -51.08, 48.33, 0.27]
@@ -21,19 +24,55 @@ class Control(Node):
         #set up subscribers
         self.ee_rot_sub = self.create_subscription(Bool, '/move_test', self.doTest, 10)
         self.joint_states_sub = self.create_subscription(JointState, '/joint_states', self.jointStateCallback, 10)
+        self.ball_pred_sub = self.create_subscription(PoseStamped, '/ball_prediction', self.moveToPrediction, 10)
 
         #set up publishers
         self.joint_pub = self.create_publisher(JointTrajectory, "/joint_trajectory_controller/joint_trajectory", 10)
         self.goal_pub = self.create_publisher(Float32MultiArray, "/joint_goal", 10)
 
+
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
+
         self.ur5 = rtb.models.UR5()
         self.pose = Pose()
+
+    def moveToPrediction(self, data):
+        try:
+            t = self.tf_buffer.lookup_transform(
+                "tool0",
+                "ball_prediction_tf",
+                rclpy.time.Time())
+        except Exception as ex:
+            # self.get_logger().info(
+            #     f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
+            return
+        
+        x = t.transform.translation.x
+        y = t.transform.translation.y
+        z = t.transform.translation.z
+        
+        goalT = Pose()
+        goalT.position = self.pose.position
+        goalT.orientation = self.pose.orientation
+        goalT.position.x += x
+        goalT.position.y += y
+        goalT.position.z += z
+
+        if not self.checkValid(goalT.position.x,goalT.position.y,goalT.position.z):
+            return
+
+        self.sendPose(goalT)
+
+    def checkValid(x,y,z):
+        distance = np.sqrt(x**2 + y**2 + z**2)   
+        return distance > 
 
     def doTest(self, data):
         goalT = Pose()
         goalT.position = self.pose.position
         goalT.orientation = self.pose.orientation
-        goalT.position.z += 0.2
+        goalT.position.x -= 0.4
 
         self.sendPose(goalT)
 
@@ -74,6 +113,7 @@ class Control(Node):
         jointTrajPoint.velocities = []
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
+        jointTrajPoint.time_from_start.nanosec = int(0.5 * 1000000000)
 
         self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]}")
 
