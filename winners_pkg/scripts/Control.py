@@ -37,20 +37,28 @@ class Control(Node):
         self.ur5 = rtb.models.UR5()
         self.pose = Pose()
 
+        self.speed = 0.75
+
+        self.sendQ(CATCHING_JOINTS)
+
     def moveToPrediction(self, data):
         try:
-            t = self.tf_buffer.lookup_transform(
-                "tool0",
+            t1 = self.tf_buffer.lookup_transform(
+                "base_link",
                 "ball_prediction_tf",
+                rclpy.time.Time())
+            t2 = self.tf_buffer.lookup_transform(
+                "base_link",
+                "tool0",
                 rclpy.time.Time())
         except Exception as ex:
             # self.get_logger().info(
             #     f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
             return
         
-        x = t.transform.translation.x
-        y = t.transform.translation.y
-        z = t.transform.translation.z
+        x = t1.transform.translation.x - t2.transform.translation.x
+        y = t1.transform.translation.y - t2.transform.translation.y
+        z = t1.transform.translation.z - t2.transform.translation.z
         
         goalT = Pose()
         goalT.position = self.pose.position
@@ -62,26 +70,41 @@ class Control(Node):
         if not self.checkValid(goalT.position.x,goalT.position.y,goalT.position.z):
             return
 
-        self.sendPose(goalT)
+        distance = np.sqrt(x**2 + y**2 + z**2)
+        time = distance / self.speed   
+        self.sendPose(goalT, time)
 
-    def checkValid(x,y,z):
+    def checkValid(self, x,y,z):
         distance = np.sqrt(x**2 + y**2 + z**2)   
-        return distance > 
+        validDistance = distance > 0.45 and distance < 0.85
+        validZ = z > 0.0
+        validX = x < -0.3
+        validY = y > 0.0
+        valid = (validDistance and validX and validY and validZ)
+
+        if not valid:
+            self.get_logger().info(f"Failed validity check {x}, {y}, {z}")
+
+        return valid
 
     def doTest(self, data):
         goalT = Pose()
         goalT.position = self.pose.position
         goalT.orientation = self.pose.orientation
-        goalT.position.x -= 0.4
+        goalT.position.x -= 0.2
 
-        self.sendPose(goalT)
+        if not self.checkValid(goalT.position.x,goalT.position.y,goalT.position.z):
+            return
+
+        time = 0.2 / self.speed   
+        self.sendPose(goalT, time)
 
     def inverseKin(self, pose: Pose):
         trans = [pose.position.x, pose.position.y, pose.position.z]
         rot = q2r([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         targetPose = sm.SE3.Rt(rot, trans)
         qNear = np.deg2rad(np.array(CATCHING_JOINTS)) # 
-        qTarget =  self.ur5.ikine_LM(targetPose, q0=qNear, joint_limits=True)
+        qTarget =  self.ur5.ikine_LM(targetPose, q0=self.ur5.q, joint_limits=True)
 
         return qTarget.q
 
@@ -101,9 +124,11 @@ class Control(Node):
         self.pose.orientation.z = quaternion[3]
         # self.get_logger().info(f"CURRENT POSE: x:{self.pose.position.x:.3f}, y:{self.pose.position.y:.3f}, z:{self.pose.position.z:.3f}, qx:{self.pose.orientation.x:.3f}, qy:{self.pose.orientation.y:.3f}, qz:{self.pose.orientation.z:.3f}, ")
 
-    def sendPose(self, pose: Pose):
+    def sendPose(self, pose: Pose, time):
         qTarget = self.inverseKin(pose)
         qTarget = [float(joint) for joint in qTarget]
+
+        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {time}")
 
         jointTraj = JointTrajectory()
         jointTraj.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
@@ -113,9 +138,33 @@ class Control(Node):
         jointTrajPoint.velocities = []
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
-        jointTrajPoint.time_from_start.nanosec = int(0.5 * 1000000000)
 
-        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]}")
+        if time > 1.0:
+            jointTrajPoint.time_from_start.nanosec = int(float(0.95) * 1000000000)
+        else:
+            jointTrajPoint.time_from_start.nanosec = int(float(time) * 1000000000)
+
+
+        jointTraj.points = [jointTrajPoint]
+        self.joint_pub.publish(jointTraj)
+
+        jointGoal = Float32MultiArray()
+        jointGoal.data = qTarget
+        self.goal_pub.publish(jointGoal)
+
+    def sendQ(self, qTarget):
+        qTarget = [float(np.radians(joint)) for joint in qTarget]
+
+        jointTraj = JointTrajectory()
+        jointTraj.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+                                            'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+        jointTrajPoint = JointTrajectoryPoint()
+        jointTrajPoint.positions = qTarget
+        jointTrajPoint.velocities = []
+        jointTrajPoint.accelerations = []
+        jointTrajPoint.effort = []
+
+        jointTrajPoint.time_from_start.nanosec = int(float(1.0) * 1000000000)
 
         jointTraj.points = [jointTrajPoint]
         self.joint_pub.publish(jointTraj)

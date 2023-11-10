@@ -9,7 +9,7 @@ RobotControl::RobotControl() : Node("RobotControl")
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
-    launch_pub = this->create_publisher<std_msgs::msg::Bool>("/ee_launch", 10);
+    launch_pub = this->create_publisher<std_msgs::msg::Bool>("/arduino", 10);
     throw_fin_pub = this->create_publisher<std_msgs::msg::Bool>("/throw_finished", 10);
 
     // Moveit objects
@@ -216,6 +216,9 @@ void RobotControl::throw_ball_request(
     // DO LAUNCH
     std_msgs::msg::Bool launchMsg;
     launchMsg.data = true;
+    launch_pub->publish(launchMsg);
+    std::this_thread::sleep_for(std::chrono::seconds(60));
+    launchMsg.data = false;
     launch_pub->publish(launchMsg);
 
     throw_fin_pub->publish(launchMsg);

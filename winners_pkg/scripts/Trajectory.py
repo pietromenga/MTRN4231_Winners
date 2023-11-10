@@ -82,7 +82,7 @@ class TrajectoryCalculator(Node):
             gravity = -9.81
 
             # z = -0.2 plane
-            z_target = -0.2
+            z_target = -0.42
 
             # Calculate time to reach z = -0.2 plane using quadratic formula
             A = 0.5 * gravity

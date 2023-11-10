@@ -92,28 +92,33 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(
+            package='balldetect',
+            name='ball_detector',
+            executable='ball_detector',
+        ),
+        Node(
+            package='balldetect',
+            name='target_detector',
+            executable='target_detector',
+        ),
+        Node(
+            package='winners_pkg',
+            name='Trajectory',
+            executable='Trajectory.py',
+        ),
+        Node(
+            package='winners_pkg',
+            name='Transforms',
+            executable='Transforms',
+        ),
+        Node(
+            package='winners_pkg',
+            name='Visualisations',
+            executable='Visualisations',
+        ),
+        Node(
             package='winners_pkg',
             name='Control',
             executable='Control.py',
         )
-        # Node(
-        #     package='balldetect',
-        #     name='target_detector',
-        #     executable='target_detector',
-        # ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='Trajectory',
-        #     executable='Trajectory.py',
-        # ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='Transforms',
-        #     executable='Transforms',
-        # ),
-        # Node(
-        #     package='winners_pkg',
-        #     name='Visualisations',
-        #     executable='Visualisations',
-        # )
     ])
