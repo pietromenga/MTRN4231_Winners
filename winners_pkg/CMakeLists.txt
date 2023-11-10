@@ -124,6 +124,7 @@ install(PROGRAMS
   scripts/Trajectory.py
   scripts/TriKalman.py
   scripts/BallPose.py
+  scripts/Control.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
