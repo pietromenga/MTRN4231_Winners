@@ -319,6 +319,8 @@ class Control(Node):
     def sendQ(self, qTarget):
         qTarget = [float(np.radians(joint)) for joint in qTarget]
 
+        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {0.9}")
+
         jointTraj = JointTrajectory()
         jointTraj.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
                                             'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
@@ -328,7 +330,7 @@ class Control(Node):
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
 
-        jointTrajPoint.time_from_start.nanosec = int(0.95 * 1000000000)
+        jointTrajPoint.time_from_start.nanosec = int(0.9 * 1000000000)
 
         jointTraj.points = [jointTrajPoint]
         self.joint_pub.publish(jointTraj)

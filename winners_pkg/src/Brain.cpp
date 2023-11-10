@@ -43,7 +43,7 @@ void Brain::tfCallback()
     try {
         t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
     } catch (const tf2::TransformException & ex) {
-        RCLCPP_INFO(this->get_logger(), "No frames?");
+        // RCLCPP_INFO(this->get_logger(), "No frames?");
         return;
     }
 
