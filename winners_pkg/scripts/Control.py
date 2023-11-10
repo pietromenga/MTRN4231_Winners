@@ -2,7 +2,7 @@
 
 from rclpy.node import Node
 import rclpy
-from geometry_msgs.msg import Pose, Twist, PoseStamped
+from geometry_msgs.msg import Pose, TwistStamped, PoseStamped
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int64MultiArray, Float32MultiArray, Bool
@@ -15,21 +15,36 @@ from spatialmath.base import q2r, r2q
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
+from std_srvs.srv import Trigger
+
+from  enum import Enum
+import time
+
 JOINT_ORDER = [5, 0, 1, 2, 3, 4]
 CATCHING_JOINTS = [136.8, -64.91, 117.28, -51.08, 48.33, 0.27]
+LAUNCHING_JOINT = [128.57, -70.04, 100.70, -29.27, 39.9, 0.03]
+
+class RobotMode(Enum):
+    LAUNCH = 0
+    CATCH = 1
 
 class Control(Node):
     def __init__(self):
         super().__init__('Control')
-        #set up subscribers
+        # set up subscribers
         self.ee_rot_sub = self.create_subscription(Bool, '/move_test', self.doTest, 10)
         self.joint_states_sub = self.create_subscription(JointState, '/joint_states', self.jointStateCallback, 10)
         self.ball_pred_sub = self.create_subscription(PoseStamped, '/ball_prediction', self.moveToPrediction, 10)
-
-        #set up publishers
+        
+        # set up publishers
         self.joint_pub = self.create_publisher(JointTrajectory, "/joint_trajectory_controller/joint_trajectory", 10)
         self.goal_pub = self.create_publisher(Float32MultiArray, "/joint_goal", 10)
+        self.state_pub = self.create_publisher(Bool, "/catch_state", 10)
+        self.arduino = self.create_publisher(Bool, "/arduino", 10)
+        self.twist_cmd_pub = self.create_publisher(TwistStamped, "/servo_node/delta_twist_cmds", 10)
 
+        # services
+        self.srv = self.create_service(Trigger, '/launch_ball', self.launchBall)
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -37,11 +52,78 @@ class Control(Node):
         self.ur5 = rtb.models.UR5()
         self.pose = Pose()
 
-        self.speed = 0.75
+        # Parameters
+        self.speed = 0.75 #m/s
+        self.targetGoalBound = 0.5 #degrees
 
-        self.sendQ(CATCHING_JOINTS)
+        self.robotMode = RobotMode.CATCH
+
+    def sendState(self):
+        boolmsg = Bool()
+        boolmsg.data = self.robotMode.value
+        self.state_pub.publish(boolmsg)
+
+    def aimAtTarget(self):
+        # Aiming control loop
+        aim_angle = np.pi
+        launch_angle = np.pi
+        while abs(aim_angle) > self.targetGoalBound*np.pi/180.0 or abs(launch_angle) > self.targetGoalBound*np.pi/180.0:
+            time.sleep(1)
+            
+            try:
+                t = self.tf_buffer.lookup_transform(
+                    "tool0",
+                    "target_tf",
+                    rclpy.time.Time())
+            except Exception as ex:
+                return
+            
+            # Get angles
+            x = t.transform.translation.x
+            y = t.transform.translation.y
+            z = t.transform.translation.z 
+            aim_angle = np.arctan2(x,z)
+            launch_angle = np.arctan2(y,z)
+
+            # Target too far from curr aim
+            if abs(aim_angle) > np.pi/3.0 or abs(launch_angle) > np.pi/4.0:
+                continue
+            
+            # Pub to servo
+            rx = np.clip(launch_angle*10.0, -np.pi, np.pi)
+            ry = np.clip(aim_angle*10.0, -np.pi, np.pi)
+            twist = TwistStamped()
+            twist.header.frame_id = "tool0"
+            twist.header.stamp = self.get_clock().now().to_msg()
+            twist.twist.angular.x = -rx
+            twist.twist.angular.y = ry
+            self.twist_cmd_pub.publish(twist)
+
+    def launchBall(self, request, response):
+        if self.robotMode == RobotMode.CATCH:
+            self.get_logger().info("Commencing Launch")
+            self.robotMode = RobotMode.LAUNCH
+            self.sendState()
+
+            # Move to start
+            self.sendQ(LAUNCHING_JOINT)
+
+            # Shoot
+            self.aimAtTarget()
+            boolmsg = Bool()
+            boolmsg.data = True
+            self.arduino.publish(boolmsg)
+
+            # Go back to catching
+            self.get_logger().info("Launching finished")
+            self.sendQ(CATCHING_JOINTS)
+            self.robotMode = RobotMode.CATCH
+            self.sendState()
 
     def moveToPrediction(self, data):
+        if self.robotMode != RobotMode.CATCH:
+            return
+        
         try:
             t1 = self.tf_buffer.lookup_transform(
                 "base_link",
@@ -164,7 +246,7 @@ class Control(Node):
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
 
-        jointTrajPoint.time_from_start.nanosec = int(float(1.0) * 1000000000)
+        jointTrajPoint.time_from_start.nanosec = int(0.95 * 1000000000)
 
         jointTraj.points = [jointTrajPoint]
         self.joint_pub.publish(jointTraj)

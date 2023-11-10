@@ -20,7 +20,7 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-enum RobotState {THROWING, CATCHING};
+enum RobotState {LAUNCHING, CATCHING};
 
 class Brain : public rclcpp::Node
 {
@@ -30,12 +30,13 @@ private:
     #define CATCH_THRESHOLD 0.25
 
     // Clients
-    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr start_catching_client_;
-    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr throw_client_;
+    rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr launch_client;
 
-    RobotState robotState = RobotState::THROWING;
+    RobotState robotState = RobotState::CATCHING;
 
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr finished_throwing;
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr robot_state_sub;
+
 
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -47,14 +48,11 @@ private:
     // Sends a request to the robot control node to start moving the robot for catching
     void request_start_catching();
 
-    // Sends a request to the robot control node to stop moving the robot for catching
-    void request_stop_catching();
-
     //
     void tfCallback();
 
     //
-    void request_throw();
+    void change_mode();
 
-    void throwFinished(std_msgs::msg::Bool fin);
+    void changeCatchState(std_msgs::msg::Bool state);
 };
