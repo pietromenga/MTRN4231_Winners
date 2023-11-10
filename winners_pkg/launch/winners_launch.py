@@ -113,8 +113,8 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='RobotControl',
-            executable='RobotControl',
+            name='Control',
+            executable='Control.py',
             parameters=[
                 robot_description,
                 robot_description_semantic,

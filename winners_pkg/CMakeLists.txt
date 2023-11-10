@@ -57,13 +57,6 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# TESTING CAMERA
-add_executable(camTest src/camTest.cpp)
-ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
-# BALL POSE
-# add_executable(BallPose src/BallPose.cpp)
-# ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(Transforms src/Transforms.cpp)
@@ -81,14 +74,6 @@ ament_target_dependencies(RobotControl ${THIS_PACKAGE_INCLUDE_DEPENDS})
 add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
-# BRAIN
-add_executable(Camera src/Camera.cpp)
-ament_target_dependencies(Camera ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
-
-# add_executable(ballPose src/ballPose.cpp)
-# ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -103,12 +88,10 @@ if(BUILD_TESTING)
 endif()
 
 install(TARGETS
-  camTest
   Transforms
   Visualisations
   RobotControl
   Brain
-  Camera
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY
@@ -123,7 +106,6 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/Trajectory.py
   scripts/TriKalman.py
-  scripts/BallPose.py
   scripts/Control.py
   DESTINATION lib/${PROJECT_NAME}
 )

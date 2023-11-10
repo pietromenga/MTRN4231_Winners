@@ -22,8 +22,6 @@
   <depend>control_msgs</depend>
   <depend>OpenCV</depend>
   <depend>cv_bridge</depend>
-
-
   <depend>Eigen3</depend>
   <depend>moveit_ros_planning_interface</depend>
   <depend>ros_ur_driver</depend>
@@ -31,6 +29,7 @@
   <depend>rviz_visual_tools</depend>
   <depend>controller_manager_msgs</depend>
   <depend>winners_interfaces</depend>
+  <depend>moveit_commander</depend>
 
   <exec_depend>ros2launch</exec_depend>
 

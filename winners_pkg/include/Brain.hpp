@@ -45,9 +45,6 @@ private:
     // Waits for all services to become available
     void wait_for_services();
 
-    // Sends a request to the robot control node to start moving the robot for catching
-    void request_start_catching();
-
     //
     void tfCallback();
 

@@ -19,6 +19,8 @@ Brain::Brain() : Node("Brain") {
 }
 
 void Brain::changeCatchState(std_msgs::msg::Bool state) {
+    RCLCPP_INFO(this->get_logger(), "State Changed");
+
     if (state.data) {
         robotState = RobotState::CATCHING;
     } else {
@@ -28,6 +30,10 @@ void Brain::changeCatchState(std_msgs::msg::Bool state) {
 
 void Brain::tfCallback()
 {
+    if (robotState != RobotState::CATCHING) {
+        return;
+    }
+
     // Get transformation between ball and end effector 
     std::string fromFrameRel = "ball_tf"; 
     std::string toFrameRel = "tool0";
@@ -37,6 +43,7 @@ void Brain::tfCallback()
     try {
         t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
     } catch (const tf2::TransformException & ex) {
+        RCLCPP_INFO(this->get_logger(), "No frames?");
         return;
     }
 
@@ -44,13 +51,13 @@ void Brain::tfCallback()
     auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
 
     // If within distance stop catching and initiate throw
-    if (distance < CATCH_THRESHOLD && robotState == RobotState::CATCHING) {
+    if (distance < CATCH_THRESHOLD && robotState) {
         change_mode();
     }
 }
 
 void Brain::change_mode() {
-    RCLCPP_INFO(this->get_logger(), "Requesting Throw");
+    RCLCPP_INFO(this->get_logger(), "Request Changing Mode");
 
     auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
     auto result = launch_client->async_send_request(request);
