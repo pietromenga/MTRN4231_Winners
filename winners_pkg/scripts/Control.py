@@ -2,7 +2,7 @@
 
 from rclpy.node import Node
 import rclpy
-from geometry_msgs.msg import Pose, TwistStamped, PoseStamped, Point
+from geometry_msgs.msg import Pose, TwistStamped, PoseStamped, Point, TransformStamped
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int64MultiArray, Float32MultiArray, Bool
@@ -41,6 +41,8 @@ class Control(Node):
         self.state_pub = self.create_publisher(Bool, "/catch_state", 10)
         self.arduino = self.create_publisher(Bool, "/arduino", 10)
         self.twist_cmd_pub = self.create_publisher(TwistStamped, "/servo_node/delta_twist_cmds", 10)
+        self.aiming = False
+        self.aim_timer = self.create_timer(0.01, self.aimAtTarget)
 
         # services
         self.srv = self.create_service(Trigger, '/launch_ball', self.launchBall)
@@ -65,17 +67,22 @@ class Control(Node):
         # self.setupCollisions()
 
         # Clients
-        self.servo_start = self.create_client(Trigger, '/servo_node/start_servo')
+        self.servo_start = self.create_client(Trigger, "/servo_node/start_servo")
         while not self.servo_start.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('service not available, waiting again...')
+            self.get_logger().info("service not available, waiting again...")
 
-        self.servo_stop = self.create_client(Trigger, '/servo_node/stop_servo')
+        self.servo_stop = self.create_client(Trigger, "/servo_node/stop_servo")
         while not self.servo_stop.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('service not available, waiting again...')
+            self.get_logger().info("service not available, waiting again...")
 
-        self.switch_controller = self.create_client(SwitchController, '/controller_manager/switch_controller')
+        self.switch_controller = self.create_client(SwitchController, "/controller_manager/switch_controller")
         while not self.switch_controller.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('service not available, waiting again...')
+            self.get_logger().info("service not available, waiting again...")
+
+    def __del__(self):
+        self.servo_stop_request()
+        self.robotMode = RobotMode.CATCH
+        self.switch_controller_request()
 
     # def setupCollisions(self):
     #     box_pose = PoseStamped()
@@ -89,24 +96,22 @@ class Control(Node):
         self.get_logger().info('Starting servo')
         req = Trigger.Request()
         future = self.servo_start.call_async(req)
-        time.sleep(1.0)
 
     def servo_stop_request(self):
         self.get_logger().info('Stopping servo')
         req = Trigger.Request()
         future = self.servo_stop.call_async(req)
-        time.sleep(1.0)
 
     def switch_controller_request(self):
         req = SwitchController.Request()
         self.get_logger().info('Switching controller')
 
         if self.robotMode == RobotMode.CATCH:
-            req.activate_controllers.append("joint_trajectory_controller")
-            req.deactivate_controllers.append("forward_position_controller")
+            req.start_controllers.append("joint_trajectory_controller")
+            req.stop_controllers.append("forward_position_controller")
         else:
-            req.activate_controllers.append("forward_position_controller")
-            req.deactivate_controllers.append("joint_trajectory_controller")
+            req.start_controllers.append("forward_position_controller")
+            req.stop_controllers.append("joint_trajectory_controller")
 
         req.strictness = 2
         req.activate_asap = True
@@ -114,7 +119,6 @@ class Control(Node):
         timeout.sec = 2
         req.timeout = timeout
         future = self.switch_controller.call_async(req)
-        time.sleep(1.0)
 
     def sendState(self):
         self.get_logger().info('Sending state to brain')
@@ -122,41 +126,61 @@ class Control(Node):
         boolmsg.data = bool(self.robotMode.value)
         self.state_pub.publish(boolmsg)
 
+    def finishAiming(self):
+        self.get_logger().info("Launching finished")
+        self.robotMode = RobotMode.CATCH
+        self.servo_stop_request()
+        self.switch_controller_request()
+        self.sendQ(CATCHING_JOINTS)
+        self.sendState()
+        self.aiming = False
+
     def aimAtTarget(self):
+        if not self.aiming:
+            return
+        
         # Aiming control loop
-        aim_angle = np.pi
-        launch_angle = np.pi
-        while abs(aim_angle) > self.targetGoalBound*np.pi/180.0 or abs(launch_angle) > self.targetGoalBound*np.pi/180.0:
-            time.sleep(0.001)
-            
-            try:
-                t = self.tf_buffer.lookup_transform(
-                    "tool0",
-                    "target_tf",
-                    rclpy.time.Time())
-            except Exception as ex:
-                return
-            
-            # Get angles
+        if abs(self.aim_angle) <= self.targetGoalBound*np.pi/180.0 and abs(self.launch_angle) <= self.targetGoalBound*np.pi/180.0:
+            boolmsg = Bool()
+            boolmsg.data = True
+            self.arduino.publish(boolmsg)
+
+            # Go back to catching
+            self.finishAiming()
+            return
+        
+        try:
+            t = self.tf_buffer.lookup_transform(
+                "tool0",
+                "target_tf",
+                rclpy.time.Time())
             x = t.transform.translation.x
             y = t.transform.translation.y
             z = t.transform.translation.z 
-            aim_angle = np.arctan2(x,z)
-            launch_angle = np.arctan2(y,z)
+            # self.get_logger().info(f"x: {x}, y: {y}, z: {z}")
+        except Exception as ex:
+            self.get_logger().info('Target frame missing, aborting aiming')
+            self.finishAiming()
+            return
+        
+        # Get angles
+        self.aim_angle = np.arctan2(x,z)
+        self.launch_angle = np.arctan2(y,z)
 
-            # Target too far from curr aim
-            if abs(aim_angle) > np.pi/3.0 or abs(launch_angle) > np.pi/4.0:
-                continue
-            
-            # Pub to servo
-            rx = np.clip(launch_angle*10.0, -np.pi, np.pi)
-            ry = np.clip(aim_angle*10.0, -np.pi, np.pi)
-            twist = TwistStamped()
-            twist.header.frame_id = "tool0"
-            twist.header.stamp = self.get_clock().now().to_msg()
-            twist.twist.angular.x = -rx
-            twist.twist.angular.y = ry
-            self.twist_cmd_pub.publish(twist)
+        # Target too far from curr aim
+        if abs(self.aim_angle) > np.pi/3.0 or abs(self.launch_angle) > np.pi/4.0:
+            self.get_logger().info('Angle diff between tool and target too large')
+            return
+        
+        # Pub to servo
+        rx = np.clip(self.launch_angle*2.0, -np.pi, np.pi)
+        ry = np.clip(self.aim_angle*2.0, -np.pi, np.pi)
+        twist = TwistStamped()
+        twist.header.frame_id = "tool0"
+        twist.header.stamp = self.get_clock().now().to_msg()
+        twist.twist.angular.x = -rx
+        twist.twist.angular.y = ry
+        self.twist_cmd_pub.publish(twist)
 
     def launchBall(self, request, response: Trigger.Response):
         if self.robotMode == RobotMode.CATCH:
@@ -170,19 +194,11 @@ class Control(Node):
             self.servo_start_request()
 
             # Shoot
-            self.aimAtTarget()
-            boolmsg = Bool()
-            boolmsg.data = True
-            self.arduino.publish(boolmsg)
-
-            # Go back to catching
-            self.get_logger().info("Launching finished")
-            self.robotMode = RobotMode.CATCH
-            self.servo_stop_request()
-            self.switch_controller_request()
-            self.sendQ(CATCHING_JOINTS)
-            self.sendState()
-
+            self.aim_angle = np.pi
+            self.launch_angle = np.pi
+            self.get_logger().info("Starting aiming")
+            self.aiming = True
+        
             response.success = True
             return response
         
@@ -222,7 +238,7 @@ class Control(Node):
             return
         
         # if validTimer has not been renewed in 0.5 sec reset avg
-        if (time.time() - self.validTimer) > 0.5:
+        if (time.time() - self.validTimer) > 1.0:
             self.resetAverages()
         goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
 
@@ -249,13 +265,15 @@ class Control(Node):
 
     def checkValid(self, x,y,z):
         distance = np.sqrt(x**2 + y**2 + z**2)   
-        validDistance = distance > 0.45 and distance < 0.85
+        validDistance = distance > 0.45 and distance < 0.9
         validZ = z > 0.0
         validX = x < -0.3
-        validY = y > 0.0
+        validY = y > -0.1
         valid = (validDistance and validX and validY and validZ)
 
-        if not valid:
+        if not validDistance:
+            self.get_logger().info(f"Failed validity check {x}, {y}, {z} with distance {distance}")
+        elif not valid:
             self.get_logger().info(f"Failed validity check {x}, {y}, {z}")
 
         return valid
@@ -288,11 +306,11 @@ class Control(Node):
         self.pose.orientation.z = quaternion[3]
         # self.get_logger().info(f"CURRENT POSE: x:{self.pose.position.x:.3f}, y:{self.pose.position.y:.3f}, z:{self.pose.position.z:.3f}, qx:{self.pose.orientation.x:.3f}, qy:{self.pose.orientation.y:.3f}, qz:{self.pose.orientation.z:.3f}, ")
 
-    def sendPose(self, pose: Pose, time):
+    def sendPose(self, pose: Pose, moveTime):
         qTarget = self.inverseKin(pose)
         qTarget = [float(joint) for joint in qTarget]
 
-        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {time}")
+        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {moveTime}")
 
         jointTraj = JointTrajectory()
         jointTraj.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
@@ -303,10 +321,10 @@ class Control(Node):
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
 
-        if time > 1.0:
+        if moveTime > 1.0:
             jointTrajPoint.time_from_start.nanosec = int(float(0.95) * 1000000000)
         else:
-            jointTrajPoint.time_from_start.nanosec = int(float(time) * 1000000000)
+            jointTrajPoint.time_from_start.nanosec = int(float(moveTime) * 1000000000)
 
 
         jointTraj.points = [jointTrajPoint]
@@ -315,11 +333,13 @@ class Control(Node):
         jointGoal = Float32MultiArray()
         jointGoal.data = qTarget
         self.goal_pub.publish(jointGoal)
+
+        time.sleep(moveTime)
 
     def sendQ(self, qTarget):
         qTarget = [float(np.radians(joint)) for joint in qTarget]
 
-        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {0.9}")
+        self.get_logger().info(f"PUBLISHING JOINT GOAL {[np.degrees(j) for j in qTarget]} in time {3.0}")
 
         jointTraj = JointTrajectory()
         jointTraj.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
@@ -330,7 +350,7 @@ class Control(Node):
         jointTrajPoint.accelerations = []
         jointTrajPoint.effort = []
 
-        jointTrajPoint.time_from_start.nanosec = int(0.9 * 1000000000)
+        jointTrajPoint.time_from_start.sec = int(3)
 
         jointTraj.points = [jointTrajPoint]
         self.joint_pub.publish(jointTraj)
@@ -338,6 +358,8 @@ class Control(Node):
         jointGoal = Float32MultiArray()
         jointGoal.data = qTarget
         self.goal_pub.publish(jointGoal)
+
+        time.sleep(3.0)
 
 def main(args=None):
     rclpy.init(args=args)
