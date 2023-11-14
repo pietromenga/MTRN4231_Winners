@@ -14,12 +14,12 @@ class BallDetectorNode(Node):
         self.bridge = CvBridge()
         self.subscription = self.create_subscription(
             Image,
-            '/camera/color/image_raw',
+            '/camera/camera/color/image_raw',
             self.image_callback,
             10)
         self.depth_subscription = self.create_subscription(
             Image,
-            '/camera/aligned_depth_to_color/image_raw',
+            '/camera/camera/aligned_depth_to_color/image_raw',
             self.depth_callback,
             10)
         self.depth_image = None
@@ -28,15 +28,15 @@ class BallDetectorNode(Node):
         # self.lower_range = np.array([(200/2), (80/100)*255, (30/100)*255])
         # self.upper_blue = np.array([(240/2), (100/100)*255, (100/100)*255])
         # BALL GREEN
-        self.lower_range = np.array([137.5/2,150,0.05*255])
-        self.upper_range = np.array([155.8/2,255,0.8*255])
+        self.lower_range = np.array([48/2,0.5*255,0.15*255])
+        self.upper_range = np.array([62/2,255,255])
 
         self.kernel = np.ones((3, 3), np.uint8)
 
         self.fov_horizontal = 69.4  # in degrees
         self.fov_vertical = 42.5  # in degrees
 
-        self.debug = False
+        self.debug = True
 
     def depth_callback(self, data):
         self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='16UC1')

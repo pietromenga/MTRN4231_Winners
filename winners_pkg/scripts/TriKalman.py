@@ -44,17 +44,7 @@ if __name__ == "__main__":
     # Initial state estimate [x, y, z, vx, vy, vz]
     initial_state = np.array([0, 0, 0, 1, 1, 1])
 
-    # Initial covariance matrix
-    initial_covariance = np.eye(6)
-
-    # Process noise covariance matrix
-    process_noise = np.eye(6) * 0.01
-
-    # Measurement noise covariance matrix
-    measurement_noise = np.eye(6) * 0.1
-
-    # Create a Kalman filter instance
-    kf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
+    tkf = KalmanFilter3D(initial_state, initial_covariance, process_noise, measurement_noise)
 
     # Simulate measurements
     measurements = np.array([1, 1, 1, 2, 2, 2])
