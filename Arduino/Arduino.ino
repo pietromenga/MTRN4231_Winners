@@ -48,21 +48,23 @@ void loop() {
 
         // Start spinning the motors
         Spin();
-
+        /*
         // Step forward
         for (int i = 0, i < 8, i++) {
-            myStepper.step(stepsPerRevolution);
-            delay(500);
+        myStepper.step(stepsPerRevolution);
+        delay(500);
         }
 
         // Stop the motors 
         Stop();
-        
+
         // Step back to origin
         for (int i = 0, i < 8, i++) {
-            myStepper.step(-stepsPerRevolution);
-            delay(500);
+        myStepper.step(-stepsPerRevolution);
+        delay(500);
         }
+        */
+        delay(2000);
     }
 
     // If there is no data on the serial, keep looking until there is
