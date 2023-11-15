@@ -57,11 +57,12 @@ class Control(Node):
 
         # Parameters
         self.speed = 0.750 #m/s
-        self.targetGoalBound = 1 #degrees
+        self.targetGoalBound = 0.75 #degrees
         self.robotMode = RobotMode.CATCH
         self.sumX, self.sumY, self.sumZ = 0.0, 0.0, 0.0
         self.validCount = 0
         self.validTimer = time.time()
+        self.arduinoShootTime = 12
 
         # self.scene = moveit_commander.PlanningSceneInterface()
         # self.setupCollisions()
@@ -142,7 +143,7 @@ class Control(Node):
         self.sendQ(CATCHING_JOINTS)
         self.sendState()
         self.aiming = False
-        # time.sleep(12)
+        time.sleep(self.arduinoShootTime)
         self.get_logger().info("CATCHING RIGHT NOW!")
 
     def aimAtTarget(self):
@@ -150,11 +151,11 @@ class Control(Node):
             return
         
         # Aiming control loop
-        if abs(self.aim_angle) <= self.targetGoalBound*np.pi/180.0 and abs(self.launch_error) <= self.targetGoalBound*np.pi/180.0:
+        if abs(self.aim_angle) <= self.targetGoalBound*np.pi/180.0 and abs(self.launch_angle) <= self.targetGoalBound*np.pi/180.0:
             boolmsg = String()
             boolmsg.data = "Start"
             self.arduino.publish(boolmsg)
-            # time.sleep(12)
+            time.sleep(self.arduinoShootTime)
 
             # Go back to catching
             self.finishAiming()
@@ -180,8 +181,7 @@ class Control(Node):
         
         # Get angles
         self.aim_angle = np.arctan2(x,z)
-        self.launch_angle = np.arctan2(y + 0.45,z)
-        self.launch_error = self.launch_angle
+        self.launch_angle = np.arctan2(y + 0.40,z)
         
         # Target too far from curr aim
         if abs(self.aim_angle) > np.pi/3.0 or abs(self.launch_angle) > np.pi/2.0:
@@ -189,7 +189,7 @@ class Control(Node):
             return
         
         # Pub to servo
-        rx = np.clip(self.launch_error*8.0, -np.pi, np.pi)
+        rx = np.clip(self.launch_angle*8.0, -np.pi, np.pi)
         ry = np.clip(self.aim_angle*8.0, -np.pi, np.pi)
         twist = TwistStamped()
         twist.header.frame_id = "tool0"
@@ -213,7 +213,6 @@ class Control(Node):
             # Shoot
             self.aim_angle = np.pi
             self.launch_angle = np.pi
-            self.launch_error = np.pi / 6.0
             self.get_logger().info("Starting aiming")
             self.aiming = True
         
@@ -256,16 +255,15 @@ class Control(Node):
             self.resetAverages()
             return
         
-        # if validTimer has not been renewed in 0.5 sec reset avg
-        # if (time.time() - self.validTimer) > 1.0:
-        #     self.resetAverages()
         goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
 
         # self.get_logger().info(f"Pred position {goalT.position.x}, {goalT.position.y}, {goalT.position.z}")
 
-        distance = np.sqrt(x**2 + y**2 + z**2)
-        moveTime = distance / self.speed
-        self.sendPose(goalT, moveTime)
+        if self.validCount >= 20:
+            distance = np.sqrt(x**2 + y**2 + z**2)
+            moveTime = distance / self.speed
+            self.sendPose(goalT, moveTime)
+            self.resetAverages()
 
     def resetAverages(self):
         self.sumX, self.sumY, self.sumZ = 0,0,0
@@ -354,6 +352,8 @@ class Control(Node):
         jointGoal = Float32MultiArray()
         jointGoal.data = qTarget
         self.goal_pub.publish(jointGoal)
+
+        time.sleep(moveTime + 0.5)
 
     def sendQ(self, qTarget):
         qTarget = [float(np.radians(joint)) for joint in qTarget]

@@ -40,7 +40,7 @@ void Brain::tfCallback()
 
     // Get transformation between ball and end effector 
     std::string fromFrameRel = "ball_tf"; 
-    std::string toFrameRel = "tool0";
+    std::string toFrameRel = "base_link";
 
     geometry_msgs::msg::TransformStamped t;
 
@@ -56,11 +56,14 @@ void Brain::tfCallback()
 
     // Distance to end eff
     // auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
+    auto xrange = t.transform.translation.x < 0 && t.transform.translation.x > -0.7;
+    auto yrange = t.transform.translation.y > 0 && t.transform.translation.y < 0.5;
+    auto zrange = t.transform.translation.x > 0 && t.transform.translation.z < 0.4;
 
     // If within distance stop catching and initiate throw
-    // if (distance < CATCH_THRESHOLD && robotState) {
-    //     change_mode();
-    // }
+    if (xrange && yrange && zrange) {
+        change_mode();
+    }
 }
 
 void Brain::change_mode() {
