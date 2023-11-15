@@ -42,6 +42,8 @@ private:
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
     rclcpp::TimerBase::SharedPtr timer_;
 
+    int noBallCount = 0;
+
     // Waits for all services to become available
     void wait_for_services();
 

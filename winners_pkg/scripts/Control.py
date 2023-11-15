@@ -5,7 +5,7 @@ import rclpy
 from geometry_msgs.msg import Pose, TwistStamped, PoseStamped, Point, TransformStamped
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Int64MultiArray, Float32MultiArray, Bool
+from std_msgs.msg import Int64MultiArray, Float32MultiArray, Bool, String
 import numpy as np
 import roboticstoolbox as rtb
 import spatialmath as sm
@@ -22,7 +22,7 @@ import time
 
 JOINT_ORDER = [5, 0, 1, 2, 3, 4]
 CATCHING_JOINTS = [136.8, -64.91, 117.28, -51.08, 48.33, 0.27]
-LAUNCHING_JOINT = [128.57, -70.04, 100.70, -29.27, 39.9, 0.03]
+LAUNCHING_JOINT = [128.57, -70.04, 100.70, -60.27, 39.9, 0.03]
 
 class RobotMode(Enum):
     LAUNCH = 0
@@ -39,7 +39,7 @@ class Control(Node):
         self.joint_pub = self.create_publisher(JointTrajectory, "/joint_trajectory_controller/joint_trajectory", 10)
         self.goal_pub = self.create_publisher(Float32MultiArray, "/joint_goal", 10)
         self.state_pub = self.create_publisher(Bool, "/catch_state", 10)
-        self.arduino = self.create_publisher(Bool, "/arduino", 10)
+        self.arduino = self.create_publisher(String, "/arduino", 10)
         self.twist_cmd_pub = self.create_publisher(TwistStamped, "/servo_node/delta_twist_cmds", 10)
         self.aiming = False
         self.aim_timer = self.create_timer(0.01, self.aimAtTarget)
@@ -56,8 +56,8 @@ class Control(Node):
         self.pose = Pose()
 
         # Parameters
-        self.speed = 0.75 #m/s
-        self.targetGoalBound = 0.5 #degrees
+        self.speed = 0.5 #m/s
+        self.targetGoalBound = 1 #degrees
         self.robotMode = RobotMode.CATCH
         self.sumX, self.sumY, self.sumZ = 0.0, 0.0, 0.0
         self.validCount = 0
@@ -65,6 +65,8 @@ class Control(Node):
 
         # self.scene = moveit_commander.PlanningSceneInterface()
         # self.setupCollisions()
+
+        self.noTargetCount = 0
 
         # Clients
         self.servo_start = self.create_client(Trigger, "/servo_node/start_servo")
@@ -132,18 +134,21 @@ class Control(Node):
         self.servo_stop_request()
         self.switch_controller_request()
         self.sendQ(CATCHING_JOINTS)
+        self.sendQ(CATCHING_JOINTS)
         self.sendState()
         self.aiming = False
+        time.sleep(15)
 
     def aimAtTarget(self):
         if not self.aiming:
             return
         
         # Aiming control loop
-        if abs(self.aim_angle) <= self.targetGoalBound*np.pi/180.0 and abs(self.launch_angle) <= self.targetGoalBound*np.pi/180.0:
-            boolmsg = Bool()
-            boolmsg.data = True
+        if abs(self.aim_angle) <= self.targetGoalBound*np.pi/180.0 and abs(self.launch_error) <= self.targetGoalBound*np.pi/180.0:
+            boolmsg = String()
+            boolmsg.data = "Start"
             self.arduino.publish(boolmsg)
+            time.sleep(15)
 
             # Go back to catching
             self.finishAiming()
@@ -155,26 +160,31 @@ class Control(Node):
                 "target_tf",
                 rclpy.time.Time())
             x = t.transform.translation.x
-            y = t.transform.translation.y
+            y = t.transform.translation.y 
             z = t.transform.translation.z 
             # self.get_logger().info(f"x: {x}, y: {y}, z: {z}")
         except Exception as ex:
-            self.get_logger().info('Target frame missing, aborting aiming')
-            self.finishAiming()
+            self.noTargetCount += 1
+            if self.noTargetCount >= 500:
+                self.get_logger().info('Target frame missing, aborting aiming')
+                self.finishAiming()
             return
+            
+        self.noTargetCount = 0
         
         # Get angles
         self.aim_angle = np.arctan2(x,z)
         self.launch_angle = np.arctan2(y,z)
-
+        self.launch_error = np.pi/12.0 - self.launch_angle
+        
         # Target too far from curr aim
-        if abs(self.aim_angle) > np.pi/3.0 or abs(self.launch_angle) > np.pi/4.0:
+        if abs(self.aim_angle) > np.pi/3.0: # or abs(self.launch_angle) > np.pi/4.0:
             self.get_logger().info('Angle diff between tool and target too large')
             return
         
         # Pub to servo
-        rx = np.clip(self.launch_angle*2.0, -np.pi, np.pi)
-        ry = np.clip(self.aim_angle*2.0, -np.pi, np.pi)
+        rx = np.clip(self.launch_error*8.0, -np.pi, np.pi)
+        ry = np.clip(self.aim_angle*8.0, -np.pi, np.pi)
         twist = TwistStamped()
         twist.header.frame_id = "tool0"
         twist.header.stamp = self.get_clock().now().to_msg()
@@ -190,12 +200,14 @@ class Control(Node):
 
             # Move to start and swap to servo
             self.sendQ(LAUNCHING_JOINT)
+            self.sendQ(LAUNCHING_JOINT)
             self.switch_controller_request()
             self.servo_start_request()
 
             # Shoot
             self.aim_angle = np.pi
             self.launch_angle = np.pi
+            self.launch_error = np.pi / 6.0
             self.get_logger().info("Starting aiming")
             self.aiming = True
         
@@ -216,7 +228,7 @@ class Control(Node):
                 rclpy.time.Time())
             t2 = self.tf_buffer.lookup_transform(
                 "base_link",
-                "tool0",
+                "bucket",
                 rclpy.time.Time())
         except Exception as ex:
             # self.get_logger().info(
@@ -238,12 +250,14 @@ class Control(Node):
             return
         
         # if validTimer has not been renewed in 0.5 sec reset avg
-        if (time.time() - self.validTimer) > 1.0:
-            self.resetAverages()
-        goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
-
+        # if (time.time() - self.validTimer) > 1.0:
+        #     self.resetAverages()
+        # goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
         distance = np.sqrt(x**2 + y**2 + z**2)
-        moveTime = distance / self.speed   
+        if distance > 0.100:
+            moveTime = distance / self.speed   
+        else: 
+            moveTime = distance / 0.250
         self.sendPose(goalT, moveTime)
 
     def resetAverages(self):
@@ -265,9 +279,9 @@ class Control(Node):
 
     def checkValid(self, x,y,z):
         distance = np.sqrt(x**2 + y**2 + z**2)   
-        validDistance = distance > 0.45 and distance < 0.9
+        validDistance = distance >= 0.60 and distance <= 1.0
         validZ = z > 0.0
-        validX = x < -0.3
+        validX = x < -0.45
         validY = y > -0.1
         valid = (validDistance and validX and validY and validZ)
 
@@ -282,7 +296,6 @@ class Control(Node):
         trans = [pose.position.x, pose.position.y, pose.position.z]
         rot = q2r([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         targetPose = sm.SE3.Rt(rot, trans)
-        qNear = np.deg2rad(np.array(CATCHING_JOINTS)) # 
         qTarget =  self.ur5.ikine_LM(targetPose, q0=self.ur5.q, joint_limits=True)
 
         return qTarget.q

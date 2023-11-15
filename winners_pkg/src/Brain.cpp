@@ -32,6 +32,10 @@ void Brain::tfCallback()
 {
     if (robotState != RobotState::CATCHING) {
         return;
+    } 
+
+    if (noBallCount >= 300) {
+        change_mode();
     }
 
     // Get transformation between ball and end effector 
@@ -44,16 +48,19 @@ void Brain::tfCallback()
         t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
     } catch (const tf2::TransformException & ex) {
         // RCLCPP_INFO(this->get_logger(), "No frames?");
+        noBallCount++;
         return;
     }
 
+    noBallCount = 0;
+
     // Distance to end eff
-    auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
+    // auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
 
     // If within distance stop catching and initiate throw
-    if (distance < CATCH_THRESHOLD && robotState) {
-        change_mode();
-    }
+    // if (distance < CATCH_THRESHOLD && robotState) {
+    //     change_mode();
+    // }
 }
 
 void Brain::change_mode() {

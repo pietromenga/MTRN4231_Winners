@@ -92,6 +92,11 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(
+            package='util_arduino_serial',
+            name='util_arduino_serial',
+            executable='util_arduino_serial',
+        ),
+        Node(
             package='balldetect',
             name='ball_detector',
             executable='ball_detector',

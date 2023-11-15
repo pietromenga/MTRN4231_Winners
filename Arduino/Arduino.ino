@@ -38,33 +38,36 @@ void setup() {
 
     // opens serial port, sets data rate to 9600
     Serial.begin(9600); 
+    Spin();
 }
 
 void loop() {
+  
     // check for data from serial, any data is fine
     if (Serial.available() > 0) {
-        // if there is a serial data then activate the launcher loop
-        Serial.println("Starting Launching Process")
+        if (Serial.read() > 0) {
+          // if there is a serial data then activate the launcher loop
+          Serial.println("Starting Launching Process");
+  
+          // Start spinning the motors
+          
+          
+          // Step forward
+          for (int i = 0; i < 12; i++) {
+          myStepper.step(stepsPerRevolution);
+          delay(500);
+          }
 
-        // Start spinning the motors
-        Spin();
-        /*
-        // Step forward
-        for (int i = 0, i < 8, i++) {
-        myStepper.step(stepsPerRevolution);
-        delay(500);
+          delay(1000);
+          
+  
+          // Step back to origin
+          for (int i = 0; i < 12; i++) {
+          myStepper.step(-stepsPerRevolution);
+          delay(500);
+          }
+         
         }
-
-        // Stop the motors 
-        Stop();
-
-        // Step back to origin
-        for (int i = 0, i < 8, i++) {
-        myStepper.step(-stepsPerRevolution);
-        delay(500);
-        }
-        */
-        delay(2000);
     }
 
     // If there is no data on the serial, keep looking until there is
@@ -75,15 +78,16 @@ void Spin() {
     analogWrite(enB, 255);
 
     // Turn on motor A & B
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
-    digitalWrite(in3, HIGH);
-    digitalWrite(in4, LOW);
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
     delay(2000);
 }
 
 void Stop() {
     // turn off motors
+    Serial.println("Stoping");
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);

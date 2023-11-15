@@ -74,12 +74,12 @@ void TFBroadcaster::tf_prediction(const geometry_msgs::msg::PoseStamped & msg)
 }
 
 void TFBroadcaster::setupStaticTransforms() {
-	geometry_msgs::msg::TransformStamped camera_origin, catch_box;
+	geometry_msgs::msg::TransformStamped camera_origin, catch_box, bucket;
 
     camera_origin.header.frame_id = "base_link";
     camera_origin.child_frame_id = "camera_origin";
-    camera_origin.transform.translation.x = 0.515;
-    camera_origin.transform.translation.y = 0.742;
+    camera_origin.transform.translation.x = 0.530;
+    camera_origin.transform.translation.y = 0.710;
     camera_origin.transform.translation.z = 0.494;
     camera_origin.transform.rotation.w = 0.707;
     camera_origin.transform.rotation.x = 0.0;
@@ -97,8 +97,19 @@ void TFBroadcaster::setupStaticTransforms() {
     catch_box.transform.rotation.y = 0.0;
     catch_box.transform.rotation.z = 0.0;
 
+    bucket.header.frame_id = "tool0";
+    bucket.child_frame_id = "bucket";
+    bucket.transform.translation.x = 0.0;
+    bucket.transform.translation.y = 0.0;
+    bucket.transform.translation.z = 0.145;
+    bucket.transform.rotation.w = 1.0;
+    bucket.transform.rotation.x = 0.0;
+    bucket.transform.rotation.y = 0.0;
+    bucket.transform.rotation.z = 0.0;
+
     tf_static_broadcaster_->sendTransform(catch_box);
     tf_static_broadcaster_->sendTransform(camera_origin);
+    tf_static_broadcaster_->sendTransform(bucket);
 }
 
 
