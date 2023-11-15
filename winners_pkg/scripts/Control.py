@@ -33,11 +33,11 @@ class Control(Node):
         super().__init__('Control')
         # set up subscribers
         self.joint_states_sub = self.create_subscription(JointState, '/joint_states', self.jointStateCallback, 10)
-        self.ball_pred_sub = self.create_subscription(PoseStamped, '/ball_prediction', self.moveToPrediction, 10)
+        self.ball_pred_sub = self.create_subscription(PoseStamped, '/ball_prediction', self.moveToPrediction, 1)
         
         # set up publishers
         self.joint_pub = self.create_publisher(JointTrajectory, "/joint_trajectory_controller/joint_trajectory", 10)
-        self.goal_pub = self.create_publisher(Float32MultiArray, "/joint_goal", 10)
+        self.goal_pub = self.create_publisher(Float32MultiArray, "/joint_goal", 1)
         self.state_pub = self.create_publisher(Bool, "/catch_state", 10)
         self.arduino = self.create_publisher(String, "/arduino", 10)
         self.twist_cmd_pub = self.create_publisher(TwistStamped, "/servo_node/delta_twist_cmds", 10)
@@ -82,6 +82,9 @@ class Control(Node):
             self.get_logger().info("service not available, waiting again...")
 
         self.sendQ(CATCHING_JOINTS)
+
+        self.last_cmd_time = None
+        self.cmd_interval = 0.5  # seconds between commands
 
     def __del__(self):
         self.servo_stop_request()
@@ -279,6 +282,7 @@ class Control(Node):
         newPos.y = self.sumY / self.validCount
         newPos.z = self.sumZ / self.validCount
         self.validTimer = time.time()
+
         return newPos
 
     def checkValid(self, x,y,z):
