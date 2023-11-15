@@ -56,7 +56,7 @@ class Control(Node):
         self.pose = Pose()
 
         # Parameters
-        self.speed = 0.5 #m/s
+        self.speed = 0.750 #m/s
         self.targetGoalBound = 1 #degrees
         self.robotMode = RobotMode.CATCH
         self.sumX, self.sumY, self.sumZ = 0.0, 0.0, 0.0
@@ -80,6 +80,8 @@ class Control(Node):
         self.switch_controller = self.create_client(SwitchController, "/controller_manager/switch_controller")
         while not self.switch_controller.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("service not available, waiting again...")
+
+        self.sendQ(CATCHING_JOINTS)
 
     def __del__(self):
         self.servo_stop_request()
@@ -137,7 +139,8 @@ class Control(Node):
         self.sendQ(CATCHING_JOINTS)
         self.sendState()
         self.aiming = False
-        time.sleep(15)
+        # time.sleep(12)
+        self.get_logger().info("CATCHING RIGHT NOW!")
 
     def aimAtTarget(self):
         if not self.aiming:
@@ -148,7 +151,7 @@ class Control(Node):
             boolmsg = String()
             boolmsg.data = "Start"
             self.arduino.publish(boolmsg)
-            time.sleep(15)
+            # time.sleep(12)
 
             # Go back to catching
             self.finishAiming()
@@ -174,11 +177,11 @@ class Control(Node):
         
         # Get angles
         self.aim_angle = np.arctan2(x,z)
-        self.launch_angle = np.arctan2(y,z)
-        self.launch_error = np.pi/12.0 - self.launch_angle
+        self.launch_angle = np.arctan2(y + 0.45,z)
+        self.launch_error = self.launch_angle
         
         # Target too far from curr aim
-        if abs(self.aim_angle) > np.pi/3.0: # or abs(self.launch_angle) > np.pi/4.0:
+        if abs(self.aim_angle) > np.pi/3.0 or abs(self.launch_angle) > np.pi/2.0:
             self.get_logger().info('Angle diff between tool and target too large')
             return
         
@@ -228,7 +231,7 @@ class Control(Node):
                 rclpy.time.Time())
             t2 = self.tf_buffer.lookup_transform(
                 "base_link",
-                "bucket",
+                "tool0",
                 rclpy.time.Time())
         except Exception as ex:
             # self.get_logger().info(
@@ -236,28 +239,29 @@ class Control(Node):
             return
         
         x = t1.transform.translation.x - t2.transform.translation.x
-        y = t1.transform.translation.y - t2.transform.translation.y
-        z = t1.transform.translation.z - t2.transform.translation.z
-        
+        y = t1.transform.translation.y - t2.transform.translation.y 
+        z = t1.transform.translation.z - t2.transform.translation.z 
+
         goalT = Pose()
         goalT.position = self.pose.position
         goalT.orientation = self.pose.orientation
-        goalT.position.x += x
+        goalT.position.x += x + 0.150
         goalT.position.y += y
         goalT.position.z += z
 
         if not self.checkValid(goalT.position.x,goalT.position.y,goalT.position.z):
+            self.resetAverages()
             return
         
         # if validTimer has not been renewed in 0.5 sec reset avg
         # if (time.time() - self.validTimer) > 1.0:
         #     self.resetAverages()
-        # goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
+        goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
+
+        # self.get_logger().info(f"Pred position {goalT.position.x}, {goalT.position.y}, {goalT.position.z}")
+
         distance = np.sqrt(x**2 + y**2 + z**2)
-        if distance > 0.100:
-            moveTime = distance / self.speed   
-        else: 
-            moveTime = distance / 0.250
+        moveTime = distance / self.speed
         self.sendPose(goalT, moveTime)
 
     def resetAverages(self):
@@ -279,16 +283,16 @@ class Control(Node):
 
     def checkValid(self, x,y,z):
         distance = np.sqrt(x**2 + y**2 + z**2)   
-        validDistance = distance >= 0.60 and distance <= 1.0
-        validZ = z > 0.0
-        validX = x < -0.45
+        validDistance = distance >= 0.5 and distance <= 0.85
+        validZ = z > 0.05
+        validX = x < -0.4
         validY = y > -0.1
         valid = (validDistance and validX and validY and validZ)
 
-        if not validDistance:
-            self.get_logger().info(f"Failed validity check {x}, {y}, {z} with distance {distance}")
-        elif not valid:
-            self.get_logger().info(f"Failed validity check {x}, {y}, {z}")
+        # if not validDistance:
+        #     self.get_logger().info(f"Failed validity check {x}, {y}, {z} with distance {distance}")
+        # elif not valid:
+        #     self.get_logger().info(f"Failed validity check {x}, {y}, {z}")
 
         return valid
 
@@ -296,7 +300,7 @@ class Control(Node):
         trans = [pose.position.x, pose.position.y, pose.position.z]
         rot = q2r([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
         targetPose = sm.SE3.Rt(rot, trans)
-        qTarget =  self.ur5.ikine_LM(targetPose, q0=self.ur5.q, joint_limits=True)
+        qTarget =  self.ur5.ikine_NR(targetPose, q0=self.ur5.q, joint_limits=True)
 
         return qTarget.q
 
@@ -346,8 +350,6 @@ class Control(Node):
         jointGoal = Float32MultiArray()
         jointGoal.data = qTarget
         self.goal_pub.publish(jointGoal)
-
-        time.sleep(moveTime)
 
     def sendQ(self, qTarget):
         qTarget = [float(np.radians(joint)) for joint in qTarget]

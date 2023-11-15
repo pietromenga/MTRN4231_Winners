@@ -120,10 +120,10 @@ def generate_launch_description():
             package='winners_pkg',
             name='Control',
             executable='Control.py',
-            parameters=[
-                robot_description,
-                robot_description_semantic,
-            ],
+            # parameters=[
+            #     robot_description,
+            #     robot_description_semantic,
+            # ],
         ),  
         Node(
             package='winners_pkg',

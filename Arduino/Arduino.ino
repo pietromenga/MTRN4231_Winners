@@ -55,7 +55,7 @@ void loop() {
           // Step forward
           for (int i = 0; i < 12; i++) {
           myStepper.step(stepsPerRevolution);
-          delay(500);
+          delay(300);
           }
 
           delay(1000);
@@ -64,7 +64,7 @@ void loop() {
           // Step back to origin
           for (int i = 0; i < 12; i++) {
           myStepper.step(-stepsPerRevolution);
-          delay(500);
+          delay(300);
           }
          
         }

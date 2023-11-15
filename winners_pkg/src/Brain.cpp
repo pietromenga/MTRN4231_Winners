@@ -34,7 +34,7 @@ void Brain::tfCallback()
         return;
     } 
 
-    if (noBallCount >= 300) {
+    if (noBallCount >= 500) {
         change_mode();
     }
 
