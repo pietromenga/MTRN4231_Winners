@@ -60,7 +60,7 @@ class TrajectoryCalculator(Node):
         ballPredTarget = ()
 
         # Ensure we have enough points to calculate velocity and apply the moving average
-        if self.itemCount >= 5:
+        if self.itemCount >= 2:
             # Apply the moving average filter
             posX_smooth = np.mean(self.posX)
             posY_smooth = np.mean(self.posY)

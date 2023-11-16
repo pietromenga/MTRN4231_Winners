@@ -56,12 +56,16 @@ void Brain::tfCallback()
 
     // Distance to end eff
     // auto distance = std::sqrt(std::pow(t.transform.translation.x,2) + std::pow(t.transform.translation.y,2) + std::pow(t.transform.translation.z,2));
-    auto xrange = t.transform.translation.x < 0 && t.transform.translation.x > -0.7;
-    auto yrange = t.transform.translation.y > 0 && t.transform.translation.y < 0.5;
-    auto zrange = t.transform.translation.x > 0 && t.transform.translation.z < 0.4;
+    auto xrange = t.transform.translation.x < -0.1 && t.transform.translation.x > -0.7;
+    auto yrange = t.transform.translation.y > 0.1 && t.transform.translation.y < 0.5;
+    auto zrange = t.transform.translation.z > -0.5 && t.transform.translation.z < 1.0;
+
+    // RCLCPP_INFO(this->get_logger(), "xrange: %d, yrange: %d, zrange: %d", xrange, yrange, zrange);
 
     // If within distance stop catching and initiate throw
     if (xrange && yrange && zrange) {
+        robotState = RobotState::LAUNCHING;
+        std::this_thread::sleep_for(4000ms);
         change_mode();
     }
 }

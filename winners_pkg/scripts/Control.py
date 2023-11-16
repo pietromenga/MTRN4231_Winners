@@ -57,7 +57,7 @@ class Control(Node):
 
         # Parameters
         self.speed = 0.750 #m/s
-        self.targetGoalBound = 0.75 #degrees
+        self.targetGoalBound = 1.0 #degrees
         self.robotMode = RobotMode.CATCH
         self.sumX, self.sumY, self.sumZ = 0.0, 0.0, 0.0
         self.validCount = 0
@@ -143,7 +143,7 @@ class Control(Node):
         self.sendQ(CATCHING_JOINTS)
         self.sendState()
         self.aiming = False
-        time.sleep(self.arduinoShootTime)
+        # time.sleep(self.arduinoShootTime)
         self.get_logger().info("CATCHING RIGHT NOW!")
 
     def aimAtTarget(self):
@@ -155,7 +155,8 @@ class Control(Node):
             boolmsg = String()
             boolmsg.data = "Start"
             self.arduino.publish(boolmsg)
-            time.sleep(self.arduinoShootTime)
+            self.get_logger().info("SHOOTING RIGHT NOW!")
+            # time.sleep(self.arduinoShootTime)
 
             # Go back to catching
             self.finishAiming()
@@ -249,17 +250,16 @@ class Control(Node):
         goalT.orientation = self.pose.orientation
         goalT.position.x += x + 0.150
         goalT.position.y += y
-        goalT.position.z += z
+        goalT.position.z = 0.10
 
         if not self.checkValid(goalT.position.x,goalT.position.y,goalT.position.z):
-            self.resetAverages()
             return
         
         goalT.position = self.averagePosition(goalT.position) # Valid position, store and average
 
         # self.get_logger().info(f"Pred position {goalT.position.x}, {goalT.position.y}, {goalT.position.z}")
 
-        if self.validCount >= 20:
+        if self.validCount >= 2:
             distance = np.sqrt(x**2 + y**2 + z**2)
             moveTime = distance / self.speed
             self.sendPose(goalT, moveTime)
@@ -268,26 +268,22 @@ class Control(Node):
     def resetAverages(self):
         self.sumX, self.sumY, self.sumZ = 0,0,0
         self.validCount = 0
-        self.validTimer = time.time()
 
     def averagePosition(self, position: Point):
         self.sumX += position.x
         self.sumY += position.y
-        self.sumZ += position.z
         self.validCount += 1
         newPos = Point()
         newPos.x = self.sumX / self.validCount
         newPos.y = self.sumY / self.validCount
-        newPos.z = self.sumZ / self.validCount
-        self.validTimer = time.time()
 
         return newPos
 
     def checkValid(self, x,y,z):
         distance = np.sqrt(x**2 + y**2 + z**2)   
-        validDistance = distance >= 0.5 and distance <= 0.85
-        validZ = z > 0.05
-        validX = x < -0.4
+        validDistance = distance >= 0.45 and distance <= 0.85
+        validZ = z > 0
+        validX = x < -0.35
         validY = y > -0.1
         valid = (validDistance and validX and validY and validZ)
 
@@ -353,7 +349,7 @@ class Control(Node):
         jointGoal.data = qTarget
         self.goal_pub.publish(jointGoal)
 
-        time.sleep(moveTime + 0.5)
+        time.sleep(moveTime + 0.2)
 
     def sendQ(self, qTarget):
         qTarget = [float(np.radians(joint)) for joint in qTarget]
