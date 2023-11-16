@@ -1,6 +1,5 @@
 Step instruction: 
 
 1. ./setupRealur5e 
+ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true
 2. ros2 launch winners_pkg winners_launch.py
-3. ros2 run CameraCV opencv_test.py
-4. ros2 run util_arduino_serial util_arduino_serial
