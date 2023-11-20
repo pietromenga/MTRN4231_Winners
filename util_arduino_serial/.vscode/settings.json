@@ -1,0 +1,16 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/splice_47/ros2_ws/Project/install/util_arduino_serial/lib/python3.10/site-packages",
+        "/home/splice_47/ros2_ws/Project/install/balldetect/lib/python3.10/site-packages",
+        "/home/splice_47/ros2_ws/Project/install/CameraCV_pkg/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/splice_47/ros2_ws/Project/install/util_arduino_serial/lib/python3.10/site-packages",
+        "/home/splice_47/ros2_ws/Project/install/balldetect/lib/python3.10/site-packages",
+        "/home/splice_47/ros2_ws/Project/install/CameraCV_pkg/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}

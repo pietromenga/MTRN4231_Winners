@@ -4,7 +4,7 @@ import rclpy
 import numpy as np
 from rclpy.node import Node
 import time
-from builtin_interfaces.msg import Time 
+from builtin_interfaces.msg import Time
 
 from geometry_msgs.msg import PoseStamped
 from tf2_ros import TransformException
@@ -13,18 +13,18 @@ from tf2_ros.transform_listener import TransformListener
 
 
 class TrajectoryCalculator(Node):
-
     def __init__(self):
-        super().__init__('Trajectory_Calculator')
+        super().__init__("Trajectory_Calculator")
 
         # Prediction publisher
-        self.pred_publisher_ = self.create_publisher(PoseStamped, 'ball_prediction', 10)
+        self.pred_publisher_ = self.create_publisher(PoseStamped, "ball_prediction", 10)
 
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
 
-        self.dt = 0.1
-        self.timer = self.create_timer(self.dt, self.timer_callback)
+        # self.dt = 0.1
+        # self.timer = self.create_timer(self.dt, self.timer_callback)
+        self.create_subscription(PoseStamped, "/ball_pose", self.timer_callback, 10)
 
         self.itemCount = 0
         self.posX = []
@@ -32,105 +32,124 @@ class TrajectoryCalculator(Node):
         self.posZ = []
         self.timeList = []
         self.startTime = time.time()
-        self.to_frame_rel = 'base_link'
+        self.to_frame_rel = "base_link"
+        self.prevPosX = 0
+        self.prevPosY = 0
+        self.prevPosZ = 0
+        self.prevTime = 0
 
         self.minY, self.maxY = 0, 0.4
         self.minX, self.maxX = -0.9, -0.5
         self.minZ, self.maxZ = 0, 0.25
 
-    def timer_callback(self):
+    def timer_callback(self, pose: PoseStamped):
+        self.appendTransform(pose)
 
-        # Get position of ball in base frame
-        try:
-            tBall = self.tf_buffer.lookup_transform(
-                self.to_frame_rel,
-                'ball_tf',
-                rclpy.time.Time())
-            
-            tEndEff = self.tf_buffer.lookup_transform(
-                self.to_frame_rel,
-                'tool0',
-                rclpy.time.Time())
-        except TransformException as ex:
-            # self.get_logger().info(
-            #     f'Could not transform {to_frame_rel} to {from_frame_rel}: {ex}')
-            return
-        
-        # Store transforms
-        if self.itemCount < 5:
-            self.appendTransform(tBall)
-        else: # Enough to regress
-            currentTime = time.time() - self.startTime
-            self.appendTransform(tBall)
+        # Find target
+        ballPredTarget = self.predictBall()
 
-            xCoeff = np.polyfit(self.timeList, self.posX, 2)
-            yCoeff = np.polyfit(self.timeList, self.posY, 2)
-            zCoeff = np.polyfit(self.timeList, self.posZ, 2)
+        # send off prediction
+        if ballPredTarget != ():
+            self.sendBallPred(*ballPredTarget)  # unpack tuple into args
 
-            dt = 0.01
-            timeSteps = np.arange(currentTime, currentTime + 1, dt)
-            minDist = 100
-            ballPredTarget = ()
-            # for ti in reversed(timeSteps): # Reversed as solutions farthest away will be closest
-            #     # xyz at time step ti
-            #     x = float(xCoeff[0] * ti ** 2 + xCoeff[1] * ti + xCoeff[2])
-            #     y = float(yCoeff[0] * ti ** 2 + yCoeff[1] * ti + yCoeff[2])
-            #     z = float(zCoeff[0] * ti ** 2 + zCoeff[1] * ti + zCoeff[2])
+    def moving_average(self, values, window_size):
+        weights = np.ones(window_size) / window_size
+        return np.convolve(values, weights, mode="valid")
 
-                # Calc distance to tool
-                # dist2tool = np.sqrt(
-                #     (x - tEndEff.transform.translation.x)**2 + 
-                #     (y - tEndEff.transform.translation.y)**2 +
-                #     (z - tEndEff.transform.translation.z)**2 
-                # )
+    def predictBall(self):
+        ballPredTarget = ()
 
-                # Update mindist
-                # if dist2tool < minDist and self.inCatchingRange(x,y,z):
-                    # minDist = dist2tool 
-                    # ballPredTarget = (x,y,z)
+        # Ensure we have enough points to calculate velocity and apply the moving average
+        if self.itemCount >= 2:
+            # Apply the moving average filter
+            posX_smooth = np.mean(self.posX)
+            posY_smooth = np.mean(self.posY)
+            posZ_smooth = np.mean(self.posZ)
+            timeList_smooth = np.mean(self.timeList)
 
-            secondInFuture = currentTime + 1
-            x = float(xCoeff[0] * secondInFuture ** 2 + xCoeff[1] * secondInFuture + xCoeff[2])
-            y = float(yCoeff[0] * secondInFuture ** 2 + yCoeff[1] * secondInFuture + yCoeff[2])
-            z = float(zCoeff[0] * secondInFuture ** 2 + zCoeff[1] * secondInFuture + zCoeff[2])
-            ballPredTarget = (x,y,z)
-                
+            # Calculate velocities using smoothed positions
+            vx = (posX_smooth - self.prevPosX) / (
+                timeList_smooth - self.prevTime
+            )
+            vy = (posY_smooth - self.prevPosY) / (
+                timeList_smooth - self.prevTime
+            )
+            vz = (posZ_smooth - self.prevPosZ) / (
+                timeList_smooth - self.prevTime
+            )
 
-            # send off prediction
-            if ballPredTarget != ():
-                self.sendBallPred(*ballPredTarget) #unpack tuple into args
+            # Gravity constant in m/s^2 (negative because it's acting downwards)
+            gravity = -9.81
 
-            # Remove last point to get new regression
-            self.removeLast()
+            # z = -0.2 plane
+            z_target = -0.35
 
-    def sendBallPred(self, x,y,z):
+            # Calculate time to reach z = -0.2 plane using quadratic formula
+            A = 0.5 * gravity
+            B = vz
+            C = self.posZ[-1] - z_target
+
+            # Calculate discriminant
+            discriminant = B**2 - 4 * A * C
+            if discriminant >= 0:
+                # Compute the two possible solutions for time
+                t1 = (-B + np.sqrt(discriminant)) / (2 * A)
+                t2 = (-B - np.sqrt(discriminant)) / (2 * A)
+                # We want the positive, smallest time at which the ball crosses z = -0.2
+                t = min(filter(lambda t: t > 0, [t1, t2]), default=None)
+
+                if t is not None:
+                    # Calculate the z-velocity at the intersection time
+                    vz_intersection = vz + gravity * t
+
+                    # Ensure that the z-velocity is negative (ball is moving downwards)
+                    if vz_intersection < 0:
+                        # Calculate future positions for x and y
+                        pred_x = self.posX[-1] + vx * t
+                        pred_y = self.posY[-1] + vy * t
+
+                        # We already know pred_z since it's the z_target
+                        pred_z = z_target
+
+                        ballPredTarget = (pred_x, pred_y, pred_z)
+
+            self.prevPosX = posX_smooth
+            self.prevPosY = posY_smooth
+            self.prevPosZ = posZ_smooth
+            self.prevTime = timeList_smooth
+            self.removeOne()
+        return ballPredTarget
+
+    def sendBallPred(self, x, y, z):
         pred = PoseStamped()
         pred.header.stamp = self.get_clock().now().to_msg()
         pred.header.frame_id = "base_link"
-        pred.pose.position.x = x
-        pred.pose.position.y = y
-        pred.pose.position.z = z
+        pred.pose.position.x = float(x)
+        pred.pose.position.y = float(y)
+        pred.pose.position.z = float(z)
         self.pred_publisher_.publish(pred)
 
     def inCatchingRange(self, x, y, z):
         # xRange = x > self.minX and x < self.maxX
         # yRange = y > self.minY and y < self.maxY
-        # zRange = z > self.minZ and z < self.maxZ    
+        # zRange = z > self.minZ and z < self.maxZ
         return True
 
-    def removeLast(self):
-        self.posX.clear()
-        self.posY.clear()
-        self.posZ.clear()
-        self.timeList.clear()
+    def removeOne(self):
+        self.posX.pop(0)
+        self.posY.pop(0)
+        self.posZ.pop(0)
+        self.timeList.pop(0)
         self.itemCount -= 1
-    
-    def appendTransform(self, t): 
-        self.posX.append(t.transform.translation.x)
-        self.posY.append(t.transform.translation.y)
-        self.posZ.append(t.transform.translation.z)
+
+    def appendTransform(self, pose: PoseStamped):
+        self.posX.append(pose.pose.position.x)
+        self.posY.append(pose.pose.position.y)
+        self.posZ.append(pose.pose.position.z)
         self.timeList.append(time.time() - self.startTime)
         self.itemCount += 1
+        # self.get_logger().info(f"Time: {time.time() - self.startTime}")
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -139,5 +158,6 @@ def main(args=None):
     minimal_publisher.destroy_node()
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

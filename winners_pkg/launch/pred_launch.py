@@ -92,11 +92,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         Node(
-            package='util_arduino_serial',
-            name='util_arduino_serial',
-            executable='util_arduino_serial',
-        ),
-        Node(
             package='balldetect',
             name='ball_detector',
             executable='ball_detector',
@@ -118,21 +113,12 @@ def generate_launch_description():
         ),
         Node(
             package='winners_pkg',
-            name='Control',
-            executable='Control.py',
-            # parameters=[
-            #     robot_description,
-            #     robot_description_semantic,
-            # ],
-        ),  
-        Node(
-            package='winners_pkg',
             name='Visualisations',
             executable='Visualisations',
         ),
         Node(
             package='winners_pkg',
-            name='Brain',
-            executable='Brain',
+            name='Control',
+            executable='Control.py',
         )
     ])

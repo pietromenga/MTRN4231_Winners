@@ -19,11 +19,13 @@ public:
 
 private:
     void tf_ball(const geometry_msgs::msg::PoseStamped & msg);
+    void tf_target(const geometry_msgs::msg::PoseStamped & msg);
     void tf_prediction(const geometry_msgs::msg::PoseStamped & msg);
     void setupStaticTransforms();
 
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr ballpose_sub_;
-    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr velcropose_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr target_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pred_sub_;
     std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
     std::shared_ptr<tf2_ros::StaticTransformBroadcaster> tf_static_broadcaster_;
 };

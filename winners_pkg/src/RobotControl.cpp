@@ -9,12 +9,16 @@ RobotControl::RobotControl() : Node("RobotControl")
 
     joint_cmd_pub_ = this->create_publisher<control_msgs::msg::JointJog>("/servo_node/delta_joint_cmds", 10);
     twist_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/servo_node/delta_twist_cmds", 10);
+    launch_pub = this->create_publisher<std_msgs::msg::Bool>("/arduino", 10);
+    throw_fin_pub = this->create_publisher<std_msgs::msg::Bool>("/throw_finished", 10);
 
     // Moveit objects
     move_group_interface = std::make_shared<moveit::planning_interface::MoveGroupInterface>(std::shared_ptr<rclcpp::Node>(this), "ur_manipulator");
-    move_group_interface->setPlanningTime(10.0);
+    move_group_interface->setPlanningTime(1);
     move_group_interface->setEndEffectorLink("tool0");
     move_group_interface->startStateMonitor();
+    move_group_interface->setMaxVelocityScalingFactor(1);
+    move_group_interface->setMaxAccelerationScalingFactor(1);
     planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     planning_frame_id = move_group_interface->getPlanningFrame();
 
@@ -23,14 +27,10 @@ RobotControl::RobotControl() : Node("RobotControl")
     
     // Sub to catching servo control
     update_ball_pred_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>("/ball_prediction", 10, std::bind(&RobotControl::set_catch_target, this, _1));
-    move_catch_timer_ = this->create_wall_timer(
-      2ms, std::bind(&RobotControl::move_to_catch, this));
-    //throw_traj_sub_ ...
 
     // Mode 
-    robot_mode = RobotControlMode::JOINT;
+    robot_mode = RobotControlMode::THROW;
     start_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/start_catching", std::bind(&RobotControl::start_catching, this, _1, _2));
-    stop_catching_service_ = this->create_service<std_srvs::srv::Trigger>("/stop_catching", std::bind(&RobotControl::stop_catching_request, this, _1, _2));
     throwing_service_ = this->create_service<std_srvs::srv::Trigger>("/throw_ball", std::bind(&RobotControl::throw_ball_request, this, _1, _2));
 
     // Setup
@@ -38,99 +38,61 @@ RobotControl::RobotControl() : Node("RobotControl")
     setup_collisions();
 }
 
-RobotControl::~RobotControl() {
-    if (robot_mode == RobotControlMode::SERVO) {
-        stop_catching();
-    }
-}
-
 void RobotControl::setup_collisions() {
     auto col_object_table = generateCollisionObject( 2.4, 1.2, 0.04, 0.85, 0.25, -0.03, planning_frame_id, "table");
-    auto col_object_backWall = generateCollisionObject( 4, 0.04, 2.0, 0.85, -0.31, 0.0, planning_frame_id, "backWall");
+    // auto col_object_backWall = generateCollisionObject( 4, 0.04, 2.0, 0.85, -0.31, 0.0, planning_frame_id, "backWall");
     auto col_object_sideWall = generateCollisionObject( 0.04, 1.2, 1.0, -0.31, 0.25, -0.5, planning_frame_id, "sideWall");
 
     planning_scene_interface->applyCollisionObject(col_object_table);
-    planning_scene_interface->applyCollisionObject(col_object_backWall);
+    // planning_scene_interface->applyCollisionObject(col_object_backWall);
     planning_scene_interface->applyCollisionObject(col_object_sideWall);
 }
 
-bool RobotControl::validTarget() {
-    // check within box range
-    return true;
+
+
+void RobotControl::set_catch_target(geometry_msgs::msg::PoseStamped pose) {
+    if (robot_mode == RobotControlMode::CATCH) {
+        // pose.pose.orientation.w = -0.494082;
+        // pose.pose.orientation.x = -0.492382;
+        // pose.pose.orientation.y = 0.515817;
+        // pose.pose.orientation.z = 0.49737;
+
+        geometry_msgs::msg::TransformStamped t;
+        try {
+            t = tf_buffer_->lookupTransform( "base_link", "ball_prediction_tf", tf2::TimePointZero);
+        } catch (const tf2::TransformException & ex) {
+            RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
+            return;
+        }
+
+        auto x = t.transform.translation.x;
+        auto y = t.transform.translation.y;
+        auto z = t.transform.translation.z;
+        if (!validTarget(x,y,z)) {
+            return;
+        }
+
+        geometry_msgs::msg::Pose targetPose;
+        targetPose.position.x = x;
+        targetPose.position.y = y;
+        targetPose.position.z = z;
+        targetPose.orientation.w = -0.494082;
+        targetPose.orientation.x = -0.492382;
+        targetPose.orientation.y = 0.515817;
+        targetPose.orientation.z = 0.49737;
+
+        std::vector<geometry_msgs::msg::Pose> path {targetPose}; //move_group_interface->getCurrentPose("tool0").pose
+        moveit_msgs::msg::RobotTrajectory trajectory;
+        const double jump_threshold = 0.0;
+        const double eef_step = 0.05;
+        auto frac = move_group_interface->computeCartesianPath(path, eef_step, jump_threshold, trajectory);
+
+        bool executeSuccess = static_cast<bool>(move_group_interface->execute(trajectory));
+    }
 }
 
-void RobotControl::move_to_catch() {
-    if (robot_mode != RobotControlMode::SERVO || !validTarget()) {
-        return;
-    }
-    // RCLCPP_INFO(this->get_logger(), std::to_string(this->now().seconds()));
-
-
-    // Change in robot pos
-    geometry_msgs::msg::TwistStamped delta;
-    delta.header.stamp = this->now();
-    delta.header.frame_id = "base_link";
-
-    // Get current pose of the robot
-    // auto currentPose = move_group_interface->getCurrentState();
-    // auto currentRPY = move_group_interface->getCurrentRPY();
-
-    // Find transformation of ball relative to robot base
-    std::string fromFrameRel = "tool0";
-    std::string toFrameRel = "base_link";
-    geometry_msgs::msg::TransformStamped t;
-    try {
-        t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
-    } catch (const tf2::TransformException & ex) {
-        RCLCPP_INFO( this->get_logger(), "Could not transform %s to %s: %s", toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
-        return;
-    }
-
-    // Calculate desired relative movement
-    auto xDiff = catch_target.pose.position.x - t.transform.translation.x;
-    auto yDiff = catch_target.pose.position.y - t.transform.translation.y;
-    auto zDiff = catch_target.pose.position.z - t.transform.translation.z;
-    // auto xDiff = t.transform.translation.x;
-    // auto yDiff = t.transform.translation.y;
-    // auto zDiff = t.transform.translation.z;
-
-    // Clamp to max velocity per tick
-    auto xInc = std::clamp(xDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto yInc = std::clamp(yDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-    auto zInc = std::clamp(zDiff * 10 * MAX_STEP, -MAX_STEP, MAX_STEP);
-
-    // add to twist
-    delta.twist.linear.x = xInc;
-    delta.twist.linear.y = yInc;
-    delta.twist.linear.z = zInc;
-
-    // RCLCPP_INFO( this->get_logger(), "&&&& TARGET %f %f %f", catch_target.pose.position.x, catch_target.pose.position.y, catch_target.pose.position.z);
-    // RCLCPP_INFO( this->get_logger(), "#### CURRENT %f %f %f", t.transform.translation.x, t.transform.translation.y, t.transform.translation.z);
-    // RCLCPP_INFO( this->get_logger(), "#### DIFF %f %f %f", xDiff, yDiff, zDiff);
-    // RCLCPP_INFO( this->get_logger(), "#### INC %f %f %f", xInc, yInc, zInc);
-
-    // Get target RPY
-    // auto q_target = tf2::Quaternion(
-    //     catch_target.orientation.x,
-    //     catch_target.orientation.y,
-    //     catch_target.orientation.z,
-    //     catch_target.orientation.w);
-    // tf2::Matrix3x3 m(q_target);
-    // double roll, pitch, yaw;
-    // m.getRPY(roll, pitch, yaw);
-
-    // Clamp to max step per tick
-    // auto xInc = std::clamp(xDiff, -MAX_STEP, MAX_STEP);
-    // auto yInc = std::clamp(yDiff, -MAX_STEP, MAX_STEP);
-    // auto zInc = std::clamp(zDiff, -MAX_STEP, MAX_STEP);
-    
-    // publishing
-    twist_cmd_pub_->publish(delta);
-}
-
-void RobotControl::set_catch_target(const geometry_msgs::msg::PoseStamped &pose) {
-    // RCLCPP_INFO(this->get_logger(), "Received ball target for catching");
-    catch_target = pose;
+bool RobotControl::validTarget(double x, double y, double z) {
+    return x < -0.45 && y > 0.2 && x > -0.7;
 }
 
 void RobotControl::tryMoveToTargetPose(const geometry_msgs::msg::Pose &msg) {
@@ -187,19 +149,12 @@ void RobotControl::start_catching(
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
     response->success = false;
+    RCLCPP_INFO(this->get_logger(), "Starting Catching");
 
-    if (robot_mode != RobotControlMode::SERVO) {
-        RCLCPP_INFO(this->get_logger(), "Starting Catching");
+    tryMoveToTargetQ(catching_start_joint);
+    robot_mode = RobotControlMode::CATCH;
 
-        tryMoveToTargetQ(catching_start_joint);
-
-        request_switch_controllers(RobotControlMode::SERVO);
-        request_start_servo();
-
-        response->success = true;
-    } else {
-        RCLCPP_INFO(this->get_logger(), "Already in Catching Mode");
-    }
+    response->success = true;
 }
 
 void RobotControl::throw_ball_request(
@@ -207,39 +162,77 @@ void RobotControl::throw_ball_request(
     std::shared_ptr<std_srvs::srv::Trigger::Response> response
 ) {
     response->success = false;
+    // Go to throw pos and start servoing
+    robot_mode = RobotControlMode::THROW;
+    RCLCPP_INFO(this->get_logger(), "Starting throwing");
+    tryMoveToTargetQ(throwing_start_joint);
 
-    if (robot_mode == RobotControlMode::JOINT) {
-        RCLCPP_INFO(this->get_logger(), "Making throw");
+    request_switch_controllers(RobotControlMode::THROW);
+    request_start_servo();
 
-        tryMoveToTargetQ(throwing_start_joint);
+    // Adjust until close to target
+    auto aim_angle = M_PI;
+    auto launch_angle = M_PI;
+    std::string fromFrameRel = "target_tf"; 
+    std::string toFrameRel = "tool0";
+    geometry_msgs::msg::TransformStamped t;
+    while (abs(aim_angle) > 0.5*M_PI/180.0 || abs(launch_angle) > 0.5*M_PI/180.0) {
+        std::this_thread::sleep_for(1ms);
 
-        // Do throwing motion
-        std::this_thread::sleep_for(2000ms);
+        try {
+            t = tf_buffer_->lookupTransform( toFrameRel, fromFrameRel, tf2::TimePointZero);
+        } catch (const tf2::TransformException & ex) {
+            RCLCPP_INFO(this->get_logger(), "YAAAAAAAAAAAAAAAAAAAAAAAAA %s", ex.what());
+            break;
+        }
 
-        response->success = true;
-    } else {
-        RCLCPP_INFO(this->get_logger(), "Cannot throw in Catching Mode");
+        auto x = t.transform.translation.x;
+        auto y = t.transform.translation.y;
+        auto z = t.transform.translation.z; // artifically increase if needed
+        aim_angle = std::atan2(x,z);
+        launch_angle = std::atan2(y,z);
+        // RCLCPP_INFO(this->get_logger(), "aim %f launch %f x %f y %f z %f", aim_angle, launch_angle, x,y,z);
+
+
+        if (abs(aim_angle) > M_PI/3 || abs(launch_angle) > M_PI/4) {
+            // RCLCPP_INFO(this->get_logger(), "angle bad");
+            continue;
+        }
+        auto rx = std::clamp(launch_angle*10, -M_PI, M_PI);
+        auto ry = std::clamp(aim_angle*10, -M_PI, M_PI);
+
+        geometry_msgs::msg::TwistStamped twist;
+        twist.header.frame_id = "tool0";
+        twist.header.stamp = this->now();
+        twist.twist.angular.x = -rx;
+        twist.twist.angular.y = ry;
+        twist_cmd_pub_->publish(twist);
     }
+
+    // Stop Servoing
+    request_stop_servo();
+    request_switch_controllers(RobotControlMode::CATCH);
+
+    // DO LAUNCH
+    std_msgs::msg::Bool launchMsg;
+    launchMsg.data = true;
+    launch_pub->publish(launchMsg);
+    std::this_thread::sleep_for(std::chrono::seconds(60));
+    launchMsg.data = false;
+    launch_pub->publish(launchMsg);
+
+    throw_fin_pub->publish(launchMsg);
+
+    robot_mode = RobotControlMode::CATCH;
+    tryMoveToTargetQ(catching_start_joint);
+    response->success = true;
+    RCLCPP_INFO(this->get_logger(), "Throwing finished");
+
 }
 
-void RobotControl::stop_catching_request(
-    const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
-    std::shared_ptr<std_srvs::srv::Trigger::Response> response
-) {
-    response->success = stop_catching();
-}
-
-bool RobotControl::stop_catching() {
-    if (robot_mode != RobotControlMode::JOINT) {
-        RCLCPP_INFO(this->get_logger(), "Stopping Catching");
-
-        request_stop_servo();
-        request_switch_controllers(RobotControlMode::JOINT);
-        return true;
-    }
-
-    RCLCPP_INFO(this->get_logger(), "Already in Throwing Mode");
-    return false;
+RobotControl::~RobotControl() {
+    request_stop_servo();
+    request_switch_controllers(RobotControlMode::CATCH);
 }
 
 void RobotControl::request_start_servo() {
@@ -257,7 +250,7 @@ void RobotControl::request_switch_controllers(RobotControlMode mode) {
     auto request = std::make_shared<controller_manager_msgs::srv::SwitchController::Request>();
 
     // Activate/Deactivate controllers based on mode
-    if (mode == RobotControlMode::SERVO) {
+    if (mode == RobotControlMode::THROW) {
         request->activate_controllers.push_back("forward_position_controller");
         request->deactivate_controllers.push_back("joint_trajectory_controller");
     } else {
@@ -276,7 +269,6 @@ void RobotControl::client_stop_servo_response_callback(rclcpp::Client<std_srvs::
 {
     if (future.get()->success) {
         RCLCPP_INFO(this->get_logger(), "Servo Mode Off");
-        robot_mode = RobotControlMode::JOINT;
     } else {
         shutdownControl("Stop Servo Mode Failed");
     }
@@ -286,7 +278,6 @@ void RobotControl::client_start_servo_response_callback(rclcpp::Client<std_srvs:
 {
     if (future.get()->success) {
         RCLCPP_INFO(this->get_logger(), "Servo Mode On");
-        robot_mode = RobotControlMode::SERVO;
     } else {
         shutdownControl("Start Servo Mode Failed");
     }
@@ -329,7 +320,10 @@ void RobotControl::wait_for_services(){
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<RobotControl>());
+    auto node = std::make_shared<RobotControl>();
+    auto executor = std::make_unique<rclcpp::executors::MultiThreadedExecutor>();
+    executor->add_node(node);
+    executor->spin();
     rclcpp::shutdown();
     return 0;
 }

@@ -30,6 +30,7 @@ find_package(moveit_visual_tools REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(controller_manager_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
 find_package(rviz_visual_tools)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -47,6 +48,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   tf2
   tf2_ros
   tf2_geometry_msgs
+  cv_bridge
 )
 
 
@@ -55,13 +57,6 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# TESTING CAMERA
-add_executable(camTest src/camTest.cpp)
-ament_target_dependencies(camTest ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
-# BALL POSE
-add_executable(BallPose src/BallPose.cpp)
-ament_target_dependencies(BallPose ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # TRANSFORMS
 add_executable(Transforms src/Transforms.cpp)
@@ -80,10 +75,6 @@ add_executable(Brain src/Brain.cpp)
 ament_target_dependencies(Brain ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 
-# add_executable(ballPose src/ballPose.cpp)
-# ament_target_dependencies(ballPose rclcpp std_msgs geometry_msgs OpenCV)
-
-
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -97,8 +88,6 @@ if(BUILD_TESTING)
 endif()
 
 install(TARGETS
-  camTest
-  BallPose
   Transforms
   Visualisations
   RobotControl
@@ -116,6 +105,8 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 install(PROGRAMS
   scripts/Trajectory.py
+  scripts/TriKalman.py
+  scripts/Control.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

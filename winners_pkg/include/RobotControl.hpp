@@ -18,10 +18,13 @@
 #include <trajectory_msgs/msg/joint_trajectory.hpp>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
+#include <std_msgs/msg/bool.hpp>
 
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_ros/buffer.h"
+#include <math.h>
+#include "moveit_msgs/msg/robot_trajectory.hpp"
 
 #include "Helpers.hpp"
 
@@ -29,7 +32,7 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-enum RobotControlMode {JOINT, SERVO};
+enum RobotControlMode {CATCH, THROW};
 
 #define MAX_STEP 0.75
 
@@ -41,7 +44,7 @@ public:
 private:
     // Robot positions
     std::vector<double> catching_start_joint = std::vector<double>{136.8, -64.91, 117.28, -51.08, 48.33, 0.27};
-    std::vector<double> throwing_start_joint = std::vector<double>{22.05, -74.5, 90.43, -104.41, -66.64, 0.35};
+    std::vector<double> throwing_start_joint = std::vector<double>{128.57, -70.04, 100.70, -29.27, 39.9, 0.03};
 
     // Catching target position
     geometry_msgs::msg::PoseStamped catch_target;
@@ -62,6 +65,8 @@ private:
     // Robot Control Publishers and moveit
     rclcpp::Publisher<control_msgs::msg::JointJog>::SharedPtr joint_cmd_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_cmd_pub_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr launch_pub;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr throw_fin_pub;
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_pose_pub_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_interface;
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface> planning_scene_interface;
@@ -79,18 +84,8 @@ private:
     // Sets robot to servo mode and allows robot control to use catch calculation and move robot.
     void start_catching(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
-    // Sets robot to joint control and stops catch calculation movement
-    void stop_catching_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
-    bool stop_catching();
-
-    // Every tick move toward target position
-    void move_to_catch();
-
-    // check if catch target is within catching bounds
-    bool validTarget();
-
     // Sets a target for the catch function to reach
-    void set_catch_target(const geometry_msgs::msg::PoseStamped &pose);
+    void set_catch_target(geometry_msgs::msg::PoseStamped pose);
 
     // Waits for active services
     void wait_for_services();
@@ -128,4 +123,7 @@ private:
     //
     void throw_ball_request(const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
     std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+
+    //
+    bool validTarget(double x, double y, double z);
 };
